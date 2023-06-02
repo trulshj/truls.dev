@@ -18,6 +18,7 @@
     }
 
     .nav-links a {
+        color: var(--color-primary-button);
         display: block;
         text-align: center;
         padding: 10px 0;
@@ -30,6 +31,10 @@
     .nav-links a:hover,
     a:focus {
         background-color: var(--color-accent);
+    }
+
+    :global(.expanded) {
+        display: unset;
     }
 
     @media screen and (min-width: 636px) {

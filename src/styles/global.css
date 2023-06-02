@@ -40,12 +40,6 @@ h1 {
     font-size: 2.5rem;
 }
 
-/* nav styles */
-
-.expanded {
-    display: unset !important;
-}
-
 /* FONTS */
 
 @font-face {
