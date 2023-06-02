@@ -1,15 +1,26 @@
 html {
-    background-color: #f1f5f9;
+    background-color: var(--color-secondary);
     font-family: "Atkinson Hyperlegible", sans-serif;
+
+    --color-primary: #000000;
+    --color-secondary: #ffffff;
+    --color-primary-button: #e96799;
+    --color-secondary-button: #e9f0fc;
+    --color-accent: #99e967;
+
+    --color-primary-rgb: 0, 0, 0;
+    --color-secondary-rgb: 255, 255, 255;
+    --color-primary-button-rgb: 233, 103, 153;
+    --color-secondary-button-rgb: 233, 240, 252;
+    --color-accent-rgb: 153, 233, 103;
 }
 
 html.dark {
-    background-color: #0d0950;
-    color: #fff;
-}
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
 
-.dark .nav-links a {
-    color: #fff;
+    --color-primary: #ffffff;
+    --color-secondary: #333333;
 }
 
 body {
@@ -31,64 +42,8 @@ h1 {
 
 /* nav styles */
 
-.hamburger {
-    padding-right: 20px;
-    cursor: pointer;
-}
-
-.hamburger .line {
-    display: block;
-    width: 40px;
-    height: 5px;
-    margin-bottom: 10px;
-    background-color: #ff9776;
-}
-
-.nav-links {
-    width: 100%;
-    top: 5rem;
-    left: 48px;
-    background-color: #ff9776;
-    display: none;
-    margin: 0;
-}
-
-.nav-links a {
-    display: block;
-    text-align: center;
-    padding: 10px 0;
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.nav-links a:hover,
-a:focus {
-    background-color: #ff9776;
-}
-
 .expanded {
-    display: unset;
-}
-
-@media screen and (min-width: 636px) {
-    .nav-links {
-        margin-left: 5em;
-        display: block;
-        position: static;
-        width: auto;
-        background: none;
-    }
-
-    .nav-links a {
-        display: inline-block;
-        padding: 15px 20px;
-    }
-
-    .hamburger {
-        display: none;
-    }
+    display: unset !important;
 }
 
 /* FONTS */
