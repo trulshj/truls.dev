@@ -1,8 +1,46 @@
 ---
+import { getCollection } from "astro:content";
+import BlogPostLink from "../components/BlogPostLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-const pageTitle = "Home Page";
+
+const allPosts = await getCollection("posts");
+const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
+
+const pageTitle = "Truls Henrik";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <h2>My awesome blog subtitle</h2>
+    <p>Ahoy! I write about learning math and I code pretty well :)</p>
+
+    <h2>Blog Posts</h2>
+
+    <ul>
+        {
+            allPosts.map((post) => (
+                <BlogPostLink slug={post.slug} title={post.data.title} />
+            ))
+        }
+    </ul>
+
+    <h2>Filter By Tags</h2>
+
+    <ul>
+        {
+            tags.map((tag) => (
+                <li>
+                    <a href={`/blog/tags/${tag}`}>{tag}</a>
+                </li>
+            ))
+        }
+    </ul>
+
+    <h2>Sometimes I also talk</h2>
+
+    <ul>
+        <li>
+            <a href="https://www.youtube.com/watch?v=qI64KH26kjA"
+                >2FA and why text messages aren't good enough (Norwegian)</a
+            >
+        </li>
+    </ul>
 </BaseLayout>
