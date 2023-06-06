@@ -2,9 +2,10 @@
 import { getCollection } from "astro:content";
 import BlogPostLink from "../components/BlogPostLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getUniqueTags } from "../utils/tags";
 
 const allPosts = await getCollection("posts");
-const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
+const tags = getUniqueTags(allPosts);
 
 const pageTitle = "Truls Henrik";
 ---
@@ -28,7 +29,9 @@ const pageTitle = "Truls Henrik";
         {
             tags.map((tag) => (
                 <li>
-                    <a href={`/tags/${tag}`}>{tag}</a>
+                    <a href={`/tags/${tag.label}`}>
+                        {tag.label} ({tag.count})
+                    </a>
                 </li>
             ))
         }
