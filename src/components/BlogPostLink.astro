@@ -5,14 +5,3 @@ const { slug, title } = Astro.props;
 <li>
     <a href={"/blog/" + slug}>{title}</a>
 </li>
-
-<style>
-    a {
-        color: var(--color-primary-button);
-    }
-
-    a:hover,
-    a:focus {
-        color: var(--color-accent);
-    }
-</style>

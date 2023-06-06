@@ -25,7 +25,7 @@
         background: none;
     }
     .sun {
-        fill: black;
+        fill: var(--color-primary-button);
     }
     .moon {
         fill: transparent;
@@ -35,7 +35,7 @@
         fill: transparent;
     }
     :global(.dark) .moon {
-        fill: white;
+        fill: var(--color-primary-button);
     }
 </style>
 
@@ -45,7 +45,7 @@
             typeof localStorage !== "undefined" &&
             localStorage.getItem("theme")
         ) {
-            return localStorage.getItem("theme");
+            return localStorage.getItem("theme") as string;
         }
         if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
             return "dark";
@@ -71,5 +71,5 @@
 
     document
         .getElementById("themeToggle")
-        .addEventListener("click", handleToggleClick);
+        ?.addEventListener("click", handleToggleClick);
 </script>

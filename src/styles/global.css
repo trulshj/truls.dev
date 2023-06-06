@@ -40,6 +40,15 @@ h1 {
     font-size: 2.5rem;
 }
 
+li a {
+    color: var(--color-primary-button);
+}
+
+li a:hover,
+li a:focus {
+    color: var(--color-accent);
+}
+
 /* FONTS */
 
 @font-face {
