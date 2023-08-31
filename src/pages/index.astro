@@ -17,9 +17,11 @@ const pageTitle = "Truls Henrik";
 
     <ul>
         {
-            allPosts.map((post) => (
-                <BlogPostLink slug={post.slug} title={post.data.title} />
-            ))
+            allPosts
+                .filter((x) => !x.data.draft)
+                .map((post) => (
+                    <BlogPostLink slug={post.slug} title={post.data.title} />
+                ))
         }
     </ul>
 

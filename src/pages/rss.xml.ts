@@ -8,10 +8,12 @@ export async function get() {
         description:
             "Truls is a software developer from Norway. He writes about web development, programming, and technology.",
         site: "https://truls.dev",
-        items: posts.map((post) => ({
-            ...post.data,
-            link: `/blog/${post.slug}/`,
-            customData: `<language>en-us</language>`,
-        })),
+        items: posts
+            .filter((x) => !x.data.draft)
+            .map((post) => ({
+                ...post.data,
+                link: `/blog/${post.slug}/`,
+                customData: `<language>en-us</language>`,
+            })),
     });
 }

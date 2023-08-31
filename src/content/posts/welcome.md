@@ -4,7 +4,7 @@ pubDate: 2023-06-05
 description: "The chronicles of this blog."
 author: "Truls Henrik Jakobsen"
 tags: ["learning", "mathematics"]
-draft: false
+draft: true
 ---
 
 ## Hello everyone!
