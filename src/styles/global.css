@@ -1,26 +1,58 @@
+:root {
+    /* Rosé Pine Dawn */
+    --rp-base: #faf4ed;
+    --rp-surface: #fffaf3;
+    --rp-overlay: #f2e9e1;
+    --rp-muted: #9893a5;
+    --rp-subtle: #797593;
+    --rp-text: #575279;
+    --rp-love: #b4637a;
+    --rp-gold: #ea9d34;
+    --rp-rose: #d7827e;
+    --rp-pine: #286983;
+    --rp-foam: #56949f;
+    --rp-iris: #907aa9;
+    --rp-highlight-low: #f4ede8;
+    --rp-highlight-med: #dfdad9;
+    --rp-highlight-high: #cecacd;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Rosé Pine */
+        --rp-base: #191724;
+        --rp-surface: #1f1d2e;
+        --rp-overlay: #26233a;
+        --rp-muted: #6e6a86;
+        --rp-subtle: #908caa;
+        --rp-text: #e0def4;
+        --rp-love: #eb6f92;
+        --rp-gold: #f6c177;
+        --rp-rose: #ebbcba;
+        --rp-pine: #31748f;
+        --rp-foam: #9ccfd8;
+        --rp-iris: #c4a7e7;
+        --rp-highlight-low: #21202e;
+        --rp-highlight-med: #403d52;
+        --rp-highlight-high: #524f67;
+    }
+}
 html {
-    background-color: var(--color-secondary);
+    color: var(--rp-text);
+    background-color: var(--rp-base);
     font-family: "Atkinson Hyperlegible", sans-serif;
 
-    --color-primary: #000000;
-    --color-secondary: #ffffff;
-    --color-primary-button: #e96799;
-    --color-secondary-button: #e9f0fc;
-    --color-accent: #99e967;
+    --color-primary: var(--rp-text);
+    --color-secondary: var(--rp-base);
+    --color-primary-button: var(--rp-pine);
+    --color-secondary-button: var(--rp-highlight-med);
+    --color-accent: var(--rp-gold);
 
     --color-primary-rgb: 0, 0, 0;
     --color-secondary-rgb: 255, 255, 255;
     --color-primary-button-rgb: 233, 103, 153;
     --color-secondary-button-rgb: 233, 240, 252;
     --color-accent-rgb: 153, 233, 103;
-}
-
-html.dark {
-    background-color: var(--color-secondary);
-    color: var(--color-primary);
-
-    --color-primary: #ffffff;
-    --color-secondary: #333333;
 }
 
 body {
@@ -36,8 +68,21 @@ body {
 }
 
 h1 {
+    color: var(--rp-love);
     margin: 1rem 0;
     font-size: 2.5rem;
+}
+
+h2 {
+    color: var(--rp-rose);
+}
+
+h3 {
+    color: var(--rp-foam);
+}
+
+h4 {
+    color: var(--rp-gold);
 }
 
 li a {
