@@ -7,7 +7,7 @@ tags: ["learning", "mathematics"]
 draft: false
 ---
 
-## Hello everyone!
+## Hallaien! 👋
 
 Welcome to my tiny corner of the digital universe! My name is Truls Henrik,
 a 23-year-old software engineer hailing from the frost-kissed landscapes of Norway with an appetite for mathematics.
