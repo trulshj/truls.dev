@@ -1,42 +1,22 @@
 ---
-title: "My self-studying Journey into Mathematics"
-pubDate: 2023-06-05
-description: "The chronicles of this blog."
+title: "Blanke ark"
+pubDate: 2024-03-04
+description: "Jeg starter på nytt"
 author: "Truls Henrik Jakobsen"
-tags: ["learning", "mathematics"]
+tags: ["meta", "skriving"]
 draft: false
 ---
 
-## Hallaien! 👋
+I dag slettet jeg _alle_ mine tidligere notater.
 
-Welcome to my tiny corner of the digital universe! My name is Truls Henrik,
-a 23-year-old software engineer hailing from the frost-kissed landscapes of Norway with an appetite for mathematics.
+> Hvorfor?
 
-I've often found myself grappling with mathematical concepts,
-staring down the barrel of what appeared to be an impenetrable fortress of numbers and symbols.
-It's a tale as old as time: you learn math in school,
-think you've left it behind, and then BAM - it rears its head when you least expect it.
+Jo fordi de var skrevet mer for andre enn for min egen glede. Med dette mener jeg ikke å si at å dele ting med andre er negativt, det vil jeg absolutt oppfordre til! Men å skrive uten å nyte prosessen selv er ikke for meg. Derfor følte jeg et primalt kall for å begynne på nytt med blanke ark og skrive for _meg_.
 
-But that's where the journey gets interesting.
-A few months ago, I took a hard look at my mathematical abilities and realized there were some huge holes where there should have been knowledge.
-So, I did what any rational person would do: I set out on an epic quest to teach myself math.
+Fra nå kommer notatene mine til å være uten system. Å organisere notater som ikke finnes ennå, er ofte utrolig vanskelig og unødvendig komplisert. Jeg kjenner meg selv godt nok til å vite at om jeg hadde laget et system så ville jeg nerd-snipet meg selv såpass hardt at systemet er det jeg ville endt opp med og ingen skriving. Å sette etiketter på ting og sortere dem i bokser er fantastisk moro og utrolig tilfredsstillende, men det øker også terskelen for å faktisk bruke systemet. Siden jeg sliter med å sette meg ned for å skrive, dropper jeg bevisst alle former for system i starten for å legge til rette for min egen suksess.
 
-From filling in the holes in my basic understanding of the fundamentals to diving headfirst into the deep end of complex equations,
-my self-study voyage has been both challenging and rewarding.
+Arbeidsmåter derimot ønsker jeg å praktisere. Jeg har lyst å integrere "Cult of Done"-manifestet sine prinsipper i måten jeg utforsker og jobber med ting. Det å droppe greie hvis jeg ikke begynner på det i løpet av en uke er en bra regel. Hvis det går en hel uke og jeg man ikke har kommet seg i gang bare 5 minutter, bare dropp det.
 
-This blog is a chronicle of that journey and a celebration of the joy of learning.
+Det å kunne si seg ferdig med et prosjekt er gull. Greien din trenger ikke være perfekt for å deles med verden. Den trenger ikke være ferdig en gang, bare si deg fornøyd på et punkt og gå videre til neste greie. En god måte å bli flinkere på er å eksperimentere mye og iterere ofte. Hvis jeg ønsker å lage videoer så burde jeg lage +5 videoer for å lære hva som fungerer og hva arbeidsflyten går ut på istedenfor å jobbe på bare én video i flere måneder. Den éne blir sikkert ganske grei, men tenk hvor god video nummer 5 eller 6 i rekka blir da!
 
-My aim is not to intimidate you with esoteric mathematical concepts and dazzle you with how smart I am,
-but to instill a sense of wonder, curiosity, and even joy in exploring math.
-I am a firm believer that math can be understood and appreciated by anyone,
-provided we shift our perspective and approach it with a touch of creativity and some humour.
-If you're wondering how that looks, stick around and you'll find out!
-
-Whether you're aprofessional seeking to polish your skills,
-a hobbyist intrigued by the prospect of learning something new,
-or a casual visitor, this space welcomes you.
-
-So come along on this mathematical journey as we tackle complex ideas together,
-uncovering the mysteries of math and, in the process, changing the way we perceive it.
-
-Happy learning and welcome aboard!
+En annen ting jeg også skal gjøre er å tenke gjennom to ting rundt prosjekter jeg har lyst å begynne på; "Hvorfor har jeg lyst å gjøre dette?" og "Hvilke konkrete steg skal jeg ta for å oppnå det?". Som jeg skrev over er det friksjon som gjør det vanskelig for meg å komme i gang med en aktivitet. Hvis jeg har tenkt gjennom disse to spørsmålene og skrevet ned svarene mine så har jeg slagplanen klar og friksjonen blir kraftig redusert. Det er da ingen unnskyldning i "jeg må finne ut av hva jeg skal gjøre og hvorfor", jeg må bare sette meg ned og starte.
