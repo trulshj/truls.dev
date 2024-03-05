@@ -5,9 +5,6 @@ const postsCollection = defineCollection({
     schema: z.object({
         title: z.string(),
         pubDate: z.date(),
-        draft: z.boolean(),
-        description: z.string(),
-        tags: z.array(z.string()),
     }),
 });
 

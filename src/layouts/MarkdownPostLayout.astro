@@ -1,22 +1,25 @@
 ---
-import Tags from "../components/Tags.astro";
 import BaseLayout from "./BaseLayout.astro";
 const { frontmatter } = Astro.props;
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
-    <p>
-        Published on {
-            (frontmatter.pubDate as Date).toLocaleDateString("en-US", {
+    <span class="publishingDate">
+        Lagt ut {
+            (frontmatter.pubDate as Date).toLocaleDateString("nb", {
                 day: "2-digit",
                 month: "long",
                 year: "numeric",
             })
         }
-    </p>
-    <p><em>{frontmatter.description}</em></p>
+    </span>
 
     <slot />
-
-    <Tags tags={frontmatter.tags} />
 </BaseLayout>
+
+<style>
+    .publishingDate {
+        display: block;
+        font-family: "Berkeley Mono", monospace;
+    }
+</style>

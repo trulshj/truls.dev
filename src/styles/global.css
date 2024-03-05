@@ -67,6 +67,13 @@ body {
     box-sizing: border-box;
 }
 
+h1,
+h2,
+h3,
+h4 {
+    font-family: "Berkeley Mono", monospace;
+}
+
 h1 {
     color: var(--rp-love);
     margin: 1rem 0;

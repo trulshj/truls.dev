@@ -1,10 +1,6 @@
 ---
 title: "Blanke ark"
 pubDate: 2024-03-04
-description: "Jeg starter på nytt"
-author: "Truls Henrik Jakobsen"
-tags: ["meta", "skriving"]
-draft: false
 ---
 
 I dag slettet jeg _alle_ mine tidligere notater.

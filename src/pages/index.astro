@@ -2,39 +2,21 @@
 import { getCollection } from "astro:content";
 import BlogPostLink from "../components/BlogPostLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getUniqueTags } from "../utils/tags";
 
 const allPosts = await getCollection("posts");
-const tags = getUniqueTags(allPosts);
 
 const pageTitle = "Truls Henrik";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <p>Hallaien 👋 Jeg prøver å lage ting :)</p>
+    <h3>Hallaien 👋 Jeg prøver å lage ting :)</h3>
 
-    <h2>Alle innlegg:</h2>
-
-    <ul>
-        {
-            allPosts
-                .filter((x) => !x.data.draft)
-                .map((post) => (
-                    <BlogPostLink slug={post.slug} title={post.data.title} />
-                ))
-        }
-    </ul>
-
-    <h2>Innlegg per tag</h2>
+    <h2>Innlegg</h2>
 
     <ul>
         {
-            tags.map((tag) => (
-                <li>
-                    <a href={`/tags/${tag.label}`}>
-                        {tag.label} ({tag.count})
-                    </a>
-                </li>
+            allPosts.map((post) => (
+                <BlogPostLink slug={post.slug} title={post.data.title} />
             ))
         }
     </ul>
