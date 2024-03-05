@@ -10,7 +10,6 @@ export async function get() {
         items: posts.map((post) => ({
             ...post.data,
             link: `/blog/${post.slug}/`,
-            customData: `<language>nb-no</language>`,
         })),
     });
 }
