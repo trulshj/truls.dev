@@ -4,8 +4,21 @@ import Navigation from "./Navigation.astro";
 ---
 
 <header>
-    <nav>
-        <Hamburger />
-        <Navigation />
-    </nav>
+  <nav>
+    <Hamburger />
+    <Navigation />
+  </nav>
+
+  <script>
+    function init() {
+      document.querySelector(".hamburger")?.addEventListener("click", () => {
+        const navLinks = document.querySelector(".nav-links");
+        navLinks?.classList.toggle("expanded");
+      });
+    }
+
+    init();
+
+    document.addEventListener("astro:after-swap", init);
+  </script>
 </header>

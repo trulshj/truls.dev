@@ -96,7 +96,9 @@ li a {
     color: var(--color-primary-button);
 }
 
+li a:hover h3,
 li a:hover,
+li a:focus h3,
 li a:focus {
     color: var(--color-accent);
 }

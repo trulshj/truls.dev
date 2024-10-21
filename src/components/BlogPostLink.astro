@@ -3,5 +3,5 @@ const { slug, title } = Astro.props;
 ---
 
 <li>
-    <a href={"/blog/" + slug}>{title}</a>
+    <a href={"/blog/" + slug} transition:name={title}><h3>{title}</h3></a>
 </li>
