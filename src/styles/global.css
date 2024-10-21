@@ -14,7 +14,6 @@ html {
     font-family: "Atkinson Hyperlegible", sans-serif;
 
     background-color: var(--light-green);
-    opacity: 0.8;
     background: linear-gradient(
                 135deg,
                 var(--med-green-alpha) 25%,
