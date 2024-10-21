@@ -1,11 +1,12 @@
 ---
 title: "Blanke ark"
 pubDate: 2024-03-04
+excerpt: "I dag slettet jeg alle mine tidligere notater. Hvorfor det?"
 ---
 
 I dag slettet jeg _alle_ mine tidligere notater.
 
-> Hvorfor?
+> Hvorfor det?
 
 Jo fordi de var skrevet mer for andre enn for min egen glede. Med dette mener jeg ikke å si at å dele ting med andre er negativt, det vil jeg absolutt oppfordre til! Men å skrive uten å nyte prosessen selv er ikke for meg. Derfor følte jeg et primalt kall for å begynne på nytt med blanke ark og skrive for _meg_.
 
