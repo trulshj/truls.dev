@@ -1,23 +1,18 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const pageTitle = "About Me";
+const pageTitle = "Kontakt Meg";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <p>
-        I am working through Astro's introductory tutorial. This is the second
-        page on my website, and it's the first one I built myself!
-    </p>
+    <h2>Lyst til å ta en prat?</h2>
 
-    <p>
-        This site will update as I complete more of the tutorial, so keep
-        checking back and see how my journey is going!
-    </p>
-
-    <p>Here are a few facts about me:</p>
     <ul>
-        <li>My name is Truls Henrik Jakobsen.</li>
-        <li>I live in Norway and I work as a Software Engineer.</li>
+        <li>
+            <a href="mailto:mail@truls.dev">mail@truls.dev</a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/in/trulshj/">LinkedIn</a>
+        </li>
     </ul>
 </BaseLayout>

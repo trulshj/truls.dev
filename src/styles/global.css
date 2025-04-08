@@ -37,6 +37,10 @@ body {
     line-height: 1.5;
 }
 
+main {
+    margin: 1rem;
+}
+
 * {
     box-sizing: border-box;
 }
