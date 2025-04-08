@@ -13,7 +13,7 @@
     "@astrojs/mdx": "^3.1.8",
     "@astrojs/rss": "^4.0.9",
     "@fontsource/atkinson-hyperlegible": "^5.0.2",
-    "astro": "^4.16.6",
+    "astro": "^4.16.18",
     "katex": "^0.16.7",
     "rehype-katex": "^6.0.3",
     "remark-math": "^5.1.1"
