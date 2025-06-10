@@ -4,11 +4,9 @@ export interface Props {
 }
 
 const { title } = Astro.props;
-
-import "@fontsource/atkinson-hyperlegible";
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -22,21 +20,3 @@ import "@fontsource/atkinson-hyperlegible";
         <slot />
     </body>
 </html>
-<style is:global>
-    :root {
-        --accent: 124, 58, 237;
-        --accent-gradient: linear-gradient(
-            45deg,
-            rgb(var(--accent)),
-            #da62c4 30%,
-            white 60%
-        );
-    }
-    html {
-        font-family: "Atkinson Hyperlegible", sans-serif;
-        background-color: #f6f6f6;
-    }
-    code {
-        font-family: "Berkeley Mono", monospace;
-    }
-</style>

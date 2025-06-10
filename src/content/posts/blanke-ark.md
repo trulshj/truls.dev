@@ -2,9 +2,10 @@
 title: "Blanke ark"
 pubDate: 2024-03-04
 excerpt: "I dag slettet jeg alle mine tidligere notater. Hvorfor det?"
+isDraft: true
 ---
 
-I dag slettet jeg _alle_ mine tidligere notater.
+I dag slettet jeg _**alle**_ mine tidligere notater.
 
 > Hvorfor det?
 

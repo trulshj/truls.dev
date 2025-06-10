@@ -7,24 +7,26 @@
     --red: #bc4749;
 
     --text-color: #0a0a0a;
+
+    /* Design System */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 4rem;
+
+    --border-width: 3px;
+    --border-radius: 0;
+
+    --shadow-offset: 4px;
+    --shadow-color: #000;
+
+    --transition-speed: 0.2s;
 }
 
 html {
     color: var(--text-color);
     font-family: "Atkinson Hyperlegible", sans-serif;
-
-    background-color: var(--light-green);
-    background: linear-gradient(
-                135deg,
-                var(--med-green-alpha) 25%,
-                transparent 25%
-            ) -10px 0/ 20px 20px,
-        linear-gradient(225deg, var(--med-green) 25%, transparent 25%) -10px 0/
-            20px 20px,
-        linear-gradient(315deg, var(--med-green-alpha) 25%, transparent 25%) 0px
-            0/ 20px 20px,
-        linear-gradient(45deg, var(--med-green) 25%, var(--light-green) 25%) 0px
-            0/ 20px 20px;
+    background-color: var(--light);
 }
 
 body {
@@ -33,12 +35,14 @@ body {
     background-color: var(--light);
     min-height: 100vh;
     max-width: 80ch;
-    padding: 1rem;
-    line-height: 1.5;
+    padding: var(--spacing-md);
+    line-height: 1.6;
+    position: relative;
 }
 
 main {
-    margin: 1rem;
+    margin: var(--spacing-md);
+    position: relative;
 }
 
 * {
@@ -52,11 +56,136 @@ h4,
 a {
     font-family: "Berkeley Mono", monospace;
     color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
 }
 
 h1 {
-    margin: 1rem 0;
+    margin: var(--spacing-md) 0 0 0;
     font-size: 2.5rem;
+    line-height: 1.2;
+    position: relative;
+    display: inline-block;
+}
+
+h1::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: var(--border-width);
+    background: var(--red);
+}
+
+h2 {
+    font-size: 1.75rem;
+    margin: var(--spacing-md) 0 0 0;
+}
+
+h3 {
+    font-size: 1.25rem;
+    margin: var(--spacing-sm) 0 0 0;
+}
+
+a {
+    color: var(--red);
+    text-decoration: none;
+    position: relative;
+    transition: color var(--transition-speed) ease;
+}
+
+/* Content link hover effects - excludes nav links */
+main a,
+p a,
+article a {
+    color: var(--red);
+    text-decoration: none;
+    position: relative;
+    transition: color var(--transition-speed) ease;
+    display: inline-block;
+}
+
+main a:hover,
+p a:hover,
+article a:hover {
+    color: var(--dark-green);
+}
+
+main a::after,
+p a::after,
+article a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--border-width);
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--transition-speed) ease;
+}
+
+main a:hover::after,
+p a:hover::after,
+article a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Button styles */
+button,
+.button {
+    font-family: "Berkeley Mono", monospace;
+    background: var(--light);
+    border: var(--border-width) solid var(--text-color);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    position: relative;
+    transition: all var(--transition-speed) ease;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+button:hover,
+.button:hover {
+    transform: translate(var(--shadow-offset), var(--shadow-offset));
+    box-shadow: calc(-1 * var(--shadow-offset)) calc(-1 * var(--shadow-offset))
+        0 var(--shadow-color);
+}
+
+button:active,
+.button:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+}
+
+/* Code blocks */
+pre,
+code {
+    font-family: "Berkeley Mono", monospace;
+    background: var(--med-green-alpha);
+    padding: var(--spacing-xs);
+    border: var(--border-width) solid var(--text-color);
+}
+
+pre {
+    padding: var(--spacing-sm);
+    overflow-x: auto;
+    position: relative;
+}
+
+pre::before {
+    content: "";
+    position: absolute;
+    top: var(--shadow-offset);
+    left: var(--shadow-offset);
+    right: calc(-1 * var(--shadow-offset));
+    bottom: calc(-1 * var(--shadow-offset));
+    background: var(--shadow-color);
+    z-index: -1;
 }
 
 /* FONTS */

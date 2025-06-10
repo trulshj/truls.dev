@@ -1,10 +1,10 @@
 ---
-
+const currentPath = Astro.url.pathname;
 ---
 
 <div class="nav-links">
-    <a href="/">Hjem</a>
-    <a href="/about">About</a>
+    <a href="/" class={currentPath === "/" ? "active" : ""}>Hjem</a>
+    <a href="/about" class={currentPath === "/about" ? "active" : ""}>Om meg</a>
     <!-- <a href="/projects">Projects</a> -->
 </div>
 
@@ -19,19 +19,40 @@
     }
 
     .nav-links a {
-        color: var(--color-primary-button);
+        color: var(--text-color);
         display: block;
         text-align: center;
-        padding: 10px 0;
+        padding: 10px 20px;
         text-decoration: none;
         font-size: 1.2rem;
         font-weight: bold;
         text-transform: uppercase;
+        border: var(--border-width) solid var(--text-color);
+        background: var(--light);
+        margin: 0.5rem;
+        position: relative;
+        transition: all var(--transition-speed) ease;
     }
 
     .nav-links a:hover,
-    a:focus {
-        color: var(--color-accent);
+    .nav-links a:focus {
+        transform: translate(var(--shadow-offset), var(--shadow-offset));
+        box-shadow: calc(-1 * var(--shadow-offset))
+            calc(-1 * var(--shadow-offset)) 0 var(--shadow-color);
+    }
+
+    .nav-links a:active {
+        transform: translate(0, 0);
+        box-shadow: none;
+    }
+
+    /* Active state */
+    .nav-links a.active {
+        background: var(--red);
+        color: var(--light);
+        transform: translate(var(--shadow-offset), var(--shadow-offset));
+        box-shadow: calc(-1 * var(--shadow-offset))
+            calc(-1 * var(--shadow-offset)) 0 var(--shadow-color);
     }
 
     .expanded.nav-links {
@@ -41,15 +62,17 @@
     @media screen and (min-width: 636px) {
         .nav-links {
             margin-left: 5em;
-            display: block;
+            display: flex;
             position: static;
             width: auto;
             background: none;
+            gap: 1rem;
         }
 
         .nav-links a {
             display: inline-block;
             padding: 15px 20px;
+            margin: 0;
         }
     }
 </style>
