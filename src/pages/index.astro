@@ -136,9 +136,11 @@ const galleryItems: GalleryItem[] = imageNames.map((x) => {
                             <talk.Content />
                         </div>
                         <div class="stack">
-                            {talk.data.links.map((link) => (
-                                <a href={link.href}>{link.label}</a>
-                            ))}
+                            {talk.data.links.map(
+                                (link: { label: string; href: string }) => (
+                                    <a href={link.href}>{link.label}</a>
+                                ),
+                            )}
                         </div>
                     </li>
                 ))
@@ -149,7 +151,7 @@ const galleryItems: GalleryItem[] = imageNames.map((x) => {
     <dialog class="photo-dialog" id="photo-gallery">
         <div class="photo-dialog__header">
             <h2>Bildegalleri</h2>
-            <button class="photo-dialog__close" type="button"> Lukk </button>
+            <button class="photo-dialog__close" type="button">Lukk</button>
         </div>
         <div class="photo-dialog__grid">
             <PhotoGallery items={galleryItems} client:load />

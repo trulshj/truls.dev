@@ -72,13 +72,6 @@ img {
     gap: var(--space-lg);
 }
 
-.page-title {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-top: var(--space-sm);
-}
-
 h1,
 h2,
 h3,
@@ -316,50 +309,6 @@ main a.inline-link {
     box-shadow: var(--shadow-soft);
 }
 
-.button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.6rem 1.2rem;
-    font-family: var(--font-display);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    border-radius: 999px;
-    border: 1px solid var(--accent);
-    background: var(--accent);
-    color: var(--surface-strong);
-    transition:
-        transform var(--transition-speed) ease,
-        box-shadow var(--transition-speed) ease,
-        background var(--transition-speed) ease,
-        color var(--transition-speed) ease;
-}
-
-.button:hover,
-.button:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-float);
-    background: var(--accent-strong);
-    color: var(--surface-strong);
-}
-
-.button.secondary {
-    background: transparent;
-    color: var(--accent);
-}
-
-.button.secondary:hover,
-.button.secondary:focus-visible {
-    background: rgba(188, 71, 73, 0.1);
-    color: var(--accent-strong);
-}
-
-.card-grid {
-    display: grid;
-    gap: var(--space-md);
-}
-
 .card {
     padding: 1.5rem;
     border-radius: 1rem;
@@ -470,9 +419,6 @@ pre {
         grid-template-columns: 1.1fr 0.9fr;
     }
 
-    .card-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
 }
 
 /* FONTS */
