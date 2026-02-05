@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PhotoGallery from "../components/PhotoGallery";
 
 const allPosts = (await getCollection("posts"))
     .filter((x) => !x.data.isDraft)
@@ -14,15 +15,36 @@ const latestPost = allPosts[0];
 const pageTitle = "Truls Henrik";
 
 const talks = (await getCollection("talks")).sort(
-    (a, b) => (b.data.date as Date).valueOf() - (a.data.date as Date).valueOf()
+    (a, b) => (b.data.date as Date).valueOf() - (a.data.date as Date).valueOf(),
 );
 
 const talkEntries = await Promise.all(
     talks.map(async (talk) => ({
         ...talk,
         Content: (await talk.render()).Content,
-    }))
+    })),
 );
+
+const galleryItems = [
+    {
+        original: "/images/headshot-1.avif",
+        thumbnail: "/images/headshot-1.avif",
+        originalAlt: "Portrett av Truls",
+        thumbnailAlt: "Miniatyr av portrett av Truls",
+    },
+    {
+        original: "/images/headshot-2.avif",
+        thumbnail: "/images/headshot-2.avif",
+        originalAlt: "Portrett av Truls",
+        thumbnailAlt: "Miniatyr av portrett av Truls",
+    },
+    {
+        original: "/images/headshot-3.avif",
+        thumbnail: "/images/headshot-3.avif",
+        originalAlt: "Portrett av Truls",
+        thumbnailAlt: "Miniatyr av portrett av Truls",
+    },
+];
 ---
 
 <BaseLayout pageTitle={pageTitle}>
@@ -31,23 +53,41 @@ const talkEntries = await Promise.all(
             <p class="eyebrow">Hjemmeside / Skriverier / Prosjekter</p>
             <h1>Truls Henrik</h1>
             <p class="lead">
-                Jeg skriver om visualisering, programmering og matematikk, med
-                fokus på brukeromsorg og systemer som gir folk mer flyt i
-                hverdagen.
+                Jeg liker når ting gir mening. Helst for flere enn bare meg. Her
+                samler jeg skriverier om visualisering, programmering og
+                matematikk, med et mykt fokus på formidling og systemer som gjør
+                ting lettere å forstå.
             </p>
-            <div class="hero__actions">
-                <a class="button" href="/about">Start her</a>
-                <a
-                    class="button secondary"
-                    href={latestPost ? `/blog/${latestPost.slug}` : "#writing"}
-                >
-                    {
-                        latestPost
-                            ? `Siste innlegg: ${latestPost.data.title}`
-                            : "Siste innlegg"
-                    }
-                </a>
+        </div>
+        <div class="hero__media">
+            <div class="photo-stack" aria-hidden="true">
+                <img
+                    class="photo-card photo-card--front"
+                    src="/images/headshot-1.avif"
+                    alt=""
+                    loading="lazy"
+                />
+                <img
+                    class="photo-card photo-card--middle"
+                    src="/images/headshot-2.avif"
+                    alt=""
+                    loading="lazy"
+                />
+                <img
+                    class="photo-card photo-card--back"
+                    src="/images/headshot-3.avif"
+                    alt=""
+                    loading="lazy"
+                />
             </div>
+            <button
+                class="photo-stack__button"
+                type="button"
+                aria-haspopup="dialog"
+                aria-controls="photo-gallery"
+            >
+                Se bilder
+            </button>
         </div>
     </section>
 
@@ -101,19 +141,63 @@ const talkEntries = await Promise.all(
             <p class="muted">Et lite utvalg av opptak.</p>
         </div>
         <ul class="list">
-            {talkEntries.map((talk) => (
-                <li class="list-item reveal">
-                    <h3>{talk.data.title}</h3>
-                    <div class="muted">
-                        <talk.Content />
-                    </div>
-                    <div class="stack">
-                        {talk.data.links.map((link) => (
-                            <a href={link.href}>{link.label}</a>
-                        ))}
-                    </div>
-                </li>
-            ))}
+            {
+                talkEntries.map((talk) => (
+                    <li class="list-item reveal">
+                        <h3>{talk.data.title}</h3>
+                        <div class="muted">
+                            <talk.Content />
+                        </div>
+                        <div class="stack">
+                            {talk.data.links.map((link) => (
+                                <a href={link.href}>{link.label}</a>
+                            ))}
+                        </div>
+                    </li>
+                ))
+            }
         </ul>
     </section>
+
+    <dialog class="photo-dialog" id="photo-gallery">
+        <div class="photo-dialog__header">
+            <h2>Bildegalleri</h2>
+            <button class="photo-dialog__close" type="button">
+                Lukk
+            </button>
+        </div>
+        <div class="photo-dialog__grid">
+            <PhotoGallery items={galleryItems} client:load />
+        </div>
+    </dialog>
+
+    <script>
+        const dialog = document.querySelector(
+            "#photo-gallery"
+        ) as HTMLDialogElement | null;
+        const openButton = document.querySelector(
+            ".photo-stack__button"
+        ) as HTMLButtonElement | null;
+        const closeButton = document.querySelector(
+            ".photo-dialog__close"
+        ) as HTMLButtonElement | null;
+
+        const openDialog = () => {
+            if (!dialog) return;
+            if (typeof dialog.showModal === "function") {
+                dialog.showModal();
+            }
+        };
+
+        const closeDialog = () => {
+            dialog?.close();
+        };
+
+        openButton?.addEventListener("click", openDialog);
+        closeButton?.addEventListener("click", closeDialog);
+        dialog?.addEventListener("click", (event) => {
+            if (event.target === dialog) closeDialog();
+        });
+        dialog?.addEventListener("cancel", closeDialog);
+    </script>
 </BaseLayout>
