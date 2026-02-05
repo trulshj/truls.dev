@@ -1,7 +1,7 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 
-export async function get() {
+export async function GET() {
     const posts = (await getCollection("posts")).filter((x) => !x.data.isDraft);
     return rss({
         title: "Truls Henrik | Blog",
