@@ -1,0 +1,53 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const posts = (await getCollection("posts"))
+    .filter((x) => !x.data.isDraft)
+    .sort(
+        (a, b) =>
+            (b.data.pubDate as Date).valueOf() -
+            (a.data.pubDate as Date).valueOf()
+    );
+---
+
+<BaseLayout pageTitle="Skriverier">
+    <section class="section">
+        <div class="stack reveal">
+            <h1>Skriverier</h1>
+            <p class="muted">Tanker og forklaringer, sortert fra nyest.</p>
+        </div>
+
+        {posts.length ? (
+            <ul class="list">
+                {posts.map((post) => (
+                    <li class="list-item" transition:name={post.data.title}>
+                        <a class="inline-link" href={`/blog/${post.slug}`}>
+                            <h3>{post.data.title}</h3>
+                        </a>
+                        {post.data.excerpt && (
+                            <p class="muted">{post.data.excerpt}</p>
+                        )}
+                        <span class="muted">
+                            {(post.data.pubDate as Date).toLocaleDateString(
+                                "nb",
+                                {
+                                    day: "2-digit",
+                                    month: "long",
+                                    year: "numeric",
+                                }
+                            )}
+                        </span>
+                    </li>
+                ))}
+            </ul>
+        ) : (
+            <div class="card reveal">
+                <h3>Ingen publiserte innlegg ennå</h3>
+                <p>
+                    Jeg jobber med å fylle på. Kom gjerne tilbake litt senere.
+                </p>
+            </div>
+        )}
+    </section>
+</BaseLayout>

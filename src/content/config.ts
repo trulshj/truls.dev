@@ -11,6 +11,21 @@ const postsCollection = defineCollection({
     }),
 });
 
+const talksCollection = defineCollection({
+    type: "content",
+    schema: z.object({
+        title: z.string(),
+        date: z.date(),
+        links: z.array(
+            z.object({
+                label: z.string(),
+                href: z.string().url(),
+            })
+        ),
+    }),
+});
+
 export const collections = {
     posts: postsCollection,
+    talks: talksCollection,
 };

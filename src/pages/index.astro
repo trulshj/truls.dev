@@ -1,64 +1,119 @@
 ---
 import { getCollection } from "astro:content";
-import BlogPostLink from "../components/BlogPostLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const allPosts = (await getCollection("posts")).filter((x) => !x.data.isDraft);
+const allPosts = (await getCollection("posts"))
+    .filter((x) => !x.data.isDraft)
+    .sort(
+        (a, b) =>
+            (b.data.pubDate as Date).valueOf() -
+            (a.data.pubDate as Date).valueOf(),
+    );
+const latestPost = allPosts[0];
 
 const pageTitle = "Truls Henrik";
+
+const talks = (await getCollection("talks")).sort(
+    (a, b) => (b.data.date as Date).valueOf() - (a.data.date as Date).valueOf()
+);
+
+const talkEntries = await Promise.all(
+    talks.map(async (talk) => ({
+        ...talk,
+        Content: (await talk.render()).Content,
+    }))
+);
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <h2>Hallaien 👋</h2>
+    <section class="hero">
+        <div class="hero__card reveal">
+            <p class="eyebrow">Hjemmeside / Skriverier / Prosjekter</p>
+            <h1>Truls Henrik</h1>
+            <p class="lead">
+                Jeg skriver om visualisering, programmering og matematikk, med
+                fokus på brukeromsorg og systemer som gir folk mer flyt i
+                hverdagen.
+            </p>
+            <div class="hero__actions">
+                <a class="button" href="/about">Start her</a>
+                <a
+                    class="button secondary"
+                    href={latestPost ? `/blog/${latestPost.slug}` : "#writing"}
+                >
+                    {
+                        latestPost
+                            ? `Siste innlegg: ${latestPost.data.title}`
+                            : "Siste innlegg"
+                    }
+                </a>
+            </div>
+        </div>
+    </section>
 
-    Her kan du finne greiene mine
-
-    <!-- <h2>Innlegg</h2> -->
-
-    <ul>
+    <section class="section" id="writing">
+        <div class="stack reveal">
+            <h2>Siste innlegg</h2>
+            <p class="muted">
+                Tekster om visualisering, programmering og matte, med blikk for
+                menneskene som bruker dem.
+            </p>
+        </div>
         {
-            allPosts.map((post) => (
-                <BlogPostLink slug={post.slug} title={post.data.title} />
-            ))
+            allPosts.length ? (
+                <ul class="list">
+                    {allPosts.map((post) => (
+                        <li class="list-item" transition:name={post.data.title}>
+                            <a class="inline-link" href={`/blog/${post.slug}`}>
+                                <h3>{post.data.title}</h3>
+                            </a>
+                            {post.data.excerpt && (
+                                <p class="muted">{post.data.excerpt}</p>
+                            )}
+                            <span class="muted">
+                                {(post.data.pubDate as Date).toLocaleDateString(
+                                    "nb",
+                                    {
+                                        day: "2-digit",
+                                        month: "long",
+                                        year: "numeric",
+                                    },
+                                )}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <div class="card reveal">
+                    <h3>Ingen publiserte innlegg ennå</h3>
+                    <p>
+                        Jeg jobber med å fylle på. Kom gjerne tilbake snart,
+                        eller si hei på e-post om du er nysgjerrig.
+                    </p>
+                </div>
+            )
         }
-    </ul>
+    </section>
 
-    <h2>Videoer</h2>
-
-    <ul>
-        <li>
-            <h3>Why does <span>fetch</span> make you wait twice?</h3>
-            <ul>
-                <li>
-                    <a href="https://www.boosterconf.no/2025/program/wednesday/7_lightning_talks/kongesalen_4/why-does-fetch-make-you-wait-twice/"
-                        >Booster 2025</a
-                    >
+    <section class="section" id="talks">
+        <div class="stack reveal">
+            <h2>Videoer og foredrag</h2>
+            <p class="muted">Et lite utvalg av opptak.</p>
+        </div>
+        <ul class="list">
+            {talkEntries.map((talk) => (
+                <li class="list-item reveal">
+                    <h3>{talk.data.title}</h3>
+                    <div class="muted">
+                        <talk.Content />
+                    </div>
+                    <div class="stack">
+                        {talk.data.links.map((link) => (
+                            <a href={link.href}>{link.label}</a>
+                        ))}
+                    </div>
                 </li>
-                <li>
-                    <a
-                        href="https://www.youtube.com/watch?v=o3dYQO-04WE&ab_channel=Variant"
-                        >Refill 2025</a
-                    >
-                </li>
-            </ul>
-        </li>
-        <li>
-            <h3>2FA, hvorfor SMS ikke er godt nok</h3>
-            <ul>
-                <li>
-                    <a href="https://www.youtube.com/watch?v=qI64KH26kjA"
-                        >Felles Variantdag 2022</a
-                    >
-                </li>
-            </ul>
-        </li>
-        <li>
-            <h3>Skjema-endringer med lave skuldre</h3>
-            <ul>
-                <li>
-                    <a href="https://youtu.be/gRZKqd8GQuE"> Refill 2024 </a>
-                </li>
-            </ul>
-        </li>
-    </ul>
+            ))}
+        </ul>
+    </section>
 </BaseLayout>

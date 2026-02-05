@@ -1,18 +1,95 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const pageTitle = "Kontakt Meg";
+const pageTitle = "Om Meg";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <h2>Lyst til å ta en prat?</h2>
-
-    <ul>
-        <li>
-            <a href="mailto:mail@truls.dev">mail@truls.dev</a>
-        </li>
-        <li>
-            <a href="https://www.linkedin.com/in/trulshj/">LinkedIn</a>
-        </li>
-    </ul>
+    <section class="about-hero">
+        <div class="about-text">
+            <p class="eyebrow">Om meg</p>
+            <h1>Hallaien! 👋</h1>
+            <p class="lead">
+                Jeg liker når ting gir mening. Helst for flere enn bare meg.
+            </p>
+            <p>
+                Jeg er en utvikler som stortrives når jeg får grave meg ned i
+                ting som er akkurat passe nerdete. Gi meg noe som virker litt
+                kaotisk eller unødvendig komplisert, så koser jeg meg med å
+                rydde i det og finne gode måter å gjøre det mer forståelig på.
+            </p>
+            <p>
+                Jeg er veldig glad i formidling, og er stadig på jakt etter de
+                små aha-opplevelsene, både når jeg lærer noe selv, og når jeg
+                får være med på å få det til å klikke for andre. Akkurat nå
+                studerer jeg visualisering, og har blitt oppriktig fascinert av
+                hvor mye lettere verden blir å forstå når ting blir tegnet,
+                fargelagt eller flyttet litt rundt på en skjerm.
+            </p>
+            <p>
+                Utenom skjermen danser jeg så ofte jeg kan. Jeg begynte med
+                fastingswing for ikke så lenge siden, og har nylig kastet meg ut
+                i både salsa og boogie woogie. Resultatet er at jeg som regel
+                har det veldig gøy, og av og til er kreativ med retningene.
+                Ellers er jeg glad i brettspill og cross-stitching, som er en
+                perfekt balanse mellom strategi, pirk og "oi, nå har det gått
+                tre timer".
+            </p>
+            <p>
+                Denne siden er mitt lille hjørne av internett der jeg samler
+                ting jeg har lyst til å lage og dele, små prosjekter, tanker,
+                formidlingsforsøk og annet jeg synes er gøy. Hvis noe her
+                treffer deg, faglig eller menneskelig,
+                <a class="inline-link" href="mailto:mail@truls.dev"
+                    >send meg gjerne en e-post</a
+                >. Jeg sier sjelden nei til en god prat.
+            </p>
+        </div>
+        <figure class="about-portrait">
+            <img
+                src="/images/headshot.jpg"
+                alt="Portrett av Truls"
+                loading="lazy"
+            />
+        </figure>
+    </section>
 </BaseLayout>
+
+<style>
+    .about-hero {
+        display: grid;
+        gap: clamp(1.5rem, 3vw, 3rem);
+        align-items: center;
+        padding: clamp(1rem, 3vw, 2rem) 0;
+    }
+
+    .about-text {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .about-portrait {
+        margin: 0;
+        padding: 0;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        border: 1px solid var(--border-soft);
+        background: var(--surface-strong);
+        box-shadow: var(--shadow-soft);
+    }
+
+    .about-portrait img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        min-height: 280px;
+    }
+
+    @media (min-width: 900px) {
+        .about-hero {
+            grid-template-columns: 1.2fr 0.8fr;
+        }
+    }
+</style>

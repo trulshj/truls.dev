@@ -10,10 +10,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.0",
-    "@astrojs/rss": "^4.0.12",
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/rss": "^4.0.14",
     "@fontsource/atkinson-hyperlegible": "^5.0.2",
-    "astro": "^5.9.2",
+    "astro": "^5.16.9",
     "katex": "^0.16.7",
     "rehype-katex": "^6.0.3",
     "remark-math": "^5.1.1"

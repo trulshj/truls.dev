@@ -1,78 +1,92 @@
 ---
 const currentPath = Astro.url.pathname;
+const active = (path: string) => {
+    if (path === "/") return currentPath === "/" ? "active" : "";
+    return currentPath === path || currentPath.startsWith(`${path}/`)
+        ? "active"
+        : "";
+};
 ---
 
-<div class="nav-links">
-    <a href="/" class={currentPath === "/" ? "active" : ""}>Hjem</a>
-    <a href="/about" class={currentPath === "/about" ? "active" : ""}>Om meg</a>
-    <!-- <a href="/projects">Projects</a> -->
+<div id="primary-nav" class="nav-links">
+    <a href="/" class={active("/")}>Hjem</a>
+    <a href="/blog" class={active("/blog")}>Skriverier</a>
+    <a href="/about" class={active("/about")}>Om meg</a>
 </div>
 
 <style>
     .nav-links {
-        font-family: "Berkeley Mono", monospace;
-        width: 100%;
-        top: 5rem;
-        left: 48px;
-        display: none;
-        margin: 0;
+        position: absolute;
+        right: 1.2rem;
+        top: calc(100% + 0.6rem);
+        display: grid;
+        gap: 0.6rem;
+        padding: 1rem;
+        border-radius: 1rem;
+        background: var(--surface);
+        border: 1px solid var(--border-soft);
+        box-shadow: var(--shadow-soft);
+        min-width: min(240px, 80vw);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px) scale(0.98);
+        transition: opacity var(--transition-speed) ease,
+            transform var(--transition-speed) ease;
+        z-index: 10;
+    }
+
+    .nav-links.is-open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
     }
 
     .nav-links a {
-        color: var(--text-color);
-        display: block;
-        text-align: center;
-        padding: 10px 20px;
-        text-decoration: none;
-        font-size: 1.2rem;
-        font-weight: bold;
+        color: var(--ink);
+        display: inline-flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 0.8rem;
+        border-radius: 0.75rem;
+        font-family: var(--font-display);
+        letter-spacing: 0.04em;
         text-transform: uppercase;
-        border: var(--border-width) solid var(--text-color);
-        background: var(--light);
-        margin: 0.5rem;
-        position: relative;
-        transition: all var(--transition-speed) ease;
+        background: transparent;
+        border: 1px solid transparent;
+        transition: border-color var(--transition-speed) ease,
+            color var(--transition-speed) ease,
+            background-color var(--transition-speed) ease;
     }
 
     .nav-links a:hover,
-    .nav-links a:focus {
-        transform: translate(var(--shadow-offset), var(--shadow-offset));
-        box-shadow: calc(-1 * var(--shadow-offset))
-            calc(-1 * var(--shadow-offset)) 0 var(--shadow-color);
+    .nav-links a:focus-visible {
+        color: var(--accent);
+        border-color: var(--accent);
+        background: rgba(188, 71, 73, 0.08);
     }
 
-    .nav-links a:active {
-        transform: translate(0, 0);
-        box-shadow: none;
-    }
-
-    /* Active state */
     .nav-links a.active {
-        background: var(--red);
-        color: var(--light);
-        transform: translate(var(--shadow-offset), var(--shadow-offset));
-        box-shadow: calc(-1 * var(--shadow-offset))
-            calc(-1 * var(--shadow-offset)) 0 var(--shadow-color);
+        border-color: var(--ink);
+        background: rgba(20, 18, 14, 0.06);
     }
 
-    .expanded.nav-links {
-        display: unset;
-    }
-
-    @media screen and (min-width: 636px) {
+    @media screen and (min-width: 760px) {
         .nav-links {
-            margin-left: 5em;
-            display: flex;
             position: static;
-            width: auto;
-            background: none;
-            gap: 1rem;
+            opacity: 1;
+            pointer-events: auto;
+            transform: none;
+            display: flex;
+            gap: 0.5rem;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            min-width: auto;
         }
 
         .nav-links a {
-            display: inline-block;
-            padding: 15px 20px;
-            margin: 0;
+            padding: 0.4rem 0.75rem;
         }
     }
 </style>

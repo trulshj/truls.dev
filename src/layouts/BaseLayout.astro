@@ -24,15 +24,16 @@ const { pageTitle } = Astro.props as LayoutProps;
         />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
-        <title>{pageTitle}</title>
+        <title>
+            {!!pageTitle ? `${pageTitle} ⋅ Truls Henrik` : "Truls Henrik"}
+        </title>
     </head>
     <body>
-        <Header />
-        <main>
-            <h1 style="margin-bottom: 2rem" transition:name={pageTitle}>
-                {pageTitle}
-            </h1>
-            <slot />
-        </main>
+        <div class="site-shell">
+            <Header />
+            <main class="site-main">
+                <slot />
+            </main>
+        </div>
     </body>
 </html>

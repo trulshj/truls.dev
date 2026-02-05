@@ -1,29 +1,56 @@
-<div class="hamburger">
+---
+const { controlsId = "primary-nav" } = Astro.props;
+---
+
+<button
+    class="hamburger"
+    type="button"
+    aria-expanded="false"
+    aria-controls={controlsId}
+>
+    <span class="sr-only">Meny</span>
     <span class="line"></span>
     <span class="line"></span>
     <span class="line"></span>
-</div>
+</button>
 
 <style>
     .hamburger {
-        padding-right: 20px;
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        padding: 0.4rem 0.6rem;
+        border: 1px solid var(--border-strong);
+        background: var(--surface);
+        border-radius: 999px;
         cursor: pointer;
+        transition: border-color var(--transition-speed) ease,
+            transform var(--transition-speed) ease;
     }
 
     .hamburger .line {
         display: block;
-        width: 40px;
-        height: 5px;
-        margin-bottom: 10px;
-        background-color: var(--color-primary-button);
+        width: 26px;
+        height: 2px;
+        background-color: var(--ink);
+        border-radius: 999px;
+        transition: background-color var(--transition-speed) ease,
+            transform var(--transition-speed) ease;
+    }
+
+    .hamburger:hover,
+    .hamburger:focus-visible {
+        border-color: var(--accent);
+        transform: translateY(-1px);
     }
 
     .hamburger:hover .line,
-    .hamburger:focus .line {
-        background-color: var(--color-accent);
+    .hamburger:focus-visible .line {
+        background-color: var(--accent);
     }
 
-    @media screen and (min-width: 636px) {
+    @media screen and (min-width: 760px) {
         .hamburger {
             display: none;
         }

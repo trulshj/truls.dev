@@ -3,24 +3,95 @@ import Hamburger from "./Hamburger.astro";
 import Navigation from "./Navigation.astro";
 ---
 
-<header>
-    <nav>
-        <Hamburger />
+<header class="site-header">
+    <nav class="site-nav" aria-label="Primary">
+        <a class="site-brand" href="/">Truls Henrik</a>
+        <Hamburger controlsId="primary-nav" />
         <Navigation />
     </nav>
 
     <script>
         function init() {
-            document
-                .querySelector(".hamburger")
-                ?.addEventListener("click", () => {
-                    const navLinks = document.querySelector(".nav-links");
-                    navLinks?.classList.toggle("expanded");
+            const button = document.querySelector(
+                ".hamburger"
+            ) as HTMLButtonElement | null;
+            const navLinks = document.querySelector(
+                ".nav-links"
+            ) as HTMLElement | null;
+            const win = window as Window & { __navResizeBound?: boolean };
+
+            if (!button || !navLinks) return;
+            if (button.dataset.bound === "true") return;
+
+            button.dataset.bound = "true";
+
+            const setExpanded = (isOpen: boolean) => {
+                button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            };
+
+            const closeMenu = () => {
+                navLinks.classList.remove("is-open");
+                setExpanded(false);
+            };
+
+            button.addEventListener("click", () => {
+                const isOpen = navLinks.classList.toggle("is-open");
+                setExpanded(isOpen);
+            });
+
+            navLinks.querySelectorAll("a").forEach((link) => {
+                link.addEventListener("click", closeMenu);
+            });
+
+            if (!win.__navResizeBound) {
+                window.addEventListener("resize", () => {
+                    if (window.innerWidth >= 760) {
+                        closeMenu();
+                    }
                 });
+                win.__navResizeBound = true;
+            }
         }
 
         init();
-
         document.addEventListener("astro:after-swap", init);
     </script>
+
+    <style>
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: linear-gradient(
+                180deg,
+                rgba(245, 241, 233, 0.98) 0%,
+                rgba(245, 241, 233, 0.92) 100%
+            );
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .site-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem clamp(1.2rem, 3vw, 2rem);
+            position: relative;
+        }
+
+        .site-brand {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink);
+        }
+
+        .site-brand:hover {
+            color: var(--accent);
+        }
+    </style>
 </header>
