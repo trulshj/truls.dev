@@ -37,7 +37,8 @@ html {
 body {
     margin: 0;
     min-height: 100vh;
-    background: radial-gradient(
+    background:
+        radial-gradient(
             circle at top left,
             rgba(188, 71, 73, 0.08),
             transparent 50%
@@ -188,7 +189,8 @@ main a.inline-link {
     background: var(--surface-strong);
     color: var(--ink);
     cursor: pointer;
-    transition: border-color var(--transition-speed) ease,
+    transition:
+        border-color var(--transition-speed) ease,
         color var(--transition-speed) ease,
         box-shadow var(--transition-speed) ease,
         transform var(--transition-speed) ease;
@@ -214,7 +216,9 @@ main a.inline-link {
     box-shadow: var(--shadow-soft);
     background: var(--surface-strong);
     transform-origin: bottom left;
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
 }
 
 .photo-card--front {
@@ -279,7 +283,8 @@ main a.inline-link {
     color: var(--ink);
     padding: 0.35rem 0.8rem;
     cursor: pointer;
-    transition: border-color var(--transition-speed) ease,
+    transition:
+        border-color var(--transition-speed) ease,
         color var(--transition-speed) ease;
 }
 
@@ -311,7 +316,6 @@ main a.inline-link {
     box-shadow: var(--shadow-soft);
 }
 
-
 .button {
     display: inline-flex;
     align-items: center;
@@ -325,7 +329,8 @@ main a.inline-link {
     border: 1px solid var(--accent);
     background: var(--accent);
     color: var(--surface-strong);
-    transition: transform var(--transition-speed) ease,
+    transition:
+        transform var(--transition-speed) ease,
         box-shadow var(--transition-speed) ease,
         background var(--transition-speed) ease,
         color var(--transition-speed) ease;
@@ -386,7 +391,8 @@ main a.inline-link {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
-    transition: transform var(--transition-speed) ease,
+    transition:
+        transform var(--transition-speed) ease,
         box-shadow var(--transition-speed) ease;
 }
 
@@ -473,7 +479,8 @@ pre {
 
 @font-face {
     font-family: "Berkeley Mono";
-    src: url("/fonts/BerkeleyMono-Regular.woff2") format("woff2"),
+    src:
+        url("/fonts/BerkeleyMono-Regular.woff2") format("woff2"),
         url("/fonts/BerkeleyMono-Regular.woff") format("woff");
     font-weight: normal;
     font-style: normal;
@@ -482,7 +489,8 @@ pre {
 
 @font-face {
     font-family: "Berkeley Mono";
-    src: url("/fonts/BerkeleyMono-Bold.woff2") format("woff2"),
+    src:
+        url("/fonts/BerkeleyMono-Bold.woff2") format("woff2"),
         url("/fonts/BerkeleyMono-Bold.woff") format("woff");
     font-weight: bold;
     font-style: normal;
@@ -491,7 +499,8 @@ pre {
 
 @font-face {
     font-family: "Berkeley Mono";
-    src: url("/fonts/BerkeleyMono-Italic.woff2") format("woff2"),
+    src:
+        url("/fonts/BerkeleyMono-Italic.woff2") format("woff2"),
         url("/fonts/BerkeleyMono-Italic.woff") format("woff");
     font-weight: normal;
     font-style: italic;
@@ -500,7 +509,8 @@ pre {
 
 @font-face {
     font-family: "Berkeley Mono";
-    src: url("/fonts/BerkeleyMono-BoldItalic.woff2") format("woff2"),
+    src:
+        url("/fonts/BerkeleyMono-BoldItalic.woff2") format("woff2"),
         url("/fonts/BerkeleyMono-BoldItalic.woff") format("woff");
     font-weight: bold;
     font-style: italic;

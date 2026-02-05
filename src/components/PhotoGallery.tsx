@@ -3,7 +3,7 @@ import ImageGallery from "react-image-gallery";
 export type GalleryItem = {
     original: string;
     thumbnail: string;
-    originalAlt: string;
+    originalAlt?: string;
     thumbnailAlt?: string;
     description?: string;
 };
@@ -17,8 +17,8 @@ export default function PhotoGallery({ items }: PhotoGalleryProps) {
         <ImageGallery
             items={items}
             showPlayButton={false}
-            showFullscreenButton={false}
-            showIndex={true}
+            showFullscreenButton={true}
+            showIndex={false}
             slideDuration={250}
         />
     );

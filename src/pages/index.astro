@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PhotoGallery from "../components/PhotoGallery";
+import PhotoGallery, { type GalleryItem } from "../components/PhotoGallery";
 
 const allPosts = (await getCollection("posts"))
     .filter((x) => !x.data.isDraft)
@@ -10,7 +10,6 @@ const allPosts = (await getCollection("posts"))
             (b.data.pubDate as Date).valueOf() -
             (a.data.pubDate as Date).valueOf(),
     );
-const latestPost = allPosts[0];
 
 const pageTitle = "Truls Henrik";
 
@@ -25,26 +24,10 @@ const talkEntries = await Promise.all(
     })),
 );
 
-const galleryItems = [
-    {
-        original: "/images/headshot-1.avif",
-        thumbnail: "/images/headshot-1.avif",
-        originalAlt: "Portrett av Truls",
-        thumbnailAlt: "Miniatyr av portrett av Truls",
-    },
-    {
-        original: "/images/headshot-2.avif",
-        thumbnail: "/images/headshot-2.avif",
-        originalAlt: "Portrett av Truls",
-        thumbnailAlt: "Miniatyr av portrett av Truls",
-    },
-    {
-        original: "/images/headshot-3.avif",
-        thumbnail: "/images/headshot-3.avif",
-        originalAlt: "Portrett av Truls",
-        thumbnailAlt: "Miniatyr av portrett av Truls",
-    },
-];
+const imageNames = ["headshot-1.avif", "headshot-2.avif", "headshot-3.avif"];
+const galleryItems: GalleryItem[] = imageNames.map((x) => {
+    return { original: `/images/${x}`, thumbnail: `/images/${x}` };
+});
 ---
 
 <BaseLayout pageTitle={pageTitle}>
@@ -95,8 +78,8 @@ const galleryItems = [
         <div class="stack reveal">
             <h2>Siste innlegg</h2>
             <p class="muted">
-                Tekster om visualisering, programmering og matte, med blikk for
-                menneskene som bruker dem.
+                Skriverier om visualisering, programmering og matte, med et
+                menneskelig perspektiv.
             </p>
         </div>
         {
@@ -128,7 +111,11 @@ const galleryItems = [
                     <h3>Ingen publiserte innlegg ennå</h3>
                     <p>
                         Jeg jobber med å fylle på. Kom gjerne tilbake snart,
-                        eller si hei på e-post om du er nysgjerrig.
+                        eller{" "}
+                        <a class="inline-link" href="mailto:post@truls.dev">
+                            si hei på e-post
+                        </a>
+                        om du er nysgjerrig.
                     </p>
                 </div>
             )
@@ -162,9 +149,7 @@ const galleryItems = [
     <dialog class="photo-dialog" id="photo-gallery">
         <div class="photo-dialog__header">
             <h2>Bildegalleri</h2>
-            <button class="photo-dialog__close" type="button">
-                Lukk
-            </button>
+            <button class="photo-dialog__close" type="button"> Lukk </button>
         </div>
         <div class="photo-dialog__grid">
             <PhotoGallery items={galleryItems} client:load />
@@ -173,13 +158,13 @@ const galleryItems = [
 
     <script>
         const dialog = document.querySelector(
-            "#photo-gallery"
+            "#photo-gallery",
         ) as HTMLDialogElement | null;
         const openButton = document.querySelector(
-            ".photo-stack__button"
+            ".photo-stack__button",
         ) as HTMLButtonElement | null;
         const closeButton = document.querySelector(
-            ".photo-dialog__close"
+            ".photo-dialog__close",
         ) as HTMLButtonElement | null;
 
         const openDialog = () => {
