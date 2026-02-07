@@ -6,6 +6,6 @@ links:
       href: "https://youtu.be/gRZKqd8GQuE"
 ---
 
-Vi har en kontrakt med brukerne vare nar vi endrer pa skjema og API-er.
+Vi har en kontrakt med brukerne vare når vi leverer et API.
 
 Hvordan kan vi endre på den kontrakten uten at hele verden eksploderer?
