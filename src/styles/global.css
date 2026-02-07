@@ -72,6 +72,11 @@ img {
     gap: var(--space-lg);
 }
 
+.site-main > p {
+    max-width: 70ch;
+    margin: auto;
+}
+
 h1,
 h2,
 h3,
@@ -418,7 +423,6 @@ pre {
     .hero {
         grid-template-columns: 1.1fr 0.9fr;
     }
-
 }
 
 /* FONTS */
