@@ -15,6 +15,7 @@
     "@astrojs/rss": "^4.0.14",
     "@fontsource/atkinson-hyperlegible": "^5.0.2",
     "astro": "^5.16.9",
+    "d3": "^7.9.0",
     "katex": "^0.16.7",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -23,6 +24,7 @@
     "remark-math": "^5.1.1"
   },
   "devDependencies": {
+    "@types/d3": "^7.4.3",
     "@types/katex": "^0.16.0"
   }
 }

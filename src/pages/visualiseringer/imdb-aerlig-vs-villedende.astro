@@ -87,11 +87,11 @@ const pageTitle = "IMDb Top 1000: Ærlig vs. villedende";
         </section>
     </section>
 
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="module">
+        import * as d3 from "d3";
+
         const FILE = "/data/imdb_top_1000.csv";
 
-        const d3 = window.d3;
         const warning = document.querySelector("#viz-warning");
 
         const TYPE = {
@@ -111,11 +111,7 @@ const pageTitle = "IMDb Top 1000: Ærlig vs. villedende";
         const COUNT_SIZE = { width: 980, height: 240 };
         const COUNT_MARGIN = { top: 20, right: 24, bottom: 46, left: 60 };
 
-        if (!d3) {
-            showWarning("Klarte ikke laste d3 fra CDN. Prøv igjen.");
-        } else {
-            init();
-        }
+        init();
 
         async function init() {
             let data = [];
