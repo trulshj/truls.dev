@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const pageTitle = "Visualiseringer";
+---
+
+<BaseLayout pageTitle={pageTitle} windowTitle="visualiseringer.md">
+    <section class="section">
+        <div class="stack reveal">
+            <h1>Visualiseringer</h1>
+            <p class="lead">
+                Små miniartikler om hvordan visualiseringer kan opplyse, overbevise
+                eller villede, avhengig av hvilke valg vi tar.
+            </p>
+        </div>
+
+        <ul class="list reveal">
+            <li>
+                <a
+                    class="list-item list-item--link"
+                    href="/visualiseringer/imdb-aerlig-vs-villedende"
+                >
+                    <h3>IMDb Top 1000: Ærlig vs villedende fremstilling</h3>
+                    <p class="muted">
+                        Samme datasett, to historier: en ryddig visualisering og en
+                        visualisering som overdriver funn.
+                    </p>
+                    <span class="muted">Miniartikkel</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+</BaseLayout>

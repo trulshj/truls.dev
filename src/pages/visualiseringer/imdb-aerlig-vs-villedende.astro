@@ -1,0 +1,692 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const pageTitle = "IMDb Top 1000: Ærlig vs. villedende";
+---
+
+<BaseLayout pageTitle={pageTitle} windowTitle="visualiseringer.md">
+    <section class="viz-page section">
+        <header class="stack reveal">
+            <h1>IMDb Top 1000: Ærlig vs. villedende fremstillinger</h1>
+            <p class="lead">
+                Her bruker vi det samme datasettet til å fortelle to ganske
+                ulike historier. Først får du en ryddig og ærlig tolkning av
+                dataene, der vi viser utviklingen over tid og spredningen i
+                materialet. Deretter skrur vi på noen klassiske grep for å få
+                moderne filmer til å fremstå ekstra imponerende. En liten
+                påminnelse om hvor mye designvalg faktisk styrer hvordan vi
+                tolker data.
+            </p>
+            <p id="viz-warning" class="note note--warning" hidden></p>
+        </header>
+
+        <section class="story" aria-labelledby="honest-title">
+            <section class="viz-panel honest">
+                <h2 id="honest-title">
+                    Ærlig visning: median per år med spredning
+                </h2>
+                <p class="subtitle">
+                    Årsmedian med interkvartilspenn (25.–75. persentil).
+                </p>
+                <svg
+                    id="honest-chart"
+                    viewBox="0 0 980 520"
+                    aria-label="Linjediagram med medianrating per år og interkvartilbånd"
+                ></svg>
+            </section>
+
+            <p class="note">
+                Her prøver vi å være tydelige på valgene vi tar. For hvert år
+                beregner vi medianen som et robust mål på sentraltendens, og
+                viser interkvartilspennet (fra første til tredje kvartil) for å
+                gjøre variasjonen i ratingene synlig. Alle titlene i
+                Top-1000-utvalget er med, men vi utelater år med færre enn tre
+                filmer for å unngå ustabile estimater. Husk også at dette
+                fortsatt er et selektert utvalg – det er de høyest rangerte
+                filmene, ikke en full populasjon av alle utgivelser.
+            </p>
+        </section>
+
+        <section class="story" aria-labelledby="deceptive-title">
+            <section class="viz-panel deceptive">
+                <h2 id="deceptive-title">
+                    Villedende visning: "Den moderne renessansen"
+                </h2>
+                <p class="subtitle">
+                    Gjennomsnittlig rating per tiår (Top-1000-utvalg).
+                </p>
+                <svg
+                    id="deceptive-chart"
+                    viewBox="0 0 980 520"
+                    aria-label="Stolpediagram med gjennomsnittsrating per tiår"
+                ></svg>
+            </section>
+
+            <p class="note">
+                Nå gjør vi det motsatte – med vilje. Vi bruker gjennomsnitt i
+                stedet for median (som er mer følsomt for ekstreme verdier),
+                kutter y-aksen slik at små forskjeller ser store ut, aggregerer
+                per tiår og skjuler dermed variasjon mellom enkeltår, og velger
+                et snevert tidsvindu. Sammen med ladede farger gir dette
+                inntrykk av et tydelig moderne oppsving. Under ser du antall
+                filmer per tiår – noe som forklarer hvorfor særlig 2020-tallet
+                er sårbart for overtolkning.
+            </p>
+
+            <section id="count-template" class="viz-panel deceptive">
+                <h2>Tellinger: antall filmer per tiår</h2>
+                <p class="subtitle">
+                    Den lille detaljen som setter historien i perspektiv.
+                </p>
+                <svg
+                    id="count-chart"
+                    class="mini-chart"
+                    viewBox="0 0 980 240"
+                    aria-label="Stolpediagram med antall filmer per tiår"></svg>
+            </section>
+        </section>
+    </section>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script type="module">
+        const FILE = "/data/imdb_top_1000.csv";
+
+        const d3 = window.d3;
+        const warning = document.querySelector("#viz-warning");
+
+        const TYPE = {
+            tick: 18,
+            axisLabel: 20,
+            annotation: 15,
+            fontFamily: "MS W98 UI, Tahoma, sans-serif",
+        };
+
+        const cssVar = (name, fallback = "") =>
+            getComputedStyle(document.documentElement)
+                .getPropertyValue(name)
+                .trim() || fallback;
+
+        const MAIN_SIZE = { width: 980, height: 520 };
+        const MAIN_MARGIN = { top: 28, right: 28, bottom: 62, left: 70 };
+        const COUNT_SIZE = { width: 980, height: 240 };
+        const COUNT_MARGIN = { top: 20, right: 24, bottom: 46, left: 60 };
+
+        if (!d3) {
+            showWarning("Klarte ikke laste d3 fra CDN. Prøv igjen.");
+        } else {
+            init();
+        }
+
+        async function init() {
+            let data = [];
+
+            try {
+                data = (await d3.csv(FILE, parseRow)).filter(Boolean);
+            } catch {
+                showWarning(
+                    "Fant ikke datasettet. Legg filen i public/data/imdb_top_1000.csv.",
+                );
+                renderEmptyCharts();
+                return;
+            }
+
+            if (!data.length) {
+                showWarning(
+                    "Datasettet ble lastet, men inneholdt ingen gyldige rader.",
+                );
+                renderEmptyCharts();
+                return;
+            }
+
+            renderHonest(data);
+            renderDeceptive(data);
+        }
+
+        function showWarning(message) {
+            if (!warning) return;
+            warning.hidden = false;
+            warning.textContent = message;
+        }
+
+        function renderEmptyCharts() {
+            renderEmpty("#honest-chart", "Mangler data");
+            renderEmpty("#deceptive-chart", "Mangler data");
+            renderEmpty("#count-chart", "Mangler data");
+        }
+
+        function renderEmpty(selector, text) {
+            const svg = d3.select(selector);
+            const viewBox = svg.attr("viewBox").split(" ").map(Number);
+            const width = viewBox[2] || 980;
+            const height = viewBox[3] || 320;
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", height / 2)
+                .attr("text-anchor", "middle")
+                .attr("font-size", 20)
+                .attr("font-family", TYPE.fontFamily)
+                .attr("fill", cssVar("--muted", "#666"))
+                .text(text);
+        }
+
+        function parseRow(d) {
+            const year = +String(d.Released_Year ?? d.Year ?? "").trim();
+            const rating = +String(
+                d.IMDB_Rating ?? d.IMDb_Rating ?? d.Rating ?? "",
+            ).trim();
+            if (!Number.isFinite(year) || !Number.isFinite(rating)) return null;
+            return { year, rating };
+        }
+
+        function createGroup(selector, margin) {
+            return d3
+                .select(selector)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+        }
+
+        function addGrid(g, y, innerWidth, ticks) {
+            const grid = g
+                .append("g")
+                .attr("class", "grid")
+                .call(
+                    d3
+                        .axisLeft(y)
+                        .ticks(ticks)
+                        .tickSize(-innerWidth)
+                        .tickFormat(""),
+                );
+
+            grid.selectAll("line")
+                .attr(
+                    "stroke",
+                    "color-mix(in oklch, var(--accent-strong) 36%, transparent)",
+                )
+                .attr("stroke-width", 1.4);
+
+            grid.selectAll("path").attr("stroke", "none");
+        }
+
+        function addAxes(g, x, y, innerHeight, xTicks, yTicks, xFormat) {
+            const xAxis = g
+                .append("g")
+                .attr("class", "axis")
+                .attr("transform", `translate(0,${innerHeight})`)
+                .call(d3.axisBottom(x).ticks(xTicks).tickFormat(xFormat));
+
+            const yAxis = g
+                .append("g")
+                .attr("class", "axis")
+                .call(d3.axisLeft(y).ticks(yTicks));
+
+            [xAxis, yAxis].forEach((axis) => {
+                axis.selectAll("path, line")
+                    .attr(
+                        "stroke",
+                        "color-mix(in oklch, var(--accent-strong) 52%, transparent)",
+                    )
+                    .attr("stroke-width", 1.8);
+
+                axis.selectAll("text")
+                    .attr("fill", cssVar("--ink", "#222"))
+                    .attr("font-size", TYPE.tick)
+                    .attr("font-family", TYPE.fontFamily);
+            });
+        }
+
+        function renderHonest(all) {
+            const innerWidth =
+                MAIN_SIZE.width - MAIN_MARGIN.left - MAIN_MARGIN.right;
+            const innerHeight =
+                MAIN_SIZE.height - MAIN_MARGIN.top - MAIN_MARGIN.bottom;
+
+            const g = createGroup("#honest-chart", MAIN_MARGIN);
+
+            const summary = Array.from(
+                d3.group(
+                    all
+                        .filter((d) => d.year >= 1920 && d.year <= 2030)
+                        .sort((a, b) => a.year - b.year),
+                    (d) => d.year,
+                ),
+                ([year, vals]) => {
+                    const ratings = vals
+                        .map((v) => v.rating)
+                        .sort(d3.ascending);
+                    return {
+                        year,
+                        q1: d3.quantile(ratings, 0.25),
+                        med: d3.quantile(ratings, 0.5),
+                        q3: d3.quantile(ratings, 0.75),
+                        n: ratings.length,
+                    };
+                },
+            ).filter((d) => d.n >= 3);
+
+            const x = d3
+                .scaleLinear()
+                .domain(d3.extent(summary, (d) => d.year))
+                .range([0, innerWidth]);
+
+            const y = d3
+                .scaleLinear()
+                .domain([7.0, 9.0])
+                .range([innerHeight, 0])
+                .nice();
+
+            addGrid(g, y, innerWidth, 8);
+            addAxes(g, x, y, innerHeight, 10, 8, d3.format("d"));
+
+            g.append("text")
+                .attr("x", innerWidth / 2)
+                .attr("y", innerHeight + 40)
+                .attr("text-anchor", "middle")
+                .attr("font-size", TYPE.axisLabel)
+                .attr("font-family", TYPE.fontFamily)
+                .attr("fill", cssVar("--ink", "#222"))
+                .text("Utgivelsesår");
+
+            g.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -innerHeight / 2)
+                .attr("y", -45)
+                .attr("text-anchor", "middle")
+                .attr("font-size", TYPE.axisLabel)
+                .attr("font-family", TYPE.fontFamily)
+                .attr("fill", cssVar("--ink", "#222"))
+                .text("IMDb-rating");
+
+            const area = d3
+                .area()
+                .x((d) => x(d.year))
+                .y0((d) => y(d.q1))
+                .y1((d) => y(d.q3));
+
+            g.append("path")
+                .datum(summary)
+                .attr("class", "iqr")
+                .attr("fill", cssVar("--bright-ocean", "#1a8fe3"))
+                .attr("opacity", 0.4)
+                .attr("d", area);
+
+            const line = d3
+                .line()
+                .x((d) => x(d.year))
+                .y((d) => y(d.med));
+
+            g.append("path")
+                .datum(summary)
+                .attr("class", "line")
+                .attr("stroke", cssVar("--pumpkin-spice", "#f17105"))
+                .attr("stroke-width", 4)
+                .attr("fill", "none")
+                .attr("d", line);
+
+            const minN = d3.min(summary, (d) => d.n);
+            const maxN = d3.max(summary, (d) => d.n);
+            g.append("text")
+                .attr("x", 0)
+                .attr("y", -8)
+                .attr("font-size", TYPE.annotation)
+                .attr("font-family", TYPE.fontFamily)
+                .attr("fill", cssVar("--muted", "#666"))
+                .text(
+                    `År med >=3 titler er med (n varierer fra ${minN} til ${maxN}).`,
+                );
+        }
+
+        function renderDeceptive(all) {
+            const innerWidth =
+                MAIN_SIZE.width - MAIN_MARGIN.left - MAIN_MARGIN.right;
+            const innerHeight =
+                MAIN_SIZE.height - MAIN_MARGIN.top - MAIN_MARGIN.bottom;
+            const g = createGroup("#deceptive-chart", MAIN_MARGIN);
+
+            const summary = Array.from(
+                d3.group(
+                    all
+                        .filter((d) => d.year >= 1950 && d.year <= 2020)
+                        .map((d) => ({
+                            ...d,
+                            decade: Math.floor(d.year / 10) * 10,
+                        })),
+                    (d) => d.decade,
+                ),
+                ([decade, vals]) => ({
+                    decade,
+                    mean: d3.mean(vals, (v) => v.rating),
+                    n: vals.length,
+                }),
+            ).sort((a, b) => a.decade - b.decade);
+
+            const x = d3
+                .scaleBand()
+                .domain(summary.map((d) => d.decade))
+                .range([0, innerWidth])
+                .padding(0.18);
+
+            const y = d3
+                .scaleLinear()
+                .domain([7.85, 8.25])
+                .range([innerHeight, 0]);
+
+            addGrid(g, y, innerWidth, 10);
+            addAxes(g, x, y, innerHeight, 10, 10, (d) => `${d}s`);
+
+            g.append("text")
+                .attr("x", innerWidth / 2)
+                .attr("y", innerHeight + 46)
+                .attr("text-anchor", "middle")
+                .attr("font-size", TYPE.axisLabel)
+                .attr("font-family", TYPE.fontFamily)
+                .attr("fill", cssVar("--ink", "#222"))
+                .text("Tiår");
+
+            g.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -innerHeight / 2)
+                .attr("y", -52)
+                .attr("text-anchor", "middle")
+                .attr("font-size", TYPE.axisLabel)
+                .attr("font-family", TYPE.fontFamily)
+                .attr("fill", cssVar("--ink", "#222"))
+                .text("Gjennomsnittlig IMDb-rating");
+
+            const color = d3
+                .scaleLinear()
+                .domain(d3.extent(summary, (d) => d.decade))
+                .range([
+                    cssVar("--accent-strong", "#6610f2"),
+                    cssVar("--saffron", "#e6c229"),
+                ]);
+
+            g.selectAll("rect")
+                .data(summary)
+                .join("rect")
+                .attr("x", (d) => x(d.decade))
+                .attr("y", (d) => y(d.mean))
+                .attr("width", x.bandwidth())
+                .attr("height", (d) => innerHeight - y(d.mean))
+                .attr("fill", (d) => color(d.decade));
+
+            const last = summary[summary.length - 1];
+            g.append("text")
+                .attr("x", x(last.decade) + x.bandwidth() / 2)
+                .attr("y", y(last.mean) - 10)
+                .attr("text-anchor", "middle")
+                .attr("font-size", TYPE.annotation)
+                .attr("font-family", TYPE.fontFamily)
+                .attr("fill", cssVar("--ink", "#222"))
+                .text("Beste tiår!");
+
+            g.append("text")
+                .attr("x", innerWidth - 4)
+                .attr("y", -6)
+                .attr("text-anchor", "end")
+                .attr("font-size", TYPE.annotation)
+                .attr("font-family", TYPE.fontFamily)
+                .attr("fill", cssVar("--muted", "#666"))
+                .text("Ser ut som et moderne gjennombrudd, sant?");
+
+            renderCounts(summary);
+        }
+
+        function renderCounts(summary) {
+            const innerWidth =
+                COUNT_SIZE.width - COUNT_MARGIN.left - COUNT_MARGIN.right;
+            const innerHeight =
+                COUNT_SIZE.height - COUNT_MARGIN.top - COUNT_MARGIN.bottom;
+            const g = createGroup("#count-chart", COUNT_MARGIN);
+            const host = d3.select("#count-template");
+            const baseFill = cssVar("--bright-ocean", "#1a8fe3");
+            const hoverFill = cssVar("--pumpkin-spice", "#f17105");
+            const hoverStroke = cssVar("--accent-strong", "#6610f2");
+
+            const tooltip = host
+                .selectAll(".tooltip")
+                .data([null])
+                .join("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            const x = d3
+                .scaleBand()
+                .domain(summary.map((d) => d.decade))
+                .range([0, innerWidth])
+                .padding(0.2);
+
+            const y = d3
+                .scaleLinear()
+                .domain([0, d3.max(summary, (d) => d.n)])
+                .range([innerHeight, 0])
+                .nice();
+
+            addGrid(g, y, innerWidth, 5);
+            addAxes(g, x, y, innerHeight, 5, 5, (d) => `${d}s`);
+
+            g.append("text")
+                .attr("x", innerWidth / 2)
+                .attr("y", innerHeight + 38)
+                .attr("text-anchor", "middle")
+                .attr("font-size", TYPE.axisLabel)
+                .attr("font-family", TYPE.fontFamily)
+                .attr("fill", cssVar("--ink", "#222"))
+                .text("Tiår");
+
+            g.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -innerHeight / 2)
+                .attr("y", -44)
+                .attr("text-anchor", "middle")
+                .attr("font-size", TYPE.axisLabel)
+                .attr("font-family", TYPE.fontFamily)
+                .attr("fill", cssVar("--ink", "#222"))
+                .text("Antall filmer");
+
+            const bars = g
+                .selectAll("rect")
+                .data(summary)
+                .join("rect")
+                .attr("x", (d) => x(d.decade))
+                .attr("y", (d) => y(d.n))
+                .attr("width", x.bandwidth())
+                .attr("height", (d) => innerHeight - y(d.n))
+                .attr("fill", baseFill)
+                .attr("stroke", "none")
+                .attr("opacity", 1)
+                .attr("tabindex", 0)
+                .attr("role", "img")
+                .attr("aria-label", (d) => `${d.decade}-tallet: ${d.n} filmer`)
+                .style("cursor", "pointer");
+
+            const mouseover = function (event, d) {
+                tooltip.style("opacity", 1);
+
+                bars.attr("opacity", 0.58)
+                    .attr("fill", baseFill)
+                    .attr("stroke", "none");
+
+                d3.select(this)
+                    .attr("opacity", 1)
+                    .attr("fill", hoverFill)
+                    .attr("stroke", hoverStroke)
+                    .attr("stroke-width", 2);
+            };
+
+            const mousemove = function (event, d) {
+                const [xPos, yPos] = d3.pointer(event, host.node());
+                tooltip
+                    .html(`${d.n} filmer`)
+                    .style("left", `${xPos + 16}px`)
+                    .style("top", `${yPos - 8}px`);
+            };
+
+            const mouseleave = function () {
+                tooltip.style("opacity", 0);
+
+                bars.attr("opacity", 1)
+                    .attr("fill", baseFill)
+                    .attr("stroke", "none");
+            };
+
+            bars.on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave);
+        }
+    </script>
+</BaseLayout>
+
+<style>
+    .viz-page {
+        gap: 1rem;
+    }
+
+    .viz-page h1 {
+        font-size: clamp(1.9rem, 5.8vw, 3.2rem);
+        line-height: 1.03;
+    }
+
+    .story {
+        display: grid;
+        gap: 0.8rem;
+    }
+
+    .viz-panel {
+        border: 2px solid var(--border-strong);
+        background: color-mix(
+            in oklch,
+            var(--surface-strong) 96%,
+            var(--bright-ocean)
+        );
+        box-shadow:
+            inset 1px 1px 0 white,
+            inset -2px -2px 0
+                color-mix(in oklch, var(--accent-strong) 14%, black),
+            4px 4px 0 color-mix(in oklch, var(--accent) 10%, black);
+        padding: 1rem 1rem 0.75rem;
+    }
+
+    .viz-panel.honest {
+        background: color-mix(
+            in oklch,
+            var(--surface-strong) 93%,
+            var(--bright-ocean)
+        );
+    }
+
+    .viz-panel.deceptive {
+        background: color-mix(
+            in oklch,
+            var(--surface-strong) 91%,
+            var(--saffron)
+        );
+    }
+
+    .viz-panel h2 {
+        font-family: var(--font-ui);
+        text-transform: none;
+        letter-spacing: 0.01em;
+        font-size: clamp(1.15rem, 3.4vw, 1.5rem);
+        margin-bottom: 0.2rem;
+    }
+
+    .subtitle {
+        margin: 0 0 0.6rem;
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.45;
+    }
+
+    .note {
+        margin: 0;
+        font-family: var(--font-body);
+        font-size: 0.98rem;
+        line-height: 1.6;
+        color: var(--muted);
+        background: color-mix(
+            in oklch,
+            var(--surface-strong) 95%,
+            var(--saffron)
+        );
+        padding: 0.85rem 1rem;
+    }
+
+    .note--warning {
+        border-style: solid;
+        border-width: 2px;
+        border-color: color-mix(in oklch, var(--accent) 50%, transparent);
+        color: color-mix(in oklch, var(--ink) 85%, var(--accent));
+    }
+
+    .mini-chart {
+        margin-top: 0.2rem;
+    }
+
+    svg {
+        width: 100%;
+        height: auto;
+    }
+
+    .axis path,
+    .axis line {
+        stroke: color-mix(in oklch, var(--accent-strong) 28%, transparent);
+    }
+
+    .axis text {
+        fill: color-mix(in oklch, var(--ink) 76%, var(--accent-strong));
+        font-family: var(--font-window);
+        font-size: 11px;
+    }
+
+    .grid line {
+        stroke: color-mix(in oklch, var(--accent-strong) 16%, transparent);
+    }
+
+    .grid path {
+        stroke: none;
+    }
+
+    .line {
+        fill: none;
+        stroke-width: 2.3;
+    }
+
+    .iqr {
+        opacity: 0.38;
+    }
+
+    :global(#count-template) {
+        position: relative;
+    }
+
+    :global(#count-template .tooltip) {
+        position: absolute;
+        z-index: 40;
+        max-width: 16rem;
+        padding: 0.35rem 0.55rem;
+        background: color-mix(
+            in oklch,
+            var(--surface-strong) 94%,
+            var(--saffron)
+        );
+        border: 2px solid var(--border-strong);
+        box-shadow: 2px 2px 0
+            color-mix(in oklch, var(--accent-strong) 18%, black);
+        color: var(--ink);
+        font-family: var(--font-window);
+        font-size: 0.78rem;
+        line-height: 1.3;
+        pointer-events: none;
+        visibility: visible;
+        opacity: 0;
+        transition: opacity 120ms ease;
+        left: 0;
+        top: 0;
+    }
+
+    @media (max-width: 760px) {
+        .viz-panel {
+            padding: 0.8rem 0.75rem 0.6rem;
+        }
+    }
+</style>
