@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PhotoGallery, { type GalleryItem } from "../components/PhotoGallery";
 
 const allPosts = (await getCollection("posts"))
     .filter((x) => !x.data.isDraft)
@@ -24,16 +23,11 @@ const talkEntries = await Promise.all(
     })),
 );
 
-const imageNames = ["headshot-1.avif", "headshot-2.avif", "headshot-3.avif"];
-const galleryItems: GalleryItem[] = imageNames.map((x) => {
-    return { original: `/images/${x}`, thumbnail: `/images/${x}` };
-});
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout pageTitle={pageTitle} windowTitle="hjemmeside.exe">
     <section class="hero">
-        <div class="hero__card reveal">
-            <p class="eyebrow">Hjemmeside / Skriverier / Prosjekter</p>
+        <div class="stack reveal">
             <h1>Truls Henrik</h1>
             <p class="lead">
                 Jeg liker når ting gir mening. Helst for flere enn bare meg. Her
@@ -41,36 +35,6 @@ const galleryItems: GalleryItem[] = imageNames.map((x) => {
                 matematikk, med et mykt fokus på formidling og systemer som gjør
                 ting lettere å forstå.
             </p>
-        </div>
-        <div class="hero__media">
-            <div class="photo-stack" aria-hidden="true">
-                <img
-                    class="photo-card photo-card--front"
-                    src="/images/headshot-1.avif"
-                    alt=""
-                    loading="lazy"
-                />
-                <img
-                    class="photo-card photo-card--middle"
-                    src="/images/headshot-2.avif"
-                    alt=""
-                    loading="lazy"
-                />
-                <img
-                    class="photo-card photo-card--back"
-                    src="/images/headshot-3.avif"
-                    alt=""
-                    loading="lazy"
-                />
-            </div>
-            <button
-                class="photo-stack__button"
-                type="button"
-                aria-haspopup="dialog"
-                aria-controls="photo-gallery"
-            >
-                Se bilder
-            </button>
         </div>
     </section>
 
@@ -86,23 +50,23 @@ const galleryItems: GalleryItem[] = imageNames.map((x) => {
             allPosts.length ? (
                 <ul class="list">
                     {allPosts.map((post) => (
-                        <li class="list-item" transition:name={post.data.title}>
-                            <a class="inline-link" href={`/blog/${post.slug}`}>
+                        <li transition:name={post.data.title}>
+                            <a class="list-item list-item--link" href={`/blog/${post.slug}`}>
                                 <h3>{post.data.title}</h3>
-                            </a>
-                            {post.data.excerpt && (
-                                <p class="muted">{post.data.excerpt}</p>
-                            )}
-                            <span class="muted">
-                                {(post.data.pubDate as Date).toLocaleDateString(
-                                    "nb",
-                                    {
-                                        day: "2-digit",
-                                        month: "long",
-                                        year: "numeric",
-                                    },
+                                {post.data.excerpt && (
+                                    <p class="muted">{post.data.excerpt}</p>
                                 )}
-                            </span>
+                                <span class="muted">
+                                    {(post.data.pubDate as Date).toLocaleDateString(
+                                        "nb",
+                                        {
+                                            day: "2-digit",
+                                            month: "long",
+                                            year: "numeric",
+                                        },
+                                    )}
+                                </span>
+                            </a>
                         </li>
                     ))}
                 </ul>
@@ -148,43 +112,4 @@ const galleryItems: GalleryItem[] = imageNames.map((x) => {
         </ul>
     </section>
 
-    <dialog class="photo-dialog" id="photo-gallery">
-        <div class="photo-dialog__header">
-            <h2>Bildegalleri</h2>
-            <button class="photo-dialog__close" type="button">Lukk</button>
-        </div>
-        <div class="photo-dialog__grid">
-            <PhotoGallery items={galleryItems} client:load />
-        </div>
-    </dialog>
-
-    <script>
-        const dialog = document.querySelector(
-            "#photo-gallery",
-        ) as HTMLDialogElement | null;
-        const openButton = document.querySelector(
-            ".photo-stack__button",
-        ) as HTMLButtonElement | null;
-        const closeButton = document.querySelector(
-            ".photo-dialog__close",
-        ) as HTMLButtonElement | null;
-
-        const openDialog = () => {
-            if (!dialog) return;
-            if (typeof dialog.showModal === "function") {
-                dialog.showModal();
-            }
-        };
-
-        const closeDialog = () => {
-            dialog?.close();
-        };
-
-        openButton?.addEventListener("click", openDialog);
-        closeButton?.addEventListener("click", closeDialog);
-        dialog?.addEventListener("click", (event) => {
-            if (event.target === dialog) closeDialog();
-        });
-        dialog?.addEventListener("cancel", closeDialog);
-    </script>
 </BaseLayout>

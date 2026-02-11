@@ -6,9 +6,11 @@ import { ClientRouter } from "astro:transitions";
 
 export type LayoutProps = {
     pageTitle: string;
+    windowTitle?: string;
 };
 
-const { pageTitle } = Astro.props as LayoutProps;
+const { pageTitle, windowTitle } = Astro.props as LayoutProps;
+const resolvedWindowTitle = windowTitle ?? pageTitle;
 ---
 
 <html lang="en">
@@ -31,7 +33,10 @@ const { pageTitle } = Astro.props as LayoutProps;
     <body>
         <div class="site-shell">
             <Header />
-            <main class="site-main">
+            <main
+                class="site-main"
+                data-window-title={resolvedWindowTitle}
+            >
                 <slot />
             </main>
         </div>

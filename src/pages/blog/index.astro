@@ -11,7 +11,7 @@ const posts = (await getCollection("posts"))
     );
 ---
 
-<BaseLayout pageTitle="Skriverier">
+<BaseLayout pageTitle="Skriverier" windowTitle="blog.md">
     <section class="section">
         <div class="stack reveal">
             <h1>Skriverier</h1>
@@ -24,23 +24,23 @@ const posts = (await getCollection("posts"))
         {posts.length ? (
             <ul class="list">
                 {posts.map((post) => (
-                    <li class="list-item" transition:name={post.data.title}>
-                        <a class="inline-link" href={`/blog/${post.slug}`}>
+                    <li transition:name={post.data.title}>
+                        <a class="list-item list-item--link" href={`/blog/${post.slug}`}>
                             <h3>{post.data.title}</h3>
-                        </a>
-                        {post.data.excerpt && (
-                            <p class="muted">{post.data.excerpt}</p>
-                        )}
-                        <span class="muted">
-                            {(post.data.pubDate as Date).toLocaleDateString(
-                                "nb",
-                                {
-                                    day: "2-digit",
-                                    month: "long",
-                                    year: "numeric",
-                                }
+                            {post.data.excerpt && (
+                                <p class="muted">{post.data.excerpt}</p>
                             )}
-                        </span>
+                            <span class="muted">
+                                {(post.data.pubDate as Date).toLocaleDateString(
+                                    "nb",
+                                    {
+                                        day: "2-digit",
+                                        month: "long",
+                                        year: "numeric",
+                                    }
+                                )}
+                            </span>
+                        </a>
                     </li>
                 ))}
             </ul>

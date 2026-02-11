@@ -21,20 +21,25 @@ const { controlsId = "primary-nav" } = Astro.props;
         justify-content: center;
         gap: 6px;
         padding: 0.4rem 0.6rem;
-        border: 1px solid var(--border-strong);
-        background: var(--surface);
-        border-radius: 999px;
+        border: 2px solid var(--border-strong);
+        background: linear-gradient(
+            180deg,
+            color-mix(in oklch, var(--surface-strong) 88%, var(--saffron)) 0%,
+            color-mix(in oklch, var(--surface) 84%, var(--bright-ocean)) 100%
+        );
+        border-radius: 0;
         cursor: pointer;
         transition: border-color var(--transition-speed) ease,
             transform var(--transition-speed) ease;
+        box-shadow: inset 1px 1px 0 white;
     }
 
     .hamburger .line {
         display: block;
         width: 26px;
-        height: 2px;
+        height: 3px;
         background-color: var(--ink);
-        border-radius: 999px;
+        border-radius: 0;
         transition: background-color var(--transition-speed) ease,
             transform var(--transition-speed) ease;
     }
@@ -42,7 +47,8 @@ const { controlsId = "primary-nav" } = Astro.props;
     .hamburger:hover,
     .hamburger:focus-visible {
         border-color: var(--accent);
-        transform: translateY(-1px);
+        transform: translateY(-1px) rotate(-1deg);
+        box-shadow: var(--shadow-float);
     }
 
     .hamburger:hover .line,

@@ -4,14 +4,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 const pageTitle = "Om meg";
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout pageTitle={pageTitle} windowTitle="About.txt">
     <section class="about-hero">
         <div class="about-text">
-            <p class="eyebrow">Om meg</p>
-            <h1>Hallaien! 👋</h1>
+            <h1 class="about-title">Hallaien! 👋</h1>
             <p class="lead">
                 Jeg liker når ting gir mening. Helst for flere enn bare meg.
             </p>
+            <figure class="about-portrait" data-window-title="truls_spanderer_øl.png">
+                <img
+                    src="/images/headshot.png"
+                    alt="Portrett av Truls"
+                    loading="lazy"
+                />
+            </figure>
             <p>
                 Jeg er en utvikler som stortrives når jeg får grave meg ned i
                 ting som er akkurat passe nerdete. Gi meg noe som virker litt
@@ -45,21 +51,14 @@ const pageTitle = "Om meg";
                 >. Jeg sier sjelden nei til en god prat.
             </p>
         </div>
-        <figure class="about-portrait">
-            <img
-                src="/images/headshot.png"
-                alt="Portrett av Truls"
-                loading="lazy"
-            />
-        </figure>
     </section>
 </BaseLayout>
 
 <style>
     .about-hero {
-        display: grid;
-        gap: clamp(1.5rem, 3vw, 3rem);
-        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(1.2rem, 2.6vw, 2rem);
         padding: clamp(1rem, 3vw, 2rem) 0;
     }
 
@@ -69,14 +68,67 @@ const pageTitle = "Om meg";
         gap: 1rem;
     }
 
+    .about-title {
+        white-space: nowrap;
+        font-size: clamp(1.9rem, 6vw, 3.1rem);
+    }
+
     .about-portrait {
-        margin: 0;
+        margin: 0.35rem 0 0.5rem;
+        width: min(100%, 23rem);
+        align-self: center;
+        position: relative;
         padding: 0;
-        border-radius: 1.5rem;
+        padding-top: 1.35rem;
+        border-radius: 0;
         overflow: hidden;
-        border: 1px solid var(--border-soft);
-        background: var(--surface-strong);
-        box-shadow: var(--shadow-soft);
+        border: 3px solid var(--border-strong);
+        background: color-mix(in oklch, var(--surface-strong) 96%, var(--bright-ocean));
+        box-shadow:
+            inset 1px 1px 0 white,
+            inset -2px -2px 0 color-mix(in oklch, var(--accent-strong) 14%, black),
+            5px 5px 0 color-mix(in oklch, var(--accent) 12%, black);
+        transform: rotate(1.5deg);
+    }
+
+    .about-portrait::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1.35rem;
+        background:
+            radial-gradient(circle at 0.8rem 50%, var(--accent) 0.22rem, transparent 0.24rem),
+            radial-gradient(circle at 1.5rem 50%, var(--saffron) 0.22rem, transparent 0.24rem),
+            radial-gradient(circle at 2.2rem 50%, var(--retro-green) 0.22rem, transparent 0.24rem),
+            linear-gradient(
+                90deg,
+                color-mix(in oklch, var(--accent-strong) 72%, white) 0%,
+                color-mix(in oklch, var(--accent) 74%, white) 45%,
+                color-mix(in oklch, var(--accent-secondary) 76%, white) 100%
+            );
+        border-bottom: 2px solid color-mix(in oklch, var(--accent-strong) 26%, black);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .about-portrait::after {
+        content: attr(data-window-title);
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 1.35rem;
+        display: flex;
+        align-items: center;
+        font-family: var(--font-window);
+        font-size: 0.62rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: color-mix(in oklch, var(--surface-strong) 92%, var(--saffron));
+        pointer-events: none;
+        z-index: 2;
     }
 
     .about-portrait img {
@@ -85,11 +137,22 @@ const pageTitle = "Om meg";
         object-fit: cover;
         display: block;
         min-height: 280px;
+        filter: saturate(1.08) contrast(1.03);
     }
 
-    @media (min-width: 900px) {
-        .about-hero {
-            grid-template-columns: 1.2fr 0.8fr;
+    @media (min-width: 820px) {
+        .about-portrait {
+            float: right;
+            margin: 0.25rem 0 0.8rem 1.2rem;
+            width: min(46%, 19rem);
+            align-self: auto;
+            transform: rotate(1deg);
+        }
+
+        .about-text::after {
+            content: "";
+            display: table;
+            clear: both;
         }
     }
 </style>

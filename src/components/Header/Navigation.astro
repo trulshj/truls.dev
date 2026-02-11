@@ -21,15 +21,17 @@ const active = (path: string) => {
         top: calc(100% + 0.6rem);
         display: grid;
         gap: 0.6rem;
-        padding: 1rem;
-        border-radius: 1rem;
-        background: var(--surface);
-        border: 1px solid var(--border-soft);
-        box-shadow: var(--shadow-soft);
+        padding: 0.8rem;
+        border-radius: 0;
+        background: var(--surface-strong);
+        border: 2px solid var(--border-strong);
+        box-shadow:
+            inset 1px 1px 0 white,
+            3px 3px 0 color-mix(in oklch, var(--accent-strong) 14%, black);
         min-width: min(240px, 80vw);
         opacity: 0;
         pointer-events: none;
-        transform: translateY(-8px) scale(0.98);
+        transform: translateY(-8px) scale(0.98) rotate(-0.6deg);
         transition: opacity var(--transition-speed) ease,
             transform var(--transition-speed) ease;
         z-index: 10;
@@ -38,7 +40,7 @@ const active = (path: string) => {
     .nav-links.is-open {
         opacity: 1;
         pointer-events: auto;
-        transform: translateY(0) scale(1);
+        transform: translateY(0) scale(1) rotate(0deg);
     }
 
     .nav-links a {
@@ -46,13 +48,14 @@ const active = (path: string) => {
         display: inline-flex;
         justify-content: space-between;
         align-items: center;
+        text-decoration: none;
         padding: 0.6rem 0.8rem;
-        border-radius: 0.75rem;
-        font-family: var(--font-display);
+        border-radius: 0;
+        font-family: var(--font-ui);
         letter-spacing: 0.04em;
         text-transform: uppercase;
         background: transparent;
-        border: 1px solid transparent;
+        border: 1px dashed transparent;
         transition: border-color var(--transition-speed) ease,
             color var(--transition-speed) ease,
             background-color var(--transition-speed) ease;
@@ -62,12 +65,12 @@ const active = (path: string) => {
     .nav-links a:focus-visible {
         color: var(--accent);
         border-color: var(--accent);
-        background: rgba(188, 71, 73, 0.08);
+        background: color-mix(in oklch, var(--saffron) 24%, transparent);
     }
 
     .nav-links a.active {
-        border-color: var(--ink);
-        background: rgba(20, 18, 14, 0.06);
+        border-color: var(--accent-strong);
+        background: color-mix(in oklch, var(--bright-ocean) 20%, transparent);
     }
 
     @media screen and (min-width: 760px) {
