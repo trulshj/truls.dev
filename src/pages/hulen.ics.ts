@@ -44,10 +44,12 @@ function cleanDescription(html: string): string {
         .replace(/<\/strong>/gi, "\n\n")
         // Convert <br> tags to newlines
         .replace(/<br\s*\/?>/gi, "\n")
+        // Replace &nbsp; entities with normal spaces
+        .replace(/&nbsp;/gi, " ")
         // Strip all remaining HTML tags
         .replace(/<[^>]*>/g, "")
-        // Ensure a newline after the "ID: 18" metadata line
-        .replace(/(ID: \d+)/g, "$1\n")
+        // Ensure a newline after the "ID: <number>" metadata line (handles missing space)
+        .replace(/(ID:\s*\d+)/g, "$1\n")
         // Remove horizontal rules (dashes used as separators)
         .replace(/-{3,}/g, "\n")
         // Collapse triple+ newlines down to double
