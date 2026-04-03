@@ -329,6 +329,65 @@ const pageTitle = "IMDb Top 1000: Ærlig vs. villedende";
                 .text(
                     `År med >=3 titler er med (n varierer fra ${minN} til ${maxN}).`,
                 );
+
+            const honestPanel = d3.select("#honest-chart").node().closest(".viz-panel");
+            const tooltip = d3.select(honestPanel)
+                .selectAll(".tooltip")
+                .data([null])
+                .join("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            const focusLine = g.append("line")
+                .attr("y1", 0)
+                .attr("y2", innerHeight)
+                .attr("stroke", cssVar("--muted", "#666"))
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray", "4,3")
+                .style("opacity", 0)
+                .style("pointer-events", "none");
+
+            const focusDot = g.append("circle")
+                .attr("r", 5)
+                .attr("fill", cssVar("--pumpkin-spice", "#f17105"))
+                .attr("stroke", "white")
+                .attr("stroke-width", 2)
+                .style("opacity", 0)
+                .style("pointer-events", "none");
+
+            const bisect = d3.bisector((d) => d.year).center;
+
+            g.append("rect")
+                .attr("width", innerWidth)
+                .attr("height", innerHeight)
+                .attr("fill", "none")
+                .attr("pointer-events", "all")
+                .on("mousemove", function (event) {
+                    const [mx] = d3.pointer(event);
+                    const i = Math.max(0, Math.min(bisect(summary, x.invert(mx)), summary.length - 1));
+                    const d = summary[i];
+
+                    focusLine
+                        .attr("x1", x(d.year))
+                        .attr("x2", x(d.year))
+                        .style("opacity", 1);
+                    focusDot
+                        .attr("cx", x(d.year))
+                        .attr("cy", y(d.med))
+                        .style("opacity", 1);
+
+                    const [xPos, yPos] = d3.pointer(event, honestPanel);
+                    tooltip
+                        .html(`<strong>${d.year}</strong><br>Median: ${d.med.toFixed(2)}<br>IQR: ${d.q1.toFixed(2)}–${d.q3.toFixed(2)}<br>n: ${d.n}`)
+                        .style("left", `${xPos + 16}px`)
+                        .style("top", `${yPos - 8}px`)
+                        .style("opacity", 1);
+                })
+                .on("mouseleave", function () {
+                    focusLine.style("opacity", 0);
+                    focusDot.style("opacity", 0);
+                    tooltip.style("opacity", 0);
+                });
         }
 
         function renderDeceptive(all) {
@@ -396,6 +455,14 @@ const pageTitle = "IMDb Top 1000: Ærlig vs. villedende";
                     cssVar("--saffron", "#e6c229"),
                 ]);
 
+            const deceptivePanel = d3.select("#deceptive-chart").node().closest(".viz-panel");
+            const tooltip = d3.select(deceptivePanel)
+                .selectAll(".tooltip")
+                .data([null])
+                .join("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
             g.selectAll("rect")
                 .data(summary)
                 .join("rect")
@@ -403,7 +470,20 @@ const pageTitle = "IMDb Top 1000: Ærlig vs. villedende";
                 .attr("y", (d) => y(d.mean))
                 .attr("width", x.bandwidth())
                 .attr("height", (d) => innerHeight - y(d.mean))
-                .attr("fill", (d) => color(d.decade));
+                .attr("fill", (d) => color(d.decade))
+                .on("mouseover", function () {
+                    tooltip.style("opacity", 1);
+                })
+                .on("mousemove", function (event, d) {
+                    const [xPos, yPos] = d3.pointer(event, deceptivePanel);
+                    tooltip
+                        .html(`<strong>${d.decade}s</strong><br>Gjennomsnitt: ${d.mean.toFixed(2)}<br>n: ${d.n} filmer`)
+                        .style("left", `${xPos + 16}px`)
+                        .style("top", `${yPos - 8}px`);
+                })
+                .on("mouseleave", function () {
+                    tooltip.style("opacity", 0);
+                });
 
             const last = summary[summary.length - 1];
             g.append("text")
@@ -548,6 +628,7 @@ const pageTitle = "IMDb Top 1000: Ærlig vs. villedende";
     }
 
     .viz-panel {
+        position: relative;
         border: 2px solid var(--border-strong);
         background: color-mix(
             in oklch,
@@ -651,14 +732,10 @@ const pageTitle = "IMDb Top 1000: Ærlig vs. villedende";
         opacity: 0.38;
     }
 
-    :global(#count-template) {
-        position: relative;
-    }
-
-    :global(#count-template .tooltip) {
+    :global(.viz-panel .tooltip) {
         position: absolute;
         z-index: 40;
-        max-width: 16rem;
+        white-space: nowrap;
         padding: 0.35rem 0.55rem;
         background: color-mix(
             in oklch,
