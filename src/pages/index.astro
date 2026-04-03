@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const allPosts = (await getCollection("posts"))
@@ -19,7 +19,7 @@ const talks = (await getCollection("talks")).sort(
 const talkEntries = await Promise.all(
     talks.map(async (talk) => ({
         ...talk,
-        Content: (await talk.render()).Content,
+        Content: (await render(talk)).Content,
     })),
 );
 
@@ -51,7 +51,7 @@ const talkEntries = await Promise.all(
                 <ul class="list">
                     {allPosts.map((post) => (
                         <li transition:name={post.data.title}>
-                            <a class="list-item list-item--link" href={`/blog/${post.slug}`}>
+                            <a class="list-item list-item--link" href={`/blog/${post.id.replace(/\.mdx?$/, "")}`}>
                                 <h3>{post.data.title}</h3>
                                 {post.data.excerpt && (
                                     <p class="muted">{post.data.excerpt}</p>

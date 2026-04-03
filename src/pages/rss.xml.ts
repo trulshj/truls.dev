@@ -9,7 +9,7 @@ export async function GET() {
         site: "https://truls.dev",
         items: posts.map((post) => ({
             ...post.data,
-            link: `/blog/${post.slug}/`,
+            link: `/blog/${post.id.replace(/\.mdx?$/, "")}/`,
         })),
     });
 }

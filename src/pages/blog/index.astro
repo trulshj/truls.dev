@@ -25,7 +25,7 @@ const posts = (await getCollection("posts"))
             <ul class="list">
                 {posts.map((post) => (
                     <li transition:name={post.data.title}>
-                        <a class="list-item list-item--link" href={`/blog/${post.slug}`}>
+                        <a class="list-item list-item--link" href={`/blog/${post.id.replace(/\.mdx?$/, "")}`}>
                             <h3>{post.data.title}</h3>
                             {post.data.excerpt && (
                                 <p class="muted">{post.data.excerpt}</p>
