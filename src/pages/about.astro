@@ -12,6 +12,7 @@ const pageTitle = "Om meg";
                 alt="Portrett av Truls"
                 loading="lazy"
             />
+            <figcaption>Gladgutt i ferd med å spandere øl på gode venner</figcaption>
         </figure>
 
         <div class="about-text">
@@ -70,24 +71,45 @@ const pageTitle = "Om meg";
     }
 
     .about-portrait {
-        margin: 0;
+        margin: 0 auto;
         padding: 0;
         width: min(100%, 16rem);
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-hover);
+        position: relative;
         transform: rotate(1.2deg);
-        overflow: hidden;
-        border-radius: 2px;
-        background: var(--surface);
     }
 
     .about-portrait img {
         width: 100%;
-        height: 100%;
         object-fit: cover;
         display: block;
         min-height: 200px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-hover);
+        border-radius: 2px;
+        background: var(--surface);
         filter: saturate(1.06) contrast(1.02);
+    }
+
+    .about-portrait figcaption {
+        position: static;
+        width: auto;
+        margin-top: 0.5rem;
+        text-align: center;
+        font-size: 0.78rem;
+        font-family: var(--font-heading);
+        color: var(--muted);
+        line-height: 1.5;
+    }
+
+    @media (min-width: 640px) {
+        .about-portrait figcaption {
+            position: absolute;
+            left: calc(100% + 0.75rem);
+            top: 0;
+            width: 8rem;
+            margin-top: 0;
+            text-align: left;
+        }
     }
 
     .about-text {

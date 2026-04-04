@@ -2,7 +2,7 @@
 title: "Så eh, hva er visualisering?"
 pubDate: 2025-06-10
 excerpt: "En intro til hva jeg velger å bruke to år av livet mitt på!"
-isDraft: false
+isDraft: true
 type: writing
 lang: no
 status: budding

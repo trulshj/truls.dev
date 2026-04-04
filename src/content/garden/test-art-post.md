@@ -1,7 +1,7 @@
 ---
 title: "Test av kunst 123!"
 pubDate: 2026-04-04
-isDraft: false
+isDraft: true
 type: art
 lang: no
 status: seedling
