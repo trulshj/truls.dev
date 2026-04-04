@@ -444,10 +444,36 @@ a:focus-visible {
     background: var(--surface);
     color: var(--muted);
     cursor: pointer;
+    position: relative;
     transition:
         background var(--transition-speed) ease,
         color var(--transition-speed) ease,
         border-color var(--transition-speed) ease;
+}
+
+.btn-text,
+.btn-ja {
+    transition: opacity 0.15s ease;
+}
+
+.btn-ja {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+    opacity: 0;
+}
+
+.filter-btn:hover .btn-text {
+    opacity: 0;
+}
+
+.filter-btn:hover .btn-ja {
+    opacity: 1;
 }
 
 .filter-btn:hover {

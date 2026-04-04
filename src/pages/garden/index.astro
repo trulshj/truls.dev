@@ -28,19 +28,19 @@ const pageTitle = "Hagen";
 
         <div class="filter-bar reveal" aria-label="Filtrer innhold">
         <div class="filter-group">
-            <button class="filter-btn active" data-filter-type="all" aria-pressed="true">Alle</button>
-            {usedTypes.has("writing") && <button class="filter-btn" data-filter-type="writing" aria-pressed="false">Tekst</button>}
-            {usedTypes.has("art")     && <button class="filter-btn" data-filter-type="art"     aria-pressed="false">Kunst</button>}
-            {usedTypes.has("story")   && <button class="filter-btn" data-filter-type="story"   aria-pressed="false">Fortelling</button>}
-            {usedTypes.has("note")    && <button class="filter-btn" data-filter-type="note"    aria-pressed="false">Notat</button>}
-            {usedTypes.has("visualization") && <button class="filter-btn" data-filter-type="visualization" aria-pressed="false">Visualisering</button>}
+            <button class="filter-btn active" data-filter-type="all" aria-pressed="true"><span class="btn-text">Alle</span><span class="btn-ja">すべて</span></button>
+            {usedTypes.has("writing") && <button class="filter-btn" data-filter-type="writing" aria-pressed="false"><span class="btn-text">Tekst</span><span class="btn-ja">文章</span></button>}
+            {usedTypes.has("art")     && <button class="filter-btn" data-filter-type="art"     aria-pressed="false"><span class="btn-text">Kunst</span><span class="btn-ja">芸術</span></button>}
+            {usedTypes.has("story")   && <button class="filter-btn" data-filter-type="story"   aria-pressed="false"><span class="btn-text">Fortelling</span><span class="btn-ja">物語</span></button>}
+            {usedTypes.has("note")    && <button class="filter-btn" data-filter-type="note"    aria-pressed="false"><span class="btn-text">Notat</span><span class="btn-ja">メモ</span></button>}
+            {usedTypes.has("visualization") && <button class="filter-btn" data-filter-type="visualization" aria-pressed="false"><span class="btn-text">Visualisering</span><span class="btn-ja">可視化</span></button>}
         </div>
         {(usedLangs.size > 1) && (
             <div class="filter-group">
-                <button class="filter-btn active" data-filter-lang="all" aria-pressed="true">Alle språk</button>
-                {usedLangs.has("no") && <button class="filter-btn" data-filter-lang="no" aria-pressed="false">NO</button>}
-                {usedLangs.has("en") && <button class="filter-btn" data-filter-lang="en" aria-pressed="false">EN</button>}
-                {usedLangs.has("ja") && <button class="filter-btn" data-filter-lang="ja" aria-pressed="false">JA</button>}
+                <button class="filter-btn active" data-filter-lang="all" aria-pressed="true"><span class="btn-text">Alle språk</span><span class="btn-ja">すべて</span></button>
+                {usedLangs.has("no") && <button class="filter-btn" data-filter-lang="no" aria-pressed="false"><span class="btn-text">NO</span><span class="btn-ja">ノルウェー語</span></button>}
+                {usedLangs.has("en") && <button class="filter-btn" data-filter-lang="en" aria-pressed="false"><span class="btn-text">EN</span><span class="btn-ja">英語</span></button>}
+                {usedLangs.has("ja") && <button class="filter-btn" data-filter-lang="ja" aria-pressed="false"><span class="btn-text">JA</span><span class="btn-ja">日本語</span></button>}
             </div>
         )}
     </div>

@@ -1,5 +1,4 @@
 ---
-import "@fontsource/atkinson-hyperlegible";
 import "../styles/global.css";
 import Header from "../components/Header/Header.astro";
 import { ClientRouter } from "astro:transitions";
@@ -50,6 +49,9 @@ const { pageTitle, lang = "no", narrow = false, wide = false } = Astro.props as 
             integrity="sha384-Xi8rHCmBmhbuyyhbI88391ZKP2dmfnOl4rT9ZfRI7mLTdk1wblIUnrIq35nqwEvC"
             crossorigin="anonymous"
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
         <title>
