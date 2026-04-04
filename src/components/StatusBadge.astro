@@ -1,0 +1,15 @@
+---
+export type Props = {
+    status: "seedling" | "budding" | "evergreen";
+};
+
+const { status } = Astro.props;
+
+const labels = {
+    seedling: "🌱 Spire",
+    budding: "🌿 Voksende",
+    evergreen: "🌲 Moden",
+};
+---
+
+<span class={`badge badge--status-${status}`}>{labels[status]}</span>

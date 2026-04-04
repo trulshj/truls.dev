@@ -1,16 +1,16 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import GardenCard from "../components/GardenCard.astro";
 
-const allPosts = (await getCollection("posts"))
+const recentItems = (await getCollection("garden"))
     .filter((x) => !x.data.isDraft)
     .sort(
         (a, b) =>
             (b.data.pubDate as Date).valueOf() -
             (a.data.pubDate as Date).valueOf(),
-    );
-
-const pageTitle = "Truls Henrik";
+    )
+    .slice(0, 6);
 
 const talks = (await getCollection("talks")).sort(
     (a, b) => (b.data.date as Date).valueOf() - (a.data.date as Date).valueOf(),
@@ -23,93 +23,88 @@ const talkEntries = await Promise.all(
     })),
 );
 
+const pageTitle = "Kaffekrus";
 ---
 
-<BaseLayout pageTitle={pageTitle} windowTitle="hjemmeside.exe">
+<BaseLayout pageTitle={pageTitle}>
     <section class="hero">
-        <div class="stack reveal">
-            <h1>Truls Henrik</h1>
-            <p class="lead">
-                Jeg liker når ting gir mening. Helst for flere enn bare meg. Her
-                samler jeg skriverier om visualisering, programmering og
-                matematikk, med et mykt fokus på formidling og systemer som gjør
-                ting lettere å forstå.
+        <div class="reveal">
+            <p class="hero-name">Kaffekrus</p>
+            <p class="hero-tagline">
+                Jeg liker når ting gir mening. Helst for flere enn bare meg.
+                Her samler jeg skriverier, kunst og eksperimenter om visualisering,
+                programmering og det som faller mellom stolene.
             </p>
         </div>
     </section>
 
-    <section class="section" id="writing">
-        <div class="stack reveal">
-            <h2>Siste innlegg</h2>
-            <p class="muted">
-                Skriverier om visualisering, programmering og matte, med et
-                menneskelig perspektiv.
-            </p>
+    <section class="section" id="garden">
+        <div class="section-header reveal">
+            <h2>Nylig i hagen</h2>
+            <p class="muted">Det siste fra hagen — tekst, kunst, fortellinger og notater.</p>
         </div>
-        {
-            allPosts.length ? (
-                <ul class="list">
-                    {allPosts.map((post) => (
-                        <li transition:name={post.data.title}>
-                            <a class="list-item list-item--link" href={`/blog/${post.id.replace(/\.mdx?$/, "")}`}>
-                                <h3>{post.data.title}</h3>
-                                {post.data.excerpt && (
-                                    <p class="muted">{post.data.excerpt}</p>
-                                )}
-                                <span class="muted">
-                                    {(post.data.pubDate as Date).toLocaleDateString(
-                                        "nb",
-                                        {
-                                            day: "2-digit",
-                                            month: "long",
-                                            year: "numeric",
-                                        },
-                                    )}
-                                </span>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <div class="card reveal">
-                    <h3>Ingen publiserte innlegg ennå</h3>
-                    <p>
-                        Jeg jobber med å fylle på. Kom gjerne tilbake snart,
-                        eller{" "}
-                        <a class="inline-link" href="mailto:post@truls.dev">
-                            si hei på e-post
-                        </a>
-                        om du er nysgjerrig.
-                    </p>
-                </div>
-            )
-        }
+        {recentItems.length > 0 ? (
+            <div class="garden-grid">
+                {recentItems.map((item) => (
+                    <div class="reveal">
+                        <GardenCard
+                            slug={item.id.replace(/\.mdx?$/, "")}
+                            title={item.data.title}
+                            excerpt={item.data.excerpt}
+                            type={item.data.type}
+                            lang={item.data.lang}
+                            status={item.data.status}
+                            pubDate={item.data.pubDate as Date}
+                            tags={item.data.tags}
+                            image={item.data.image}
+                        />
+                    </div>
+                ))}
+            </div>
+        ) : (
+            <div class="card reveal">
+                <p>
+                    Hagen er under anlegg. Kom gjerne tilbake snart, eller{" "}
+                    <a class="inline-link" href="mailto:post@truls.dev">si hei på e-post</a>
+                    om du er nysgjerrig.
+                </p>
+            </div>
+        )}
+        <div class="reveal">
+            <a href="/garden" class="cta-link">Se hele hagen →</a>
+        </div>
     </section>
 
     <section class="section" id="talks">
-        <div class="stack reveal">
-            <h2>Videoer og foredrag</h2>
-            <!-- <p class="muted">Et lite utvalg av opptak.</p> -->
+        <div class="section-header reveal">
+            <h2>Talks & videoer</h2>
         </div>
-        <ul class="list">
-            {
-                talkEntries.map((talk) => (
-                    <li class="list-item reveal">
-                        <h3>{talk.data.title}</h3>
-                        <div class="muted">
-                            <talk.Content />
-                        </div>
-                        <div class="stack">
-                            {talk.data.links.map(
-                                (link: { label: string; href: string }) => (
-                                    <a href={link.href}>{link.label}</a>
-                                ),
-                            )}
-                        </div>
-                    </li>
-                ))
-            }
+        <ul class="talks-list">
+            {talkEntries.map((talk) => (
+                <li class="talk-item reveal">
+                    <h3>{talk.data.title}</h3>
+                    <div class="muted">
+                        <talk.Content />
+                    </div>
+                    <div class="talk-links">
+                        {talk.data.links.map(
+                            (link: { label: string; href: string }) => (
+                                <a href={link.href} class="talk-link">{link.label}</a>
+                            ),
+                        )}
+                    </div>
+                </li>
+            ))}
         </ul>
     </section>
 
+    <section class="section" id="about-teaser">
+        <div class="card reveal">
+            <p class="lead" style="font-size: 1rem;">
+                Utvikler, visualiseringsstudent, danser og periodevis
+                korsstingsentusiast. Glad i aha-opplevelser og gode samtaler.
+            </p>
+            <a href="/about" class="cta-link">Les mer om meg →</a>
+        </div>
+    </section>
 </BaseLayout>

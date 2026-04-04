@@ -1,32 +1,42 @@
 ---
-import Hamburger from "./Hamburger.astro";
 import Navigation from "./Navigation.astro";
 ---
 
 <header class="site-header">
     <nav class="site-nav" aria-label="Primary">
-        <a class="site-brand" href="/">Truls Henrik</a>
-        <Hamburger controlsId="primary-nav" />
+        <a class="site-brand" href="/">Kaffekrus</a>
+
         <Navigation />
+
+        <div class="nav-controls">
+            <button class="theme-toggle" aria-label="Bytt tema" title="Bytt tema">
+                <!-- shown in light mode: switch to dark -->
+                <span class="theme-icon theme-icon--light">☾</span>
+                <!-- shown in dark mode: switch to light -->
+                <span class="theme-icon theme-icon--dark">☀</span>
+            </button>
+
+            <button class="hamburger" aria-expanded="false" aria-controls="primary-nav" aria-label="Åpne navigasjon">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
     </nav>
 
     <script>
         function init() {
-            const button = document.querySelector(
-                ".hamburger"
-            ) as HTMLButtonElement | null;
-            const navLinks = document.querySelector(
-                ".nav-links"
-            ) as HTMLElement | null;
+            const button = document.querySelector(".hamburger") as HTMLButtonElement | null;
+            const navLinks = document.querySelector(".nav-links") as HTMLElement | null;
             const win = window as Window & { __navResizeBound?: boolean };
 
             if (!button || !navLinks) return;
             if (button.dataset.bound === "true") return;
-
             button.dataset.bound = "true";
 
             const setExpanded = (isOpen: boolean) => {
                 button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+                button.classList.toggle("is-open", isOpen);
             };
 
             const closeMenu = () => {
@@ -45,16 +55,31 @@ import Navigation from "./Navigation.astro";
 
             if (!win.__navResizeBound) {
                 window.addEventListener("resize", () => {
-                    if (window.innerWidth >= 760) {
-                        closeMenu();
-                    }
+                    if (window.innerWidth >= 760) closeMenu();
                 });
                 win.__navResizeBound = true;
             }
         }
 
+        function initTheme() {
+            const toggle = document.querySelector(".theme-toggle") as HTMLButtonElement | null;
+            if (!toggle || toggle.dataset.bound === "true") return;
+            toggle.dataset.bound = "true";
+
+            toggle.addEventListener("click", () => {
+                const current = document.documentElement.dataset.theme ?? "light";
+                const next = current === "dark" ? "light" : "dark";
+                document.documentElement.dataset.theme = next;
+                localStorage.setItem("theme", next);
+            });
+        }
+
         init();
-        document.addEventListener("astro:after-swap", init);
+        initTheme();
+        document.addEventListener("astro:after-swap", () => {
+            init();
+            initTheme();
+        });
     </script>
 
     <style>
@@ -62,15 +87,9 @@ import Navigation from "./Navigation.astro";
             position: sticky;
             top: 0;
             z-index: 50;
-            background: linear-gradient(
-                180deg,
-                color-mix(in oklch, var(--surface-strong) 96%, var(--bright-ocean))
-                    0%,
-                color-mix(in oklch, var(--surface) 92%, var(--saffron)) 100%
-            );
-            backdrop-filter: blur(8px);
-            border-bottom: 2px solid var(--border-strong);
-            box-shadow: inset 0 1px 0 white;
+            background: oklch(from var(--bg) l c h / 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
         }
 
         .site-nav {
@@ -78,26 +97,101 @@ import Navigation from "./Navigation.astro";
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
-            max-width: 1100px;
+            max-width: 56rem;
             margin: 0 auto;
-            padding: 0.8rem clamp(1rem, 3vw, 1.8rem);
+            padding: 0.9rem clamp(1.2rem, 4vw, 2.5rem);
             position: relative;
         }
 
         .site-brand {
-            font-family: var(--font-display);
-            font-size: clamp(1.2rem, 2.6vw, 1.7rem);
-            letter-spacing: 0.02em;
-            text-transform: none;
+            font-family: var(--font-heading);
+            font-size: clamp(1rem, 2.2vw, 1.2rem);
+            font-weight: bold;
+            letter-spacing: -0.02em;
             color: var(--ink);
             text-decoration: none;
-            text-shadow:
-                1px 1px 0 color-mix(in oklch, var(--saffron) 74%, white),
-                2px 2px 0 color-mix(in oklch, var(--accent) 14%, transparent);
+            transition: color var(--transition-speed) ease;
         }
 
         .site-brand:hover {
-            color: var(--accent);
+            color: var(--leaf);
+            text-decoration: none;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            padding: 0;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            color: var(--ink);
+            transition: border-color var(--transition-speed) ease, background var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--border-strong);
+            background: var(--surface);
+        }
+
+        .theme-icon--light { display: inline; }
+        .theme-icon--dark  { display: none; }
+
+        :global([data-theme="dark"]) .theme-icon--light { display: none; }
+        :global([data-theme="dark"]) .theme-icon--dark  { display: inline; }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            padding: 0.4rem;
+            background: none;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            border-radius: 2px;
+            transition: border-color var(--transition-speed) ease;
+        }
+
+        .hamburger:hover {
+            border-color: var(--border-strong);
+        }
+
+        .hamburger-line {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--ink);
+            border-radius: 1px;
+            transition: transform var(--transition-speed) ease, opacity var(--transition-speed) ease;
+        }
+
+        .hamburger.is-open .hamburger-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.is-open .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.is-open .hamburger-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        @media (min-width: 760px) {
+            .hamburger {
+                display: none;
+            }
         }
     </style>
 </header>

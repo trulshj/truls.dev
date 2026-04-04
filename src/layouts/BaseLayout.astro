@@ -6,17 +6,43 @@ import { ClientRouter } from "astro:transitions";
 
 export type LayoutProps = {
     pageTitle: string;
-    windowTitle?: string;
+    lang?: "no" | "en" | "ja";
+    narrow?: boolean;
+    wide?: boolean;
 };
 
-const { pageTitle, windowTitle } = Astro.props as LayoutProps;
-const resolvedWindowTitle = windowTitle ?? pageTitle;
+const { pageTitle, lang = "no", narrow = false, wide = false } = Astro.props as LayoutProps;
 ---
 
-<html lang="en">
+<html lang={lang}>
     <head>
+        <!-- Must run before any paint to prevent flash of wrong theme -->
+        <script is:inline>
+            (function () {
+                function getTheme() {
+                    const saved = localStorage.getItem("theme");
+                    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                    return saved ?? (prefersDark ? "dark" : "light");
+                }
+
+                // Apply on initial load
+                document.documentElement.dataset.theme = getTheme();
+
+                // Astro View Transitions swap the <html> attributes from the incoming
+                // static page (which has no data-theme), clearing our setting.
+                // astro:before-swap lets us stamp the correct theme onto the new
+                // document before it ever reaches the DOM.
+                if (!window.__themeSwapListenerBound) {
+                    window.__themeSwapListenerBound = true;
+                    document.addEventListener("astro:before-swap", function (e) {
+                        e.newDocument.documentElement.dataset.theme = getTheme();
+                    });
+                }
+            })();
+        </script>
         <ClientRouter />
         <meta charset="utf-8" />
+        <meta name="color-scheme" content="light dark" />
         <link rel="icon" href="/favicon.svg" />
         <link
             rel="stylesheet"
@@ -27,16 +53,13 @@ const resolvedWindowTitle = windowTitle ?? pageTitle;
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
         <title>
-            {!!pageTitle ? `${pageTitle} ⋅ Truls Henrik` : "Truls Henrik"}
+            {!!pageTitle ? `${pageTitle} ⋅ Kaffekrus` : "Kaffekrus"}
         </title>
     </head>
     <body>
         <div class="site-shell">
             <Header />
-            <main
-                class="site-main"
-                data-window-title={resolvedWindowTitle}
-            >
+            <main class:list={["site-main", { "site-main--narrow": narrow, "site-main--wide": wide }]}>
                 <slot />
             </main>
         </div>

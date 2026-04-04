@@ -2,14 +2,14 @@ import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 
 export async function GET() {
-    const posts = (await getCollection("posts")).filter((x) => !x.data.isDraft);
+    const items = (await getCollection("garden")).filter((x) => !x.data.isDraft);
     return rss({
-        title: "Truls Henrik | Blog",
-        description: "Truls Henrik skriver om alt og ingenting",
+        title: "Kaffekrus",
+        description: "Tekst, kunst og eksperimenter fra hagen til Kaffekrus",
         site: "https://truls.dev",
-        items: posts.map((post) => ({
-            ...post.data,
-            link: `/blog/${post.id.replace(/\.mdx?$/, "")}/`,
+        items: items.map((item) => ({
+            ...item.data,
+            link: `/garden/${item.id.replace(/\.mdx?$/, "")}/`,
         })),
     });
 }

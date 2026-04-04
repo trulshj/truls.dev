@@ -1,0 +1,63 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import StatusBadge from "../components/StatusBadge.astro";
+import LangBadge from "../components/LangBadge.astro";
+
+const { frontmatter } = Astro.props;
+
+const pubDate = frontmatter.pubDate as Date;
+const formattedDate = pubDate.toLocaleDateString("nb", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+});
+
+const typeLabels: Record<string, string> = {
+    writing: "tekst",
+    art: "kunst",
+    story: "fortelling",
+    note: "notat",
+    visualization: "visualisering",
+};
+
+const isViz = frontmatter.type === "visualization";
+---
+
+<BaseLayout pageTitle={frontmatter.title} narrow={!isViz} wide={isViz} lang={frontmatter.lang}>
+    <nav class="breadcrumb reveal">
+        <a href="/garden">hagen</a>
+        <span class="breadcrumb-sep">→</span>
+        <span>{frontmatter.title}</span>
+    </nav>
+
+    <header class="article-header reveal">
+        <h1 transition:name={frontmatter.title}>{frontmatter.title}</h1>
+        <div class="article-meta">
+            <LangBadge lang={frontmatter.lang ?? "no"} />
+            <StatusBadge status={frontmatter.status ?? "seedling"} />
+            {frontmatter.type && (
+                <span class="badge badge--type">{typeLabels[frontmatter.type] ?? frontmatter.type}</span>
+            )}
+            <span class="article-date">
+                {formattedDate}
+            </span>
+        </div>
+        {frontmatter.tags && frontmatter.tags.length > 0 && (
+            <div class="tags article-tags">
+                {frontmatter.tags.map((tag: string) => (
+                    <span class="tag">#{tag}</span>
+                ))}
+            </div>
+        )}
+    </header>
+
+    {isViz ? (
+        <div class="reveal">
+            <slot />
+        </div>
+    ) : (
+        <article class="prose reveal">
+            <slot />
+        </article>
+    )}
+</BaseLayout>

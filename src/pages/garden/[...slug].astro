@@ -1,10 +1,10 @@
 ---
 import { getCollection, render } from "astro:content";
-import MarkdownPostLayout from "../../layouts/MarkdownPostLayout.astro";
+import GardenItemLayout from "../../layouts/GardenItemLayout.astro";
 
 export async function getStaticPaths() {
-    const blogEntries = await getCollection("posts");
-    return blogEntries
+    const entries = await getCollection("garden");
+    return entries
         .filter((x) => !x.data.isDraft)
         .map((entry) => ({
             params: { slug: entry.id.replace(/\.mdx?$/, "") },
@@ -16,6 +16,6 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<MarkdownPostLayout frontmatter={entry.data}>
+<GardenItemLayout frontmatter={entry.data}>
     <Content />
-</MarkdownPostLayout>
+</GardenItemLayout>

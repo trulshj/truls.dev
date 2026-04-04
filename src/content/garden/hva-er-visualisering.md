@@ -3,6 +3,10 @@ title: "Så eh, hva er visualisering?"
 pubDate: 2025-06-10
 excerpt: "En intro til hva jeg velger å bruke to år av livet mitt på!"
 isDraft: false
+type: writing
+lang: no
+status: budding
+tags: ["visualisering", "studie", "intro"]
 ---
 
 Et av de vanligste spørsmålene i et standard small-talk-rituale er en variant av: "Hva driver du med?". Spørsmålet setter igang en liten sosial dans hvor man etter tur deler en halvveis innøvd heispitch om hva jobben eller studiet går ut på. Hvor innøvd denne pitchen trenger å være, avhenger mye av hvor vanlig yrket ditt er.

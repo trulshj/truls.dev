@@ -4,35 +4,35 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 const pageTitle = "Om meg";
 ---
 
-<BaseLayout pageTitle={pageTitle} windowTitle="About.txt">
-    <section class="about-hero">
+<BaseLayout pageTitle={pageTitle} narrow={true}>
+    <section class="about">
+        <figure class="about-portrait reveal">
+            <img
+                src="/images/headshot.png"
+                alt="Portrett av Truls"
+                loading="lazy"
+            />
+        </figure>
+
         <div class="about-text">
-            <h1 class="about-title">Hallaien! 👋</h1>
-            <p class="lead">
+            <h1 class="reveal">Hallaien! Truls Henrik heter jeg.</h1>
+
+            <p class="lead reveal">
                 Jeg liker når ting gir mening. Helst for flere enn bare meg.
             </p>
-            <figure class="about-portrait" data-window-title="truls_spanderer_øl.png">
-                <img
-                    src="/images/headshot.png"
-                    alt="Portrett av Truls"
-                    loading="lazy"
-                />
-            </figure>
-            <p>
+
+            <p class="reveal">
                 Jeg er en utvikler som stortrives når jeg får grave meg ned i
-                ting som er akkurat passe nerdete. Gi meg noe som virker litt
-                kaotisk eller unødvendig komplisert, så koser jeg meg med å
-                rydde i det og finne gode måter å gjøre det mer forståelig på.
+                ting som er akkurat passe nerdete. Gi meg noe som virker kaotisk
+                eller unødvendig komplisert, så koser jeg meg med å rydde i det
+                og finne gode måter å gjøre det forståelig på — og dele det med
+                andre. Akkurat nå tar jeg en master i
+                visualisering, og har blitt oppriktig fascinert av hvor mye
+                lettere verden blir å forstå når ting blir tegnet, fargelagt
+                eller flyttet litt rundt på en skjerm.
             </p>
-            <p>
-                Jeg er veldig glad i formidling, og er stadig på jakt etter de
-                små aha-opplevelsene, både når jeg lærer noe selv, og når jeg
-                får være med på å få det til å klikke for andre. Akkurat nå
-                studerer jeg visualisering, og har blitt oppriktig fascinert av
-                hvor mye lettere verden blir å forstå når ting blir tegnet,
-                fargelagt eller flyttet litt rundt på en skjerm.
-            </p>
-            <p>
+
+            <p class="reveal">
                 Utenom skjermen danser jeg så ofte jeg kan. Jeg begynte med
                 fastingswing for ikke så lenge siden, og har nylig kastet meg ut
                 i både salsa og boogie woogie. Resultatet er at jeg som regel
@@ -41,25 +41,53 @@ const pageTitle = "Om meg";
                 perfekt balanse mellom strategi, pirk og "oi, nå har det gått
                 tre timer".
             </p>
-            <p>
+
+            <p class="reveal">
                 Denne siden er mitt lille hjørne av internett der jeg samler
-                ting jeg har lyst til å lage og dele, små prosjekter, tanker,
-                formidlingsforsøk og annet jeg synes er gøy. Hvis noe her
-                treffer deg, faglig eller menneskelig,
-                <a class="inline-link" href="mailto:post@truls.dev"
-                    >send meg gjerne en e-post</a
-                >. Jeg sier sjelden nei til en god prat.
+                ting jeg har lyst til å lage og dele — små prosjekter, tanker,
+                formidlingsforsøk og annet jeg synes er gøy.
+            </p>
+
+            <aside class="garden-note reveal">
+                Konseptet med en digital hage er inspirert av{" "}
+                <a class="inline-link" href="https://maggieappleton.com/garden-history">Maggie Appletons tanker om digitale hager.</a>
+            </aside>
+
+            <p class="about-cta reveal">
+                Hvis noe her treffer deg, faglig eller personlig,{" "}
+                <a class="inline-link" href="mailto:post@truls.dev">send meg gjerne en e-post</a>.
+                Jeg sier sjelden nei til en prat over kaffe &lt;3
             </p>
         </div>
     </section>
 </BaseLayout>
 
 <style>
-    .about-hero {
+    .about {
         display: flex;
         flex-direction: column;
-        gap: clamp(1.2rem, 2.6vw, 2rem);
-        padding: clamp(1rem, 3vw, 2rem) 0;
+        gap: 2rem;
+    }
+
+    .about-portrait {
+        margin: 0;
+        padding: 0;
+        width: min(100%, 16rem);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-hover);
+        transform: rotate(1.2deg);
+        overflow: hidden;
+        border-radius: 2px;
+        background: var(--surface);
+    }
+
+    .about-portrait img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        min-height: 200px;
+        filter: saturate(1.06) contrast(1.02);
     }
 
     .about-text {
@@ -68,91 +96,27 @@ const pageTitle = "Om meg";
         gap: 1rem;
     }
 
-    .about-title {
-        white-space: nowrap;
-        font-size: clamp(1.9rem, 6vw, 3.1rem);
+    .about-text h1 {
+        font-size: clamp(2rem, 6vw, 3rem);
     }
 
-    .about-portrait {
-        margin: 0.35rem 0 0.5rem;
-        width: min(100%, 23rem);
-        align-self: center;
-        position: relative;
-        padding: 0;
-        padding-top: 1.35rem;
-        border-radius: 0;
-        overflow: hidden;
-        border: 3px solid var(--border-strong);
-        background: color-mix(in oklch, var(--surface-strong) 96%, var(--bright-ocean));
-        box-shadow:
-            inset 1px 1px 0 white,
-            inset -2px -2px 0 color-mix(in oklch, var(--accent-strong) 14%, black),
-            5px 5px 0 color-mix(in oklch, var(--accent) 12%, black);
-        transform: rotate(1.5deg);
+    .about-text p {
+        color: var(--ink);
+        font-size: clamp(0.98rem, 1.8vw, 1.06rem);
+        line-height: 1.75;
+        max-width: 62ch;
     }
 
-    .about-portrait::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1.35rem;
-        background:
-            radial-gradient(circle at 0.8rem 50%, var(--accent) 0.22rem, transparent 0.24rem),
-            radial-gradient(circle at 1.5rem 50%, var(--saffron) 0.22rem, transparent 0.24rem),
-            radial-gradient(circle at 2.2rem 50%, var(--retro-green) 0.22rem, transparent 0.24rem),
-            linear-gradient(
-                90deg,
-                color-mix(in oklch, var(--accent-strong) 72%, white) 0%,
-                color-mix(in oklch, var(--accent) 74%, white) 45%,
-                color-mix(in oklch, var(--accent-secondary) 76%, white) 100%
-            );
-        border-bottom: 2px solid color-mix(in oklch, var(--accent-strong) 26%, black);
-        pointer-events: none;
-        z-index: 1;
+    .about-cta {
+        font-size: clamp(1.05rem, 2vw, 1.2rem) !important;
     }
 
-    .about-portrait::after {
-        content: attr(data-window-title);
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        height: 1.35rem;
-        display: flex;
-        align-items: center;
-        font-family: var(--font-window);
-        font-size: 0.62rem;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: color-mix(in oklch, var(--surface-strong) 92%, var(--saffron));
-        pointer-events: none;
-        z-index: 2;
-    }
-
-    .about-portrait img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        min-height: 280px;
-        filter: saturate(1.08) contrast(1.03);
-    }
-
-    @media (min-width: 820px) {
-        .about-portrait {
-            float: right;
-            margin: 0.25rem 0 0.8rem 1.2rem;
-            width: min(46%, 19rem);
-            align-self: auto;
-            transform: rotate(1deg);
-        }
-
-        .about-text::after {
-            content: "";
-            display: table;
-            clear: both;
-        }
+    .garden-note {
+        border-left: 3px solid var(--border-strong);
+        padding: 0.4rem 0 0.4rem 0.9rem;
+        color: var(--muted);
+        font-size: 0.85rem;
+        font-family: var(--font-heading);
+        max-width: 62ch;
     }
 </style>

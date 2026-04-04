@@ -1,0 +1,15 @@
+---
+export type Props = {
+    lang: "no" | "en" | "ja";
+};
+
+const { lang } = Astro.props;
+
+const labels = {
+    no: "NO",
+    en: "EN",
+    ja: "JA",
+};
+---
+
+<span class={`badge badge--lang-${lang}`}>{labels[lang]}</span>

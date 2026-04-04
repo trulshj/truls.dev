@@ -1,0 +1,56 @@
+---
+import StatusBadge from "./StatusBadge.astro";
+import LangBadge from "./LangBadge.astro";
+
+export type Props = {
+    slug: string;
+    title: string;
+    excerpt?: string;
+    type: "writing" | "art" | "story" | "note";
+    lang: "no" | "en" | "ja";
+    status: "seedling" | "budding" | "evergreen";
+    pubDate: Date;
+    tags?: string[];
+    image?: { src: string; alt: string };
+};
+
+const { slug, title, excerpt, type, lang, status, pubDate, tags } = Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString("nb", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+});
+
+const typeLabels: Record<string, string> = {
+    writing: "tekst",
+    art: "kunst",
+    story: "fortelling",
+    note: "notat",
+    visualization: "visualisering",
+};
+---
+
+<a
+    href={`/garden/${slug}`}
+    class="garden-card"
+    data-type={type}
+    data-lang={lang}
+    transition:name={title}
+>
+    <h3 class="garden-card__title">{title}</h3>
+    {excerpt && <p class="garden-card__excerpt">{excerpt}</p>}
+    <div class="garden-card__meta">
+        <LangBadge lang={lang} />
+        <StatusBadge status={status} />
+        <span class="badge badge--type">{typeLabels[type] ?? type}</span>
+        <time class="garden-card__date" datetime={pubDate.toISOString()}>{formattedDate}</time>
+    </div>
+    {tags && tags.length > 0 && (
+        <div class="tags">
+            {tags.slice(0, 3).map((tag) => (
+                <span class="tag">#{tag}</span>
+            ))}
+        </div>
+    )}
+</a>
