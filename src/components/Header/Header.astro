@@ -9,13 +9,6 @@ import Navigation from "./Navigation.astro";
         <Navigation />
 
         <div class="nav-controls">
-            <button class="theme-toggle" aria-label="Bytt tema" title="Bytt tema">
-                <!-- shown in light mode: switch to dark -->
-                <span class="theme-icon theme-icon--light">☾</span>
-                <!-- shown in dark mode: switch to light -->
-                <span class="theme-icon theme-icon--dark">☀</span>
-            </button>
-
             <button class="hamburger" aria-expanded="false" aria-controls="primary-nav" aria-label="Åpne navigasjon">
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
@@ -61,25 +54,8 @@ import Navigation from "./Navigation.astro";
             }
         }
 
-        function initTheme() {
-            const toggle = document.querySelector(".theme-toggle") as HTMLButtonElement | null;
-            if (!toggle || toggle.dataset.bound === "true") return;
-            toggle.dataset.bound = "true";
-
-            toggle.addEventListener("click", () => {
-                const current = document.documentElement.dataset.theme ?? "light";
-                const next = current === "dark" ? "light" : "dark";
-                document.documentElement.dataset.theme = next;
-                localStorage.setItem("theme", next);
-            });
-        }
-
         init();
-        initTheme();
-        document.addEventListener("astro:after-swap", () => {
-            init();
-            initTheme();
-        });
+        document.addEventListener("astro:after-swap", init);
     </script>
 
     <style>
@@ -124,33 +100,6 @@ import Navigation from "./Navigation.astro";
             gap: 0.4rem;
         }
 
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 2rem;
-            height: 2rem;
-            padding: 0;
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 2px;
-            cursor: pointer;
-            font-size: 1rem;
-            line-height: 1;
-            color: var(--ink);
-            transition: border-color var(--transition-speed) ease, background var(--transition-speed) ease, color var(--transition-speed) ease;
-        }
-
-        .theme-toggle:hover {
-            border-color: var(--border-strong);
-            background: var(--surface);
-        }
-
-        .theme-icon--light { display: inline; }
-        .theme-icon--dark  { display: none; }
-
-        :global([data-theme="dark"]) .theme-icon--light { display: none; }
-        :global([data-theme="dark"]) .theme-icon--dark  { display: inline; }
 
         .hamburger {
             display: flex;
