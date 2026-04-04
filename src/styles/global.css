@@ -8,14 +8,14 @@
 
     /* Text */
     --ink: oklch(0.92 0.012 80);
-    --muted: oklch(0.60 0.015 240);
+    --muted: oklch(0.6 0.015 240);
 
     /* Content type accents */
     --leaf: oklch(0.72 0.14 155);
     --leaf-light: oklch(0.24 0.05 155);
     --warm: oklch(0.78 0.12 42);
     --warm-light: oklch(0.24 0.05 50);
-    --sky: oklch(0.78 0.10 230);
+    --sky: oklch(0.78 0.1 230);
     --sky-light: oklch(0.22 0.05 230);
     --violet: oklch(0.75 0.14 298);
     --violet-light: oklch(0.22 0.05 290);
@@ -51,7 +51,8 @@
 
     /* Card shadow */
     --shadow: 0 1px 4px oklch(0 0 0 / 0.3), 0 1px 2px oklch(0 0 0 / 0.2);
-    --shadow-hover: 0 6px 18px oklch(0 0 0 / 0.45), 0 2px 6px oklch(0 0 0 / 0.3);
+    --shadow-hover:
+        0 6px 18px oklch(0 0 0 / 0.45), 0 2px 6px oklch(0 0 0 / 0.3);
 }
 
 /* ============================================================
@@ -62,6 +63,7 @@
 }
 
 html {
+    font-size: 18px;
     color: var(--ink);
     font-family: var(--font-body);
     background-color: var(--bg);
@@ -75,8 +77,8 @@ body {
     /* Subtle dot-grid background */
     background-image: radial-gradient(
         circle,
-        oklch(0.38 0.025 260) 0.5px,
-        transparent 0.5px
+        color-mix(in oklch, var(--border-strong) 45%, transparent) 1px,
+        transparent 1px
     );
     background-size: 24px 24px;
     background-color: var(--bg);
@@ -118,7 +120,10 @@ img {
 /* ============================================================
    TYPOGRAPHY
    ============================================================ */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
     color: var(--ink);
     margin: 0;
     font-family: var(--font-heading);
@@ -129,7 +134,7 @@ h1, h2, h3, h4 {
 h1 {
     font-size: clamp(2.4rem, 9vw, 4.8rem);
     letter-spacing: -0.02em;
-    line-height: 1.0;
+    line-height: 1;
 }
 
 h2 {
@@ -287,11 +292,21 @@ a:focus-visible {
     text-decoration: none;
 }
 
-.garden-card[data-type="writing"]  { border-left-color: var(--leaf); }
-.garden-card[data-type="art"]      { border-left-color: var(--warm); }
-.garden-card[data-type="story"]    { border-left-color: var(--violet); }
-.garden-card[data-type="note"]          { border-left-color: var(--sky); }
-.garden-card[data-type="visualization"] { border-left-color: var(--sky); }
+.garden-card[data-type="writing"] {
+    border-left-color: var(--leaf);
+}
+.garden-card[data-type="art"] {
+    border-left-color: var(--warm);
+}
+.garden-card[data-type="story"] {
+    border-left-color: var(--violet);
+}
+.garden-card[data-type="note"] {
+    border-left-color: var(--sky);
+}
+.garden-card[data-type="visualization"] {
+    border-left-color: var(--sky);
+}
 
 .garden-card--hidden {
     display: none;
@@ -318,6 +333,7 @@ a:focus-visible {
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -356,13 +372,31 @@ a:focus-visible {
     line-height: 1.4;
 }
 
-.badge--lang-no { color: var(--sky); background: var(--sky-light); }
-.badge--lang-en { color: var(--warm); background: var(--warm-light); }
-.badge--lang-ja { color: var(--violet); background: var(--violet-light); }
+.badge--lang-no {
+    color: var(--sky);
+    background: var(--sky-light);
+}
+.badge--lang-en {
+    color: var(--warm);
+    background: var(--warm-light);
+}
+.badge--lang-ja {
+    color: var(--violet);
+    background: var(--violet-light);
+}
 
-.badge--status-seedling  { color: var(--leaf); background: var(--leaf-light); }
-.badge--status-budding   { color: var(--leaf); background: var(--leaf-light); }
-.badge--status-evergreen { color: var(--leaf); background: var(--leaf-light); }
+.badge--status-seedling {
+    color: var(--leaf);
+    background: var(--leaf-light);
+}
+.badge--status-budding {
+    color: var(--leaf);
+    background: var(--leaf-light);
+}
+.badge--status-evergreen {
+    color: var(--leaf);
+    background: var(--leaf-light);
+}
 
 .badge--type {
     color: var(--muted);
@@ -736,11 +770,21 @@ a:focus-visible {
     animation: pop-up 0.55s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
-.reveal:nth-child(2) { animation-delay: 0.06s; }
-.reveal:nth-child(3) { animation-delay: 0.12s; }
-.reveal:nth-child(4) { animation-delay: 0.18s; }
-.reveal:nth-child(5) { animation-delay: 0.24s; }
-.reveal:nth-child(6) { animation-delay: 0.30s; }
+.reveal:nth-child(2) {
+    animation-delay: 0.06s;
+}
+.reveal:nth-child(3) {
+    animation-delay: 0.12s;
+}
+.reveal:nth-child(4) {
+    animation-delay: 0.18s;
+}
+.reveal:nth-child(5) {
+    animation-delay: 0.24s;
+}
+.reveal:nth-child(6) {
+    animation-delay: 0.3s;
+}
 
 /* ============================================================
    RESPONSIVE
