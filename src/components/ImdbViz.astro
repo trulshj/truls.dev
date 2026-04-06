@@ -1,19 +1,32 @@
 <section class="viz-page section">
     <header class="stack reveal">
         <p class="lead">
-            Her bruker vi det samme datasettet til å fortelle to ganske
-            ulike historier. Først får du en ryddig og ærlig tolkning av
-            dataene, der vi viser utviklingen over tid og spredningen i
-            materialet. Deretter skrur vi på noen klassiske grep for å få
-            moderne filmer til å fremstå ekstra imponerende. En liten
-            påminnelse om hvor mye designvalg faktisk styrer hvordan vi
-            tolker data.
+            IMDb fører en liste over de tusen høyest rangerte filmene
+            gjennom historien, et tverrsnitt av hva publikum har verdsatt
+            over tid. Men hva forteller egentlig ratingene oss? Det avhenger
+            overraskende mye av hvordan vi velger å presentere dem. Her tar
+            vi det samme datasettet og viser to ulike versjoner: én som
+            forsøker å være ærlig om hva tallene faktisk sier, og én som
+            bruker klassiske visualiseringsgrep til å skape et bestemt
+            inntrykk. Se om du legger merke til forskjellen, og hva som
+            avgjør hvilken versjon du fester lit til.
         </p>
         <p id="viz-warning" class="note note--warning" hidden></p>
     </header>
 
     <div class="stories-grid">
         <section class="story" aria-labelledby="honest-title">
+            <p class="note">
+                Her prøver vi å være tydelige på valgene vi tar. For hvert år
+                beregner vi medianen som et robust mål på sentraltendens, og
+                viser interkvartilspennet (fra første til tredje kvartil) for å
+                gjøre variasjonen i ratingene synlig. Alle titlene i
+                Top-1000-utvalget er med, men vi utelater år med færre enn tre
+                filmer for å unngå ustabile estimater. Husk også at dette
+                fortsatt er et selektert utvalg, det er de høyest rangerte
+                filmene, ikke en full populasjon av alle utgivelser.
+            </p>
+
             <section class="viz-panel honest">
                 <h2 id="honest-title">
                     Ærlig visning: median per år med spredning
@@ -27,20 +40,18 @@
                     aria-label="Linjediagram med medianrating per år og interkvartilbånd"
                 ></svg>
             </section>
-
-            <p class="note">
-                Her prøver vi å være tydelige på valgene vi tar. For hvert år
-                beregner vi medianen som et robust mål på sentraltendens, og
-                viser interkvartilspennet (fra første til tredje kvartil) for å
-                gjøre variasjonen i ratingene synlig. Alle titlene i
-                Top-1000-utvalget er med, men vi utelater år med færre enn tre
-                filmer for å unngå ustabile estimater. Husk også at dette
-                fortsatt er et selektert utvalg – det er de høyest rangerte
-                filmene, ikke en full populasjon av alle utgivelser.
-            </p>
         </section>
 
         <section class="story" aria-labelledby="deceptive-title">
+            <p class="note">
+                Nå gjør vi det motsatte, med vilje. Vi bruker gjennomsnitt i
+                stedet for median (som er mer følsomt for ekstreme verdier),
+                kutter y-aksen slik at små forskjeller ser store ut, aggregerer
+                per tiår og skjuler dermed variasjon mellom enkeltår, og velger
+                et snevert tidsvindu. Sammen med ladede farger gir dette
+                inntrykk av et tydelig moderne oppsving.
+            </p>
+
             <section class="viz-panel deceptive">
                 <h2 id="deceptive-title">
                     Villedende visning: "Den moderne renessansen"
@@ -54,19 +65,17 @@
                     aria-label="Stolpediagram med gjennomsnittsrating per tiår"
                 ></svg>
             </section>
-
-            <p class="note">
-                Nå gjør vi det motsatte – med vilje. Vi bruker gjennomsnitt i
-                stedet for median (som er mer følsomt for ekstreme verdier),
-                kutter y-aksen slik at små forskjeller ser store ut, aggregerer
-                per tiår og skjuler dermed variasjon mellom enkeltår, og velger
-                et snevert tidsvindu. Sammen med ladede farger gir dette
-                inntrykk av et tydelig moderne oppsving. Under ser du antall
-                filmer per tiår – noe som forklarer hvorfor særlig 2020-tallet
-                er sårbart for overtolkning.
-            </p>
         </section>
     </div>
+
+    <p class="note count-note">
+        Denne oversikten viser hvor mange filmer fra IMDb Top-1000-lista som
+        stammer fra hvert tiår. Det er en nøkkeldetalj for å forstå den
+        villedende visningen over: jo færre filmer et tiår bidrar med, desto
+        mer ustabilt er gjennomsnittet. 2020-tallene er særlig sårbare, med
+        bare 6 filmer i utvalget så langt. Slike skjevheter er lette å
+        overse, men avgjørende for tolkningen.
+    </p>
 
     <section id="count-template" class="viz-panel deceptive">
         <h2>Antall filmer per tiår</h2>
@@ -420,7 +429,7 @@
             .range([innerHeight, 0]);
 
         addGrid(g, y, innerWidth, 10);
-        addAxes(g, x, y, innerHeight, 10, 10, (d) => `${d}s`);
+        addAxes(g, x, y, innerHeight, 10, 10, String);
 
         g.append("text")
             .attr("x", innerWidth / 2)
@@ -457,26 +466,30 @@
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        g.selectAll("rect")
+        const bars = g.selectAll("rect")
             .data(summary)
             .join("rect")
             .attr("x", (d) => x(d.decade))
             .attr("y", (d) => y(d.mean))
             .attr("width", x.bandwidth())
             .attr("height", (d) => innerHeight - y(d.mean))
-            .attr("fill", (d) => color(d.decade))
-            .on("mouseover", function () {
+            .attr("fill", (d) => color(d.decade));
+
+        bars.on("mouseover", function () {
                 tooltip.style("opacity", 1);
+                bars.attr("opacity", 0.5);
+                d3.select(this).attr("opacity", 1);
             })
             .on("mousemove", function (event, d) {
                 const [xPos, yPos] = d3.pointer(event, deceptivePanel);
                 tooltip
-                    .html(`<strong>${d.decade}s</strong><br>Gjennomsnitt: ${d.mean.toFixed(2)}<br>Antall filmer: ${d.n}`)
+                    .html(`<strong>${d.decade}-tallet</strong><br>Gjennomsnitt: ${d.mean.toFixed(2)}<br>Antall filmer: ${d.n}`)
                     .style("left", `${xPos + 16}px`)
                     .style("top", `${yPos - 8}px`);
             })
             .on("mouseleave", function () {
                 tooltip.style("opacity", 0);
+                bars.attr("opacity", 1);
             });
 
         const last = summary[summary.length - 1];
@@ -532,7 +545,7 @@
             .nice();
 
         addGrid(g, y, innerWidth, 5);
-        addAxes(g, x, y, innerHeight, 5, 5, (d) => `${d}s`);
+        addAxes(g, x, y, innerHeight, 5, 5, String);
 
         g.append("text")
             .attr("x", innerWidth / 2)
@@ -586,7 +599,7 @@
         const mousemove = function (event, d) {
             const [xPos, yPos] = d3.pointer(event, host.node());
             tooltip
-                .html(`<strong>${d.decade}s</strong><br>Antall filmer: ${d.n}`)
+                .html(`<strong>${d.decade}-tallet</strong><br>Antall filmer: ${d.n}`)
                 .style("left", `${xPos + 16}px`)
                 .style("top", `${yPos - 8}px`);
         };
@@ -624,11 +637,6 @@
     .viz-page .lead {
         margin-left: auto;
         margin-right: auto;
-    }
-
-    .viz-page h1 {
-        font-size: clamp(1.9rem, 5.8vw, 3.2rem);
-        line-height: 1.03;
     }
 
     .stories-grid {
@@ -693,7 +701,8 @@
         color: color-mix(in oklch, var(--ink) 85%, var(--accent));
     }
 
-    #count-template {
+    #count-template,
+    .count-note {
         width: calc(50% - 0.75rem);
         margin-left: auto;
         margin-right: auto;
@@ -729,11 +738,6 @@
 
     .line {
         fill: none;
-        stroke-width: 2.3;
-    }
-
-    .iqr {
-        opacity: 0.38;
     }
 
     :global(.viz-panel .tooltip) {
@@ -749,7 +753,6 @@
         font-size: 0.78rem;
         line-height: 1.3;
         pointer-events: none;
-        visibility: visible;
         opacity: 0;
         transition: opacity 120ms ease;
         left: 0;
