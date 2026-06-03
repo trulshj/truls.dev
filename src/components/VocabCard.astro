@@ -1,0 +1,126 @@
+---
+export type Props = {
+    word: string;
+    reading?: string;
+    definition: string;
+    example?: string;
+    translation?: string;
+    context?: string;
+};
+
+const { word, reading, definition, example, translation, context } = Astro.props;
+
+function escapeHtml(s: string): string {
+    return s
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function parseExample(text: string): string {
+    const parts: string[] = [];
+    const highlightRe = /\{([^}]+)\}/g;
+    let last = 0;
+    for (const m of text.matchAll(highlightRe)) {
+        if (m.index! > last) parts.push(escapeHtml(text.slice(last, m.index!)));
+        parts.push(`<mark>${escapeHtml(m[1])}</mark>`);
+        last = m.index! + m[0].length;
+    }
+    if (last < text.length) parts.push(escapeHtml(text.slice(last)));
+    return parts.join("");
+}
+
+const processedExample = example ? parseExample(example) : "";
+---
+
+<figure class="vocab-card">
+    <div class="vocab-word-box">
+        {reading ? <ruby>{word}<rt>{reading}</rt></ruby> : word}
+    </div>
+    <div class="vocab-body">
+        <p class="vocab-definition">{definition}</p>
+        {example && <p class="vocab-example" lang="ja" set:html={processedExample} />}
+        {translation && <p class="vocab-translation">{translation}</p>}
+        {context && <p class="vocab-context">({context})</p>}
+    </div>
+</figure>
+
+<style>
+    .vocab-card {
+        position: relative;
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        box-shadow: var(--shadow);
+        margin: var(--space-md) 0;
+    }
+
+    .vocab-word-box {
+        position: absolute;
+        top: -1px;
+        left: var(--space-sm);
+        font-family: "Noto Sans JP", sans-serif;
+        font-size: 1.3rem;
+        color: var(--ink);
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        padding: 0.1em 0.5em;
+        line-height: 1.4;
+        /* Pull the word box up so it overlaps the card border */
+        transform: translateY(-50%);
+    }
+
+    .vocab-word-box ruby rt {
+        font-size: 0.55em;
+        color: var(--muted);
+    }
+
+    .vocab-body {
+        padding: 2.2rem var(--space-sm) var(--space-sm);
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .vocab-definition,
+    .vocab-example,
+    .vocab-translation,
+    .vocab-context {
+        margin: 0;
+    }
+
+    .vocab-definition {
+        color: var(--ink);
+    }
+
+    .vocab-example {
+        font-family: "Noto Sans JP", sans-serif;
+        line-height: 2.2;
+        color: var(--ink);
+    }
+
+    .vocab-translation {
+        color: var(--muted);
+        font-style: italic;
+        font-size: 0.92rem;
+    }
+
+    .vocab-context {
+        color: var(--muted);
+        font-size: 0.88rem;
+    }
+
+    :global(.vocab-example ruby rt) {
+        font-size: 0.55em;
+        color: var(--muted);
+    }
+
+    :global(.vocab-example mark) {
+        background: transparent;
+        color: var(--leaf);
+        font-weight: bold;
+    }
+</style>
