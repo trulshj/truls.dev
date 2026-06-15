@@ -8,6 +8,10 @@ export const prerender = false;
 // local Bergen time (CEST, UTC+2) in mid-June.
 const TZ_OFFSET = "+02:00";
 
+// Gap subtracted from each event's end so consecutive events never share a
+// boundary instant (see note in the GET handler).
+const GAP_MS = 60_000;
+
 interface Slot {
     /** Start time, 24h "HH:MM". */
     time: string;
@@ -181,7 +185,15 @@ export const GET: APIRoute = async () => {
 
             const start = at(day.date, slot.time);
             const next = day.slots[i + 1];
-            const end = next ? at(day.date, next.time) : undefined;
+            // End each event one minute before the next begins, rather than
+            // exactly at it. Mathematically, touching events (end == next
+            // start) don't overlap — DTEND is exclusive — but some calendar
+            // apps (Outlook, Apple in some views) treat a shared boundary
+            // instant as a conflict and render the events side-by-side as if
+            // overlapping. A 1-minute gap removes the shared instant entirely.
+            const end = next
+                ? new Date(at(day.date, next.time).getTime() - GAP_MS)
+                : undefined;
 
             calendar.createEvent({
                 id: `${day.date}-${slot.time}@truls.dev`,
