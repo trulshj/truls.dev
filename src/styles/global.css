@@ -639,6 +639,12 @@ a:focus-visible {
     border: 1px solid var(--border);
 }
 
+/* furigana, as blok publishes it: <ruby>漢字<rp>(</rp><rt>かんじ</rt><rp>)</rp></ruby> */
+.prose ruby rt {
+    font-size: 0.55em;
+    color: var(--muted);
+}
+
 .prose pre {
     background: oklch(0.18 0.03 260);
     color: oklch(0.9 0.04 85);

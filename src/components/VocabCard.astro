@@ -19,16 +19,68 @@ function escapeHtml(s: string): string {
         .replace(/'/g, "&#39;");
 }
 
-function parseExample(text: string): string {
-    const parts: string[] = [];
-    const highlightRe = /\{([^}]+)\}/g;
+type RubyPart = { base: string; reading: string };
+
+// Furigana, written as in blok: {洞窟|どうくつ}, or one reading per character: {漢字|かん|じ}
+const FURIGANA = /\{([^\s{}|<>`\\]+)\|([^\s{}<>`\\]+)\}/g;
+
+function rubyParts(base: string, readingText: string): RubyPart[] | null {
+    if (!/[^\x00-\x7f]/.test(base)) return null;
+    const readings = readingText.split("|");
+    if (readings.some((r) => !r)) return null;
+    const chars = [...base];
+    if (readings.length > 1 && readings.length === chars.length) {
+        return chars.map((ch, i) => ({ base: ch, reading: readings[i] }));
+    }
+    return [{ base, reading: readings.join("") }];
+}
+
+function rubyHtml(parts: RubyPart[]): string {
+    const inner = parts
+        .map((p) => `${escapeHtml(p.base)}<rp>(</rp><rt>${escapeHtml(p.reading)}</rt><rp>)</rp>`)
+        .join("");
+    return `<ruby>${inner}</ruby>`;
+}
+
+/** Text with furigana inside, as HTML. */
+function withRuby(text: string): string {
+    let out = "";
     let last = 0;
-    for (const m of text.matchAll(highlightRe)) {
-        if (m.index! > last) parts.push(escapeHtml(text.slice(last, m.index!)));
-        parts.push(`<mark>${escapeHtml(m[1])}</mark>`);
+    for (const m of text.matchAll(FURIGANA)) {
+        const parts = rubyParts(m[1], m[2]);
+        if (!parts) continue;
+        out += escapeHtml(text.slice(last, m.index)) + rubyHtml(parts);
         last = m.index! + m[0].length;
     }
-    if (last < text.length) parts.push(escapeHtml(text.slice(last)));
+    return out + escapeHtml(text.slice(last));
+}
+
+/**
+ * The example sentence as HTML:
+ * - {松明} highlights the word.
+ * - {洞窟|どうくつ} adds furigana, highlighted when it's the card's word.
+ * - {{覚|おぼ}えた} highlights a word with furigana inside.
+ */
+function parseExample(text: string): string {
+    const parts: string[] = [];
+    let last = 0;
+    for (let i = text.indexOf("{"); i >= 0; i = text.indexOf("{", last)) {
+        let depth = 0;
+        let end = -1;
+        for (let j = i; j < text.length && end < 0; j++) {
+            if (text[j] === "{") depth++;
+            else if (text[j] === "}" && --depth === 0) end = j;
+        }
+        if (end < 0) break;
+        parts.push(escapeHtml(text.slice(last, i)));
+        const inner = text.slice(i + 1, end);
+        const furigana = /^([^\s{}|]+)\|([^\s{}]+)$/.exec(inner);
+        const ruby = furigana && rubyParts(furigana[1], furigana[2]);
+        if (ruby) parts.push(furigana![1] === word.trim() ? `<mark>${rubyHtml(ruby)}</mark>` : rubyHtml(ruby));
+        else parts.push(`<mark>${withRuby(inner)}</mark>`);
+        last = end + 1;
+    }
+    parts.push(escapeHtml(text.slice(last)));
     return parts.join("");
 }
 
