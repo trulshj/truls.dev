@@ -250,7 +250,7 @@ p {
     top: calc(var(--rise) * 1em);
 }
 /* The first line rises above its block: letters are ink above the block's top edge and block ink
-   inside it, so light text on a dark block (story's indigo) still reads against the paper. */
+   inside it, so light text on a dark block (like indigo) still reads against the paper. */
 .bt:first-child {
     background: linear-gradient(
         to bottom,

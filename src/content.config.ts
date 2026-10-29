@@ -11,7 +11,7 @@ const gardenCollection = defineCollection({
         isDraft: z.boolean().optional(),
         excerpt: z.string().optional(),
         image: z.object({ src: z.string(), alt: z.string() }).optional(),
-        type: z.enum(["writing", "art", "story", "note", "visualization"]).default("writing"),
+        type: z.enum(["longread", "note", "art", "interactive"]).default("longread"),
         lang: z.enum(["no", "en", "ja"]).default("no"),
         status: z.enum(["seedling", "budding", "evergreen"]).default("seedling"),
         tags: z.array(z.string()).optional(),

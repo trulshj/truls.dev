@@ -3,7 +3,7 @@ title: "Så eh, hva er visualisering?"
 pubDate: 2025-06-10
 excerpt: "En intro til hva jeg velger å bruke to år av livet mitt på!"
 isDraft: true
-type: writing
+type: longread
 lang: no
 status: budding
 tags: ["visualisering", "studie", "intro"]

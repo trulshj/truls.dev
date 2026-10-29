@@ -4,7 +4,14 @@ Personal site and digital garden — a small corner of the internet for things c
 
 ## What it is
 
-A [digital garden](https://maggieappleton.com/garden-history): loosely organized, openly evolving content that grows over time rather than being published as finished work. Content lives in `/src/content/garden` and can be writing, notes, visualizations, stories, or art — in Norwegian, English, or Japanese.
+A [digital garden](https://maggieappleton.com/garden-history): loosely organized, openly evolving content that grows over time rather than being published as finished work. Content lives in `/src/content/garden`, in Norwegian, English, or Japanese. Each piece has a type, shown as its colour:
+
+- **longread** (Langlesing): something longer to read, like an essay or a story
+- **note** (Notat): something short to skim, like study notes
+- **art** (Kunst): something to look at, like renders, photos or drawings
+- **interactive** (Interaktiv): something to play with, like a visualization (gets the wide layout)
+
+What a piece is about goes in its tags.
 
 Each piece has a growth status: **seedling** 🌱 (rough idea), **budding** 🌿 (taking shape), or **evergreen** 🌳 (mature).
 
@@ -43,7 +50,7 @@ Create a `.md` or `.mdx` file in `src/content/garden/`. Required frontmatter:
 ---
 title: "Your title"
 pubDate: 2026-04-28
-type: writing        # writing | note | visualization | story | art
+type: longread       # longread | note | art | interactive
 lang: no             # no | en | ja
 status: seedling     # seedling | budding | evergreen
 isDraft: true        # omit or set false to publish

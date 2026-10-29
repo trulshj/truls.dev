@@ -24,7 +24,8 @@ const slug = slugOf(post);
 const typeLabel = TYPE_LABELS[type];
 const langLabel = LANG_LABELS[lang];
 const lines = splitTitle(title);
-const isViz = type === "visualization";
+// interactive posts (visualisations, code toys) get the wide layout
+const isViz = type === "interactive";
 ---
 
 <BaseLayout pageTitle={title} description={excerpt} narrow={!isViz} wide={isViz} lang={lang}>

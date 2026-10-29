@@ -5,13 +5,13 @@ export type GardenType = GardenPost["data"]["type"];
 export type GardenStatus = GardenPost["data"]["status"];
 export type GardenLang = GardenPost["data"]["lang"];
 
-/** Garden types, each a "line" with a colour (set by data-type in tokens.css) and a station letter, as in blok. */
+/** Garden types, each a "line" with a colour (set by data-type in tokens.css) and a station letter. */
 export const TYPE_LABELS: Record<GardenType, { no: string; ja: string; letter: string }> = {
-    writing: { no: "Tekst", ja: "文章", letter: "W" },
-    art: { no: "Kunst", ja: "作品", letter: "A" },
-    story: { no: "Fortelling", ja: "物語", letter: "S" },
+    longread: { no: "Langlesing", ja: "長文", letter: "L" },
     note: { no: "Notat", ja: "メモ", letter: "N" },
-    visualization: { no: "Visualisering", ja: "可視化", letter: "V" },
+    art: { no: "Kunst", ja: "作品", letter: "K" },
+    // 体験型: hands-on, as in 体験型展示 (an interactive exhibit)
+    interactive: { no: "Interaktiv", ja: "体験型", letter: "I" },
 };
 
 export const STATUS_LABELS: Record<GardenStatus, { no: string; kanji: string; reading: string }> = {
