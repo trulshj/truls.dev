@@ -1,0 +1,42 @@
+---
+import { STATUS_LABELS, type GardenStatus } from "../lib/garden";
+
+/** Round black status stamp: kanji in the middle, the Norwegian name around the edge when there's room. */
+export type Props = { status: GardenStatus; size?: number };
+
+const { status, size = 48 } = Astro.props;
+const { no, kanji } = STATUS_LABELS[status];
+const ring = size >= 56;
+const kanjiSize = kanji.length > 1 ? (ring ? 22 : 34) : ring ? 34 : 52;
+const label = no.toUpperCase();
+// short names go round three times, so the ring isn't mostly gaps
+const ringText = `${label} • `.repeat(label.length <= 5 ? 3 : 2);
+const id = `ring-${status}-${size}`;
+---
+
+<svg class="stamp" viewBox="0 0 100 100" width={size} height={size} role="img" aria-label={no}>
+    <circle class="stamp-bg" cx="50" cy="50" r="50"></circle>
+    {
+        ring && (
+            <>
+                <path id={id} d="M 16 50 A 34 34 0 1 1 84 50 A 34 34 0 1 1 16 50" fill="none" />
+                <text class="stamp-ring">
+                    <textPath href={`#${id}`} textLength="211" lengthAdjust="spacing">
+                        {ringText}
+                    </textPath>
+                </text>
+            </>
+        )
+    }
+    <text
+        class="stamp-kanji"
+        x="50"
+        y="51"
+        text-anchor="middle"
+        dominant-baseline="central"
+        lang="ja"
+        style={`font-size: ${kanjiSize}px`}
+    >
+        {kanji}
+    </text>
+</svg>

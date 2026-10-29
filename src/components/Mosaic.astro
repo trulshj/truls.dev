@@ -1,0 +1,35 @@
+---
+import { Tiles } from "../lib/tiles.js";
+
+const COLORS = {
+    ink: "var(--ink)",
+    accent: "var(--accent)",
+    taupe: "var(--taupe)",
+    cream: "var(--cream)",
+    paper: "var(--paper)",
+    /** the current post type's line colour */
+    t: "var(--t)",
+    teal: "var(--teal)",
+    vermilion: "var(--vermilion)",
+    indigo: "var(--indigo)",
+    green: "var(--green)",
+} as const;
+
+/** A seeded cluster of pictogram tiles from tiles.js, drawn at build time. Same seed, same pattern. */
+export type Props = {
+    seed: string;
+    cols: number;
+    rows: number;
+    /** Tile size in px. */
+    tile: number;
+    density?: number;
+    anchor?: [number, number];
+    colors: (keyof typeof COLORS)[];
+    class?: string;
+};
+
+const { seed, cols, rows, tile, density, anchor, colors, class: className } = Astro.props;
+const html = Tiles.mosaicHTML({ seed, cols, rows, density, anchor, colors: colors.map((c) => COLORS[c]) });
+---
+
+<span class:list={["mosaic", className]} style={`--cols: ${cols}; --tile: ${tile}px`} aria-hidden="true" set:html={html} />

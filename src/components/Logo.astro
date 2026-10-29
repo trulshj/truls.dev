@@ -1,0 +1,10 @@
+---
+/** K R U S on four tiles, from Kaffekrus (blok's logo is B L O K). `size` is one tile in px. */
+export type Props = { size?: number; strip?: boolean };
+
+const { size = 20, strip = false } = Astro.props;
+---
+
+<span class:list={["logo", { "logo--strip": strip }]} style={`--s: ${size}px`} aria-hidden="true">
+    <b>K</b><b>R</b><b>U</b><b>S</b>
+</span>

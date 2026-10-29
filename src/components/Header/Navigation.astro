@@ -1,40 +1,37 @@
 ---
 const currentPath = Astro.url.pathname;
-const active = (path: string) => {
-    if (path === "/") return currentPath === "/" ? "active" : "";
-    return currentPath === path || currentPath.startsWith(`${path}/`) ? "active" : "";
-};
+const isActive = (path: string) =>
+    path === "/" ? currentPath === "/" : currentPath === path || currentPath.startsWith(`${path}/`);
+
+const links = [
+    { href: "/", text: "Hjem", ja: "ホーム" },
+    { href: "/garden", text: "Hagen", ja: "庭" },
+    { href: "/about", text: "Om", ja: "概要" },
+];
 ---
 
 <div id="primary-nav" class="nav-links">
-    <a href="/" class={active("/")}>
-        <span class="nav-text">hjem</span>
-        <span class="nav-ja">ホーム</span>
-    </a>
-    <a href="/garden" class={active("/garden")}>
-        <span class="nav-text">hagen</span>
-        <span class="nav-ja">庭</span>
-    </a>
-    <a href="/about" class={active("/about")}>
-        <span class="nav-text">om</span>
-        <span class="nav-ja">概要</span>
-    </a>
+    {
+        links.map((link) => (
+            <a href={link.href} class:list={{ "is-on": isActive(link.href) }} aria-current={isActive(link.href) ? "page" : undefined}>
+                <span class="nav-text">{link.text}</span>
+                <span lang="ja">{link.ja}</span>
+            </a>
+        ))
+    }
 </div>
 
 <style>
     .nav-links {
         display: none;
         position: absolute;
-        right: 1rem;
-        top: calc(100% + 0.5rem);
+        top: calc(100% + 2px);
+        left: 0;
+        right: 0;
         flex-direction: column;
-        gap: 0.2rem;
-        padding: 0.6rem;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-hover);
-        min-width: 160px;
-        z-index: 10;
+        padding: 8px var(--gutter) 16px;
+        background: var(--paper);
+        border-bottom: 2px solid var(--ink);
     }
 
     .nav-links.is-open {
@@ -42,77 +39,59 @@ const active = (path: string) => {
     }
 
     .nav-links a {
-        font-family: var(--font-heading);
-        font-size: 1rem;
-        font-weight: bold;
-        letter-spacing: 0.02em;
-        color: var(--muted);
-        text-decoration: none;
-        padding: 0.5rem 0.7rem;
-        border-radius: 2px;
-        position: relative;
-        transition: color var(--transition-speed) ease, background var(--transition-speed) ease;
-    }
-
-    .nav-text,
-    .nav-ja {
-        transition: opacity 0.15s ease;
-    }
-
-    .nav-ja {
-        position: absolute;
-        inset: 0;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        font-family: "Noto Sans JP", sans-serif;
-        font-weight: 400;
-        letter-spacing: 0;
-    }
-
-    .nav-links a:hover .nav-text,
-    .nav-links a:focus-visible .nav-text {
-        opacity: 0;
-    }
-
-    .nav-links a:hover .nav-ja,
-    .nav-links a:focus-visible .nav-ja {
-        opacity: 1;
-    }
-
-    .nav-links a:hover,
-    .nav-links a:focus-visible {
+        align-items: baseline;
+        gap: 10px;
+        padding: 12px 10px;
         color: var(--ink);
-        background: var(--bg);
         text-decoration: none;
+        font-weight: 700;
+        font-size: calc(13px * var(--ui-text));
+        line-height: 1.15;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
     }
 
-    .nav-links a.active {
+    .nav-links [lang="ja"] {
+        font-weight: 500;
+        font-size: calc(11px * var(--ui-text));
+        letter-spacing: 0.06em;
+        color: var(--muted);
+    }
+
+    .nav-links a:hover {
+        background: var(--accent);
+    }
+
+    .nav-links a:hover [lang="ja"] {
         color: var(--ink);
-        border-bottom: 2px solid var(--leaf);
     }
 
-    @media (min-width: 760px) {
+    .nav-links a.is-on {
+        background: var(--ink);
+        color: var(--cream);
+    }
+
+    .nav-links a.is-on [lang="ja"] {
+        color: var(--panel);
+    }
+
+    @media (min-width: 640px) {
         .nav-links {
             display: flex;
-            flex-direction: row;
             position: static;
+            flex-direction: row;
+            gap: 4px;
             padding: 0;
-            background: none;
-            border: none;
-            box-shadow: none;
-            min-width: auto;
-            gap: 0.25rem;
             margin-left: auto;
+            background: none;
+            border: 0;
         }
 
         .nav-links a {
-            padding: 0.3rem 0.6rem;
-        }
-
-        .nav-links a.active {
-            border-bottom: 2px solid var(--leaf);
+            flex-direction: column;
+            gap: 3px;
+            padding: 7px 12px 6px;
         }
     }
 </style>

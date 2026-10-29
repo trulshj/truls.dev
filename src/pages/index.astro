@@ -2,110 +2,197 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import GardenCard from "../components/GardenCard.astro";
+import Mosaic from "../components/Mosaic.astro";
+import TitleBlock from "../components/TitleBlock.astro";
+import { publishedPosts, stationCodes, titleSize } from "../lib/garden";
 
-const recentItems = (await getCollection("garden"))
-    .filter((x) => !x.data.isDraft)
-    .sort(
-        (a, b) =>
-            (b.data.pubDate as Date).valueOf() -
-            (a.data.pubDate as Date).valueOf(),
-    )
-    .slice(0, 6);
+const posts = await publishedPosts();
+const codes = stationCodes(posts);
+const recent = posts.slice(0, 6);
 
-const talks = (await getCollection("talks")).sort(
-    (a, b) => (b.data.date as Date).valueOf() - (a.data.date as Date).valueOf(),
-);
+const talks = (await getCollection("talks")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const talkEntries = await Promise.all(talks.map(async (talk) => ({ ...talk, Content: (await render(talk)).Content })));
 
-const talkEntries = await Promise.all(
-    talks.map(async (talk) => ({
-        ...talk,
-        Content: (await render(talk)).Content,
-    })),
-);
-
-const pageTitle = "Kaffekrus";
+const lines = ["Kaffe", "krus"];
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-    <section class="hero">
-        <div class="reveal">
-            <p class="hero-name">Kaffekrus</p>
-            <p class="hero-tagline">
-                Hei og velkommen! Dette er min lille krok av internett — et sted
-                jeg samler ting jeg lager, skriver og tenker på. Stikk innom
-                hagen for å se hva som gror.
-            </p>
-        </div>
+<BaseLayout>
+    <section class="hero reveal">
+        <TitleBlock lines={lines} size={titleSize(lines, 900, 200, 74)} slab="珈琲マグ" transitionName="title-home">
+            <Fragment slot="plate-top">truls.dev</Fragment>
+            <span slot="plate-bottom" lang="ja">トルルスの庭</span>
+        </TitleBlock>
+        <Mosaic
+            class="hero-mosaic"
+            seed="kaffekrus"
+            cols={12}
+            rows={6}
+            tile={24}
+            density={0.8}
+            anchor={[0.1, 0.55]}
+            colors={["ink", "accent", "taupe", "cream", "vermilion", "teal"]}
+        />
+        <p class="eyebrow hero-stats">
+            <span class="dots">● ●</span>
+            <span>
+                {posts.length} innlegg i hagen · {talks.length} talks
+                <span lang="ja">庭に{posts.length}件・講演{talks.length}件</span>
+            </span>
+        </p>
     </section>
 
+    <p class="lead reveal">
+        Hei og velkommen! Dette er min lille krok av internett, et sted jeg samler ting jeg lager, skriver og tenker
+        på. Stikk innom hagen for å se hva som gror.
+    </p>
+
     <section class="section" id="garden">
-        <div class="section-header reveal">
-            <h2>Nylig i hagen</h2>
-            <p class="muted">Det siste fra hagen — tekst, kunst, fortellinger og notater.</p>
+        <div class="section-head">
+            <h2>Nylig i hagen<span lang="ja">最近の庭</span></h2>
+            <p>Det siste fra hagen: tekst, kunst, fortellinger og notater.</p>
         </div>
-        {recentItems.length > 0 ? (
-            <div class="garden-grid">
-                {recentItems.map((item) => (
-                    <div class="reveal">
-                        <GardenCard
-                            slug={item.id.replace(/\.mdx?$/, "")}
-                            title={item.data.title}
-                            excerpt={item.data.excerpt}
-                            type={item.data.type}
-                            lang={item.data.lang}
-                            status={item.data.status}
-                            pubDate={item.data.pubDate as Date}
-                            tags={item.data.tags}
-                            image={item.data.image}
-                        />
-                    </div>
-                ))}
-            </div>
-        ) : (
-            <div class="card reveal">
+        {
+            recent.length > 0 ? (
+                <div class="garden-grid">
+                    {recent.map((post) => (
+                        <GardenCard post={post} code={codes.get(post.id)} />
+                    ))}
+                </div>
+            ) : (
                 <p>
                     Hagen er under anlegg. Kom gjerne tilbake snart, eller{" "}
-                    <a class="inline-link" href="mailto:post@truls.dev">si hei på e-post</a>
-                    om du er nysgjerrig.
+                    <a href="mailto:post@truls.dev">si hei på e-post</a> om du er nysgjerrig.
                 </p>
-            </div>
-        )}
-        <div class="reveal">
-            <a href="/garden" class="cta-link">Se hele hagen →</a>
-        </div>
+            )
+        }
+        <a href="/garden" class="cta-link">Se hele hagen →<span lang="ja">庭へ</span></a>
     </section>
 
     <section class="section" id="talks">
-        <div class="section-header reveal">
-            <h2>Talks & videoer</h2>
-            <p class="muted">Foredrag og presentasjoner jeg har holdt — med lenker til opptak.</p>
+        <div class="section-head">
+            <h2>Talks & videoer<span lang="ja">講演と動画</span></h2>
+            <p>Foredrag og presentasjoner jeg har holdt, med lenker til opptak.</p>
         </div>
-        <ul class="talks-list">
-            {talkEntries.map((talk) => (
-                <li class="talk-item reveal">
-                    <h3>{talk.data.title}</h3>
-                    <div class="muted">
-                        <talk.Content />
-                    </div>
-                    <div class="talk-links">
-                        {talk.data.links.map(
-                            (link: { label: string; href: string }) => (
-                                <a href={link.href} class="talk-link">{link.label}</a>
-                            ),
-                        )}
-                    </div>
-                </li>
-            ))}
-        </ul>
+        <ol class="talks">
+            {
+                talkEntries.map((talk) => (
+                    <li class="talk">
+                        <span class="plate talk-year">{talk.data.date.getFullYear()}</span>
+                        <div class="talk-body">
+                            <h3>{talk.data.title}</h3>
+                            <div class="talk-text">
+                                <talk.Content />
+                            </div>
+                            <div class="talk-links">
+                                {talk.data.links.map((link) => (
+                                    <a href={link.href} class="chip">
+                                        {link.label} ↗
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    </li>
+                ))
+            }
+        </ol>
     </section>
 
-    <section class="section" id="about-teaser">
-        <div class="card reveal">
-            <p class="lead" style="font-size: 1rem;">
-                Utvikler, visualiseringsstudent, danser og periodevis
-                korsstingsentusiast. Glad i aha-opplevelser og gode samtaler.
-            </p>
-            <a href="/about" class="cta-link">Les mer om meg →</a>
-        </div>
+    <section class="about-teaser">
+        <p>
+            Utvikler, visualiseringsstudent, danser og periodevis korsstingsentusiast. Glad i aha-opplevelser og gode
+            samtaler.
+        </p>
+        <a href="/about" class="cta-link">Les mer om meg →<span lang="ja">自己紹介</span></a>
     </section>
 </BaseLayout>
+
+<style>
+    .talks {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .talk {
+        display: grid;
+        grid-template-columns: 76px minmax(0, 1fr);
+        align-items: start;
+        gap: 18px;
+        padding: 20px 0;
+    }
+
+    .talk + .talk {
+        border-top: 1.5px solid var(--taupe);
+    }
+
+    .talk-year {
+        justify-content: center;
+        font-family: var(--mono);
+        letter-spacing: 0.04em;
+    }
+
+    .talk-body {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .talk h3 {
+        font-size: clamp(18px, 2.4vw, 21px);
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+    }
+
+    .talk-text {
+        color: var(--ink-2);
+        font-size: calc(14.5px * var(--ui-text));
+        line-height: 1.55;
+    }
+
+    .talk-text :global(p + p) {
+        margin-top: 0.4em;
+    }
+
+    .talk-text :global(code) {
+        font-size: 0.9em;
+        padding: 0.05em 0.3em;
+        background: var(--panel);
+    }
+
+    .talk-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 4px;
+    }
+
+    .about-teaser {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px 22px;
+        background: var(--cream);
+        border: 2px solid var(--ink);
+        border-left: 8px solid var(--accent);
+    }
+
+    .about-teaser p {
+        max-width: 60ch;
+        font-size: clamp(17px, 2.2vw, 19px);
+        line-height: 1.55;
+    }
+
+    @media (max-width: 520px) {
+        .talk {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 10px;
+        }
+
+        .talk-year {
+            justify-self: start;
+        }
+    }
+</style>

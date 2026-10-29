@@ -1,20 +1,25 @@
 ---
 import Navigation from "./Navigation.astro";
+import Logo from "../Logo.astro";
 ---
 
 <header class="site-header">
     <nav class="site-nav" aria-label="Primary">
-        <a class="site-brand" href="/">Kaffekrus</a>
+        <a class="wordmark" href="/" aria-label="Kaffekrus, til forsiden">
+            <Logo size={17} />
+            <span class="wm-name">
+                <span class="wm">Kaffekrus</span>
+                <span lang="ja">カフェクルス</span>
+            </span>
+        </a>
 
         <Navigation />
 
-        <div class="nav-controls">
-            <button class="hamburger" aria-expanded="false" aria-controls="primary-nav" aria-label="Åpne navigasjon">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </button>
-        </div>
+        <button class="hamburger" aria-expanded="false" aria-controls="primary-nav" aria-label="Åpne navigasjon">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
     </nav>
 
     <script>
@@ -48,7 +53,11 @@ import Navigation from "./Navigation.astro";
 
             if (!win.__navResizeBound) {
                 window.addEventListener("resize", () => {
-                    if (window.innerWidth >= 760) closeMenu();
+                    if (window.innerWidth >= 640) {
+                        document.querySelector(".nav-links")?.classList.remove("is-open");
+                        document.querySelector(".hamburger")?.classList.remove("is-open");
+                        document.querySelector(".hamburger")?.setAttribute("aria-expanded", "false");
+                    }
                 });
                 win.__navResizeBound = true;
             }
@@ -63,59 +72,67 @@ import Navigation from "./Navigation.astro";
             position: sticky;
             top: 0;
             z-index: 50;
-            background: oklch(from var(--bg) l c h / 0.92);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
+            background: var(--paper);
+            border-bottom: 2px solid var(--ink);
         }
 
         .site-nav {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
-            max-width: 56rem;
+            gap: 24px;
+            max-width: var(--page-width);
             margin: 0 auto;
-            padding: 0.9rem clamp(1.2rem, 4vw, 2.5rem);
-            position: relative;
+            padding: 12px var(--gutter);
         }
 
-        .site-brand {
-            font-family: var(--font-heading);
-            font-size: clamp(1rem, 2.2vw, 1.2rem);
-            font-weight: bold;
-            letter-spacing: -0.02em;
-            color: var(--ink);
-            text-decoration: none;
-            transition: color var(--transition-speed) ease;
-        }
-
-        .site-brand:hover {
-            color: var(--leaf);
-            text-decoration: none;
-        }
-
-        .nav-controls {
+        .wordmark {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 12px;
+            color: var(--ink);
+            text-decoration: none;
         }
 
+        .wordmark:hover {
+            background: none;
+        }
+
+        .wm-name {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .wm {
+            font-family: var(--display);
+            font-size: 30px;
+            line-height: 1;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            text-box: trim-both cap alphabetic;
+        }
+
+        .wm-name [lang="ja"] {
+            font-weight: 700;
+            font-size: 10.5px;
+            line-height: 1;
+            letter-spacing: 0.16em;
+        }
 
         .hamburger {
             display: flex;
             flex-direction: column;
             justify-content: center;
             gap: 5px;
-            padding: 0.4rem;
-            background: none;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            border-radius: 2px;
-            transition: border-color var(--transition-speed) ease;
+            padding: 9px 8px;
+            border: 2px solid var(--ink);
         }
 
-        .hamburger:hover {
-            border-color: var(--border-strong);
+        .hamburger:hover,
+        .hamburger.is-open {
+            background: var(--ink);
         }
 
         .hamburger-line {
@@ -123,8 +140,12 @@ import Navigation from "./Navigation.astro";
             width: 20px;
             height: 2px;
             background: var(--ink);
-            border-radius: 1px;
-            transition: transform var(--transition-speed) ease, opacity var(--transition-speed) ease;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .hamburger:hover .hamburger-line,
+        .hamburger.is-open .hamburger-line {
+            background: var(--cream);
         }
 
         .hamburger.is-open .hamburger-line:nth-child(1) {
@@ -137,7 +158,7 @@ import Navigation from "./Navigation.astro";
             transform: translateY(-7px) rotate(-45deg);
         }
 
-        @media (min-width: 760px) {
+        @media (min-width: 640px) {
             .hamburger {
                 display: none;
             }

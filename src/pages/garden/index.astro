@@ -1,124 +1,163 @@
 ---
-import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import GardenCard from "../../components/GardenCard.astro";
+import Mosaic from "../../components/Mosaic.astro";
+import Stamp from "../../components/Stamp.astro";
+import TitleBlock from "../../components/TitleBlock.astro";
+import {
+    LANG_LABELS,
+    STATUS_LABELS,
+    TYPE_LABELS,
+    publishedPosts,
+    stationCodes,
+    titleSize,
+    type GardenLang,
+    type GardenStatus,
+    type GardenType,
+} from "../../lib/garden";
 
-const allItems = (await getCollection("garden"))
-    .filter((x) => !x.data.isDraft)
-    .sort(
-        (a, b) =>
-            (b.data.pubDate as Date).valueOf() -
-            (a.data.pubDate as Date).valueOf(),
-    );
+const posts = await publishedPosts();
+const codes = stationCodes(posts);
 
-const usedTypes = new Set(allItems.map((x) => x.data.type));
-const usedLangs = new Set(allItems.map((x) => x.data.lang));
+// filters only offer what the garden has
+const types = (Object.keys(TYPE_LABELS) as GardenType[]).filter((t) => posts.some((p) => p.data.type === t));
+const langs = (Object.keys(LANG_LABELS) as GardenLang[]).filter((l) => posts.some((p) => p.data.lang === l));
+const statuses = (Object.keys(STATUS_LABELS) as GardenStatus[]).filter((s) => posts.some((p) => p.data.status === s));
+const count = (status: GardenStatus) => posts.filter((p) => p.data.status === status).length;
 
-const pageTitle = "Hagen";
+const feature = posts.length >= 4;
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-    <div class="garden-top">
-        <div class="section-header reveal">
-            <h1 style="font-size: clamp(1.8rem, 5vw, 2.8rem);">Hagen</h1>
-            <p class="lead">
-                Et samlingspunkt for det jeg lager og tenker på. Tekst, kunst, fortellinger og notater — noen ferske, noen under utvikling, noen modne.
-            </p>
-        </div>
+<BaseLayout pageTitle="Hagen">
+    <section class="hero reveal">
+        <TitleBlock lines={["Hagen"]} size={titleSize(["Hagen"], 900, 190, 74)} slab="庭" transitionName="title-garden">
+            <Fragment slot="plate-top">Kaffekrus' hage</Fragment>
+            <span slot="plate-bottom" lang="ja">デジタルガーデン</span>
+        </TitleBlock>
+        <Mosaic
+            class="hero-mosaic"
+            seed="kaffekrus-hagen"
+            cols={12}
+            rows={6}
+            tile={24}
+            density={0.8}
+            anchor={[0.15, 0.6]}
+            colors={["ink", "green", "taupe", "cream", "accent", "teal"]}
+        />
+        <p class="eyebrow hero-stats">
+            <span class="dots">● ●</span>
+            <span>
+                {posts.length} innlegg · {count("seedling")} spirer · {count("evergreen")} modne
+                <span lang="ja">投稿{posts.length}件・苗{count("seedling")}件・常緑{count("evergreen")}件</span>
+            </span>
+        </p>
+    </section>
 
-        <div class="filter-bar reveal" aria-label="Filtrer innhold">
-        <div class="filter-group">
-            <button class="filter-btn active" data-filter-type="all" aria-pressed="true"><span class="btn-text">Alle</span><span class="btn-ja">すべて</span></button>
-            {usedTypes.has("writing") && <button class="filter-btn" data-filter-type="writing" aria-pressed="false"><span class="btn-text">Tekst</span><span class="btn-ja">文章</span></button>}
-            {usedTypes.has("art")     && <button class="filter-btn" data-filter-type="art"     aria-pressed="false"><span class="btn-text">Kunst</span><span class="btn-ja">芸術</span></button>}
-            {usedTypes.has("story")   && <button class="filter-btn" data-filter-type="story"   aria-pressed="false"><span class="btn-text">Fortelling</span><span class="btn-ja">物語</span></button>}
-            {usedTypes.has("note")    && <button class="filter-btn" data-filter-type="note"    aria-pressed="false"><span class="btn-text">Notat</span><span class="btn-ja">メモ</span></button>}
-            {usedTypes.has("visualization") && <button class="filter-btn" data-filter-type="visualization" aria-pressed="false"><span class="btn-text">Visualisering</span><span class="btn-ja">可視化</span></button>}
-        </div>
-        {(usedLangs.size > 1) && (
-            <div class="filter-group">
-                <button class="filter-btn active" data-filter-lang="all" aria-pressed="true"><span class="btn-text">Alle språk</span><span class="btn-ja">すべて</span></button>
-                {usedLangs.has("no") && <button class="filter-btn" data-filter-lang="no" aria-pressed="false"><span class="btn-text">NO</span><span class="btn-ja">ノルウェー語</span></button>}
-                {usedLangs.has("en") && <button class="filter-btn" data-filter-lang="en" aria-pressed="false"><span class="btn-text">EN</span><span class="btn-ja">英語</span></button>}
-                {usedLangs.has("ja") && <button class="filter-btn" data-filter-lang="ja" aria-pressed="false"><span class="btn-text">JA</span><span class="btn-ja">日本語</span></button>}
+    <div class="page-intro">
+        <p class="lead reveal">
+            Et samlingspunkt for det jeg lager og tenker på. Tekst, kunst, fortellinger og notater. Noen ferske,
+            noen under utvikling, noen modne.
+        </p>
+
+        <div class="filters reveal" aria-label="Filtrer innholdet">
+            <div class="fgroup">
+                <span class="flabel">Type<span lang="ja">種類</span></span>
+                <button class="chip is-on" data-filter="type" data-value="all" aria-pressed="true">
+                    Alle<span lang="ja">すべて</span>
+                </button>
+                {
+                    types.map((t) => (
+                        <button class="chip" data-filter="type" data-value={t} data-type={t} aria-pressed="false">
+                            <i class="sw" />
+                            {TYPE_LABELS[t].no}
+                            <span lang="ja">{TYPE_LABELS[t].ja}</span>
+                        </button>
+                    ))
+                }
             </div>
-        )}
-    </div>
+            {
+                langs.length > 1 && (
+                    <div class="fgroup">
+                        <span class="flabel">Språk<span lang="ja">言語</span></span>
+                        <button class="chip is-on" data-filter="lang" data-value="all" aria-pressed="true">
+                            Alle
+                        </button>
+                        {langs.map((l) => (
+                            <button class="chip" data-filter="lang" data-value={l} aria-pressed="false" title={LANG_LABELS[l].no}>
+                                {LANG_LABELS[l].code}
+                            </button>
+                        ))}
+                    </div>
+                )
+            }
+            {
+                statuses.length > 1 && (
+                    <div class="fgroup">
+                        <span class="flabel">Status<span lang="ja">状態</span></span>
+                        <div class="fstamps">
+                            {statuses.map((s) => (
+                                <button
+                                    class="stamp-btn"
+                                    data-filter="status"
+                                    data-value={s}
+                                    aria-pressed="false"
+                                    title={STATUS_LABELS[s].no}
+                                >
+                                    <Stamp status={s} size={34} />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )
+            }
+        </div>
     </div>
 
-    <div class="garden-grid" id="garden-grid">
-        {allItems.map((item) => (
-            <GardenCard
-                slug={item.id.replace(/\.mdx?$/, "")}
-                title={item.data.title}
-                excerpt={item.data.excerpt}
-                type={item.data.type}
-                lang={item.data.lang}
-                status={item.data.status}
-                pubDate={item.data.pubDate as Date}
-                tags={item.data.tags}
-                image={item.data.image}
-            />
-        ))}
-        {allItems.length === 0 && (
-            <div class="card reveal" style="grid-column: 1 / -1;">
-                <p>Hagen er under anlegg. Snart vokser det noe her.</p>
-            </div>
-        )}
+    <div class="garden-grid garden-grid--four" id="garden-grid">
+        {posts.map((post, i) => <GardenCard post={post} code={codes.get(post.id)} feature={feature && i === 0} />)}
     </div>
 
-    <p class="no-results" id="no-results" style="display:none; color: var(--muted); font-family: var(--font-heading); font-size: 0.9rem;">
-        Ingen innhold matcher filteret.
+    {posts.length === 0 && <p class="no-results">Hagen er under anlegg. Snart vokser det noe her.</p>}
+    <p class="no-results" id="no-results" hidden>
+        Ingenting i hagen passer filteret.<span lang="ja">該当する投稿はありません</span>
     </p>
 </BaseLayout>
 
 <script>
     function initFilters() {
-        const typeButtons = document.querySelectorAll<HTMLButtonElement>("[data-filter-type]");
-        const langButtons = document.querySelectorAll<HTMLButtonElement>("[data-filter-lang]");
-        const cards = document.querySelectorAll<HTMLElement>(".garden-card");
+        const grid = document.getElementById("garden-grid");
         const noResults = document.getElementById("no-results");
+        if (!grid || !noResults) return;
 
-        let activeType = "all";
-        let activeLang = "all";
+        const cards = [...grid.querySelectorAll<HTMLElement>(".card")];
+        const buttons = [...document.querySelectorAll<HTMLButtonElement>("[data-filter]")];
+        const active: Record<string, string> = { type: "all", lang: "all", status: "all" };
 
-        function applyFilters() {
+        function render() {
             let visible = 0;
-            cards.forEach((card) => {
-                const matchType = activeType === "all" || card.dataset.type === activeType;
-                const matchLang = activeLang === "all" || card.dataset.lang === activeLang;
-                const show = matchType && matchLang;
-                card.classList.toggle("garden-card--hidden", !show);
+            for (const card of cards) {
+                const show = Object.entries(active).every(([key, value]) => value === "all" || card.dataset[key] === value);
+                card.hidden = !show;
                 if (show) visible++;
-            });
-            if (noResults) {
-                noResults.style.display = visible === 0 ? "block" : "none";
             }
+            for (const button of buttons) {
+                const on = active[button.dataset.filter!] === button.dataset.value;
+                button.classList.toggle("is-on", on);
+                button.setAttribute("aria-pressed", String(on));
+            }
+            noResults!.hidden = visible > 0 || cards.length === 0;
         }
 
-        typeButtons.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                activeType = btn.dataset.filterType ?? "all";
-                typeButtons.forEach((b) => {
-                    b.classList.toggle("active", b === btn);
-                    b.setAttribute("aria-pressed", b === btn ? "true" : "false");
-                });
-                applyFilters();
+        for (const button of buttons) {
+            button.addEventListener("click", () => {
+                const key = button.dataset.filter!;
+                const value = button.dataset.value!;
+                // status stamps have no "all" chip: clicking the active stamp clears it
+                active[key] = key === "status" && active[key] === value ? "all" : value;
+                render();
             });
-        });
-
-        langButtons.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                activeLang = btn.dataset.filterLang ?? "all";
-                langButtons.forEach((b) => {
-                    b.classList.toggle("active", b === btn);
-                    b.setAttribute("aria-pressed", b === btn ? "true" : "false");
-                });
-                applyFilters();
-            });
-        });
+        }
     }
 
-    initFilters();
-    document.addEventListener("astro:after-swap", initFilters);
+    document.addEventListener("astro:page-load", initFilters);
 </script>

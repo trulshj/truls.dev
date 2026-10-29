@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Mosaic from "../components/Mosaic.astro";
+import TitleBlock from "../components/TitleBlock.astro";
+import { titleSize } from "../lib/garden";
+
+const lines = ["404"];
+---
+
+<BaseLayout pageTitle="Fant ikke siden">
+    <section class="hero">
+        <TitleBlock lines={lines} size={titleSize(lines, 600, 220, 74)} slab="迷子" transitionName="title-404">
+            <Fragment slot="plate-top">Fant ikke siden</Fragment>
+            <span slot="plate-bottom" lang="ja">ページが見つかりません</span>
+        </TitleBlock>
+        <Mosaic
+            class="hero-mosaic"
+            seed="kaffekrus-404"
+            cols={12}
+            rows={6}
+            tile={24}
+            density={0.7}
+            anchor={[0.5, 0.5]}
+            colors={["ink", "vermilion", "taupe", "cream", "accent"]}
+        />
+    </section>
+
+    <div class="page-intro">
+        <p class="lead">Her har det visst ikke vokst noe ennå. Kanskje siden har flyttet, eller aldri fantes?</p>
+        <div class="lost-links">
+            <a href="/" class="cta-link">Til forsiden<span lang="ja">ホーム</span></a>
+            <a href="/garden" class="cta-link">Til hagen<span lang="ja">庭</span></a>
+        </div>
+    </div>
+</BaseLayout>
+
+<style>
+    .lost-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+</style>

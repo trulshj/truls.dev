@@ -1,87 +1,69 @@
+/*
+  Kaffekrus in blok's design: warm paper, colour blocks, name plates, stamps and tile mosaics.
+  Colours, faces and the garden type lines come from tokens.css (copied from blok). The shared
+  pieces below (plates, block titles, slabs, stamps, cards) follow blok's src/styles.
+*/
+
 /* ============================================================
-   DESIGN TOKENS
+   SITE TOKENS
    ============================================================ */
 :root {
-    /* Backgrounds */
-    --bg: oklch(0.15 0.018 260);
-    --surface: oklch(0.19 0.016 260);
+    /* Berkeley Mono for code and small labels (blok uses IBM Plex Mono) */
+    --mono: "Berkeley Mono", ui-monospace, monospace;
+    --rise: 0.2;
+    --gutter: clamp(16px, 4vw, 40px);
+    --page-width: 1240px;
 
-    /* Text */
-    --ink: oklch(0.92 0.012 80);
-    --muted: oklch(0.6 0.015 240);
-
-    /* Content type accents */
-    --leaf: oklch(0.72 0.14 155);
-    --leaf-light: oklch(0.24 0.05 155);
-    --warm: oklch(0.78 0.12 42);
-    --warm-light: oklch(0.24 0.05 50);
-    --sky: oklch(0.78 0.1 230);
-    --sky-light: oklch(0.22 0.05 230);
-    --violet: oklch(0.75 0.14 298);
-    --violet-light: oklch(0.22 0.05 290);
-
-    /* Borders */
-    --border: oklch(0.28 0.018 260);
-    --border-strong: oklch(0.38 0.025 260);
-
-    /* Spacing */
-    --space-xs: 0.5rem;
-    --space-sm: 1rem;
-    --space-md: 1.5rem;
-    --space-lg: 2.5rem;
-    --space-xl: 4rem;
-
-    --transition-speed: 0.2s;
-
-    /* Typography */
-    --font-body: "Atkinson Hyperlegible", "Verdana", "Geneva", sans-serif;
-    --font-heading: "Berkeley Mono", "Courier New", monospace;
-    --font-mono: "Berkeley Mono", "Courier New", monospace;
-
-    /* Backward-compat aliases for old visualisation pages */
-    --accent-strong: var(--violet);
-    --accent: var(--leaf);
-    --accent-secondary: var(--warm);
-    --pumpkin-spice: var(--warm);
-    --saffron: var(--warm);
-    --bright-ocean: var(--sky);
-    --surface-strong: var(--surface);
-    --font-ui: var(--font-body);
-    --font-window: var(--font-mono);
-
-    /* Card shadow */
-    --shadow: 0 1px 4px oklch(0 0 0 / 0.3), 0 1px 2px oklch(0 0 0 / 0.2);
-    --shadow-hover:
-        0 6px 18px oklch(0 0 0 / 0.45), 0 2px 6px oklch(0 0 0 / 0.3);
+    /* old names, kept for components that read them (ImdbViz) */
+    --bg: var(--paper);
+    --surface: var(--cream);
+    --border: var(--taupe);
+    --border-strong: var(--ink);
+    --leaf: var(--green);
+    --warm: var(--orange);
+    --sky: var(--teal);
+    --violet: var(--indigo);
+    --accent-strong: var(--indigo);
+    --accent-secondary: var(--orange);
+    --pumpkin-spice: var(--vermilion);
+    --saffron: var(--orange);
+    --bright-ocean: var(--teal);
+    --surface-strong: var(--panel);
+    --font-body: var(--ui);
+    --font-heading: var(--ui);
+    --font-mono: var(--mono);
+    --font-ui: var(--ui);
+    --font-window: var(--mono);
+    --shadow: none;
+    --shadow-hover: none;
+    --transition-speed: 0.15s;
 }
 
 /* ============================================================
-   RESET & BASE
+   BASE
    ============================================================ */
 * {
     box-sizing: border-box;
 }
 
 html {
-    font-size: 18px;
     color: var(--ink);
-    font-family: var(--font-body);
-    background-color: var(--bg);
+    background: var(--paper);
+    font-family: var(--ui);
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
     margin: 0;
     min-height: 100vh;
-    color: var(--ink);
-    line-height: 1.65;
-    /* Subtle dot-grid background */
-    background-image: radial-gradient(
-        circle,
-        color-mix(in oklch, var(--border-strong) 45%, transparent) 1px,
-        transparent 1px
-    );
+    font-size: 16px;
+    line-height: 1.6;
+    background-color: var(--paper);
+    background-image:
+        linear-gradient(to right, var(--grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
     background-size: 24px 24px;
-    background-color: var(--bg);
 }
 
 img {
@@ -89,661 +71,58 @@ img {
     height: auto;
 }
 
-/* ============================================================
-   LAYOUT
-   ============================================================ */
-.site-shell {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+[lang="ja"] {
+    font-family: var(--jp);
 }
 
-.site-main {
-    flex: 1;
-    width: 100%;
-    max-width: 56rem;
-    margin: 0 auto;
-    padding: clamp(2rem, 4vw, 3.5rem) clamp(1.2rem, 4vw, 2.5rem) var(--space-xl);
-    display: flex;
-    flex-direction: column;
-    gap: clamp(2rem, 5vw, 2.5rem);
+code,
+kbd,
+.mono {
+    font-family: var(--mono);
 }
 
-.site-main--narrow {
-    max-width: 44rem;
+a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 3px;
 }
 
-.site-main--wide {
-    max-width: 90rem;
+a:hover {
+    background: var(--accent);
 }
 
-/* ============================================================
-   TYPOGRAPHY
-   ============================================================ */
+:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+::selection {
+    background: var(--accent);
+    color: var(--ink);
+}
+
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    border-radius: 0;
+    cursor: pointer;
+}
+
 h1,
 h2,
 h3,
 h4 {
-    color: var(--ink);
     margin: 0;
-    font-family: var(--font-heading);
-    font-weight: bold;
-    line-height: 1.15;
-}
-
-h1 {
-    font-size: clamp(2.4rem, 9vw, 4.8rem);
-    letter-spacing: -0.02em;
-    line-height: 1;
-}
-
-h2 {
-    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
-    letter-spacing: -0.01em;
-}
-
-h3 {
-    font-size: clamp(1.05rem, 2.5vw, 1.2rem);
-    letter-spacing: 0;
-}
-
-h4 {
-    font-size: 1rem;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--muted);
+    color: var(--ink);
 }
 
 p {
     margin: 0;
-    color: var(--muted);
-    font-family: var(--font-body);
-}
-
-a {
-    color: var(--leaf);
-    text-decoration: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: oklch(from var(--leaf) l c h / 0.4);
-    text-decoration-thickness: 0.08em;
-    text-underline-offset: 0.2em;
-    transition: color var(--transition-speed) ease;
-}
-
-a:hover,
-a:focus-visible {
-    color: var(--ink);
-    text-decoration-color: var(--warm);
-}
-
-.lead {
-    font-family: var(--font-body);
-    font-size: clamp(1.05rem, 2.2vw, 1.22rem);
-    color: var(--ink);
-    line-height: 1.6;
-    max-width: 58ch;
-}
-
-.muted {
-    color: var(--muted);
-    font-size: 0.9rem;
-}
-
-/* ============================================================
-   SECTION
-   ============================================================ */
-.section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-}
-
-.section-header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: var(--space-sm);
-}
-
-/* ============================================================
-   HERO
-   ============================================================ */
-.hero {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    padding: clamp(1rem, 3vw, 2rem) 0 0;
-}
-
-.hero-name {
-    font-family: var(--font-heading);
-    font-size: clamp(3rem, 12vw, 6.5rem);
-    font-weight: bold;
-    letter-spacing: -0.03em;
-    line-height: 0.92;
-    color: var(--ink);
-}
-
-.hero-tagline {
-    font-family: var(--font-body);
-    font-size: clamp(1.05rem, 2.4vw, 1.3rem);
-    color: var(--muted);
-    max-width: 52ch;
-    line-height: 1.55;
-}
-
-/* ============================================================
-   CARD
-   ============================================================ */
-.card {
-    padding: 1.1rem 1.2rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-/* ============================================================
-   GARDEN TOP (header + filter-bar wrapper)
-   ============================================================ */
-.garden-top {
-    display: flex;
-    flex-direction: column;
-}
-
-/* ============================================================
-   GARDEN GRID
-   ============================================================ */
-.garden-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
-}
-
-/* ============================================================
-   GARDEN CARD (used inside garden-grid)
-   ============================================================ */
-.garden-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-    padding: 1.1rem 1.2rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left-width: 4px;
-    border-radius: 2px;
-    box-shadow: var(--shadow);
-    text-decoration: none;
-    color: inherit;
-    transition:
-        box-shadow var(--transition-speed) ease,
-        transform var(--transition-speed) ease;
-}
-
-.garden-card:hover,
-.garden-card:focus-visible {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-2px);
-    color: inherit;
-    text-decoration: none;
-}
-
-.garden-card[data-type="writing"] {
-    border-left-color: var(--leaf);
-}
-.garden-card[data-type="art"] {
-    border-left-color: var(--warm);
-}
-.garden-card[data-type="story"] {
-    border-left-color: var(--violet);
-}
-.garden-card[data-type="note"] {
-    border-left-color: var(--sky);
-}
-.garden-card[data-type="visualization"] {
-    border-left-color: var(--sky);
-}
-
-.garden-card--hidden {
-    display: none;
-}
-
-.garden-card__title {
-    font-family: var(--font-heading);
-    font-size: clamp(0.95rem, 2vw, 1.08rem);
-    font-weight: bold;
-    color: var(--ink);
-    line-height: 1.3;
-    margin: 0;
-    transition: color var(--transition-speed) ease;
-}
-
-.garden-card:hover .garden-card__title,
-.garden-card:focus-visible .garden-card__title {
-    color: var(--leaf);
-}
-
-.garden-card__excerpt {
-    font-size: 0.88rem;
-    color: var(--muted);
-    line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.garden-card__meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem;
-    margin-top: auto;
-    padding-top: 0.4rem;
-}
-
-.garden-card__date {
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    color: var(--muted);
-    margin-left: auto;
-}
-
-/* ============================================================
-   BADGES
-   ============================================================ */
-.badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25em;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: bold;
-    letter-spacing: 0.04em;
-    padding: 0.18em 0.5em;
-    border-radius: 2px;
-    border: 1px solid currentColor;
-    white-space: nowrap;
-    line-height: 1.4;
-}
-
-.badge--lang-no {
-    color: var(--sky);
-    background: var(--sky-light);
-}
-.badge--lang-en {
-    color: var(--warm);
-    background: var(--warm-light);
-}
-.badge--lang-ja {
-    color: var(--violet);
-    background: var(--violet-light);
-}
-
-.badge--status-seedling {
-    color: var(--leaf);
-    background: var(--leaf-light);
-}
-.badge--status-budding {
-    color: var(--leaf);
-    background: var(--leaf-light);
-}
-.badge--status-evergreen {
-    color: var(--leaf);
-    background: var(--leaf-light);
-}
-
-.badge--type {
-    color: var(--muted);
-    background: oklch(from var(--border) l c h / 0.5);
-    border-color: var(--border);
-}
-
-/* ============================================================
-   TAGS
-   ============================================================ */
-.tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-}
-
-.tag {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--muted);
-    background: oklch(from var(--border) l c h / 0.5);
-    border: 1px solid var(--border);
-    padding: 0.15em 0.55em;
-    border-radius: 2px;
-}
-
-/* ============================================================
-   FILTER BAR
-   ============================================================ */
-.filter-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.2rem;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border);
-}
-
-.filter-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    align-items: center;
-}
-
-.filter-btn {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    font-weight: bold;
-    letter-spacing: 0.03em;
-    padding: 0.3em 0.8em;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    background: var(--surface);
-    color: var(--muted);
-    cursor: pointer;
-    position: relative;
-    transition:
-        background var(--transition-speed) ease,
-        color var(--transition-speed) ease,
-        border-color var(--transition-speed) ease;
-}
-
-.btn-text,
-.btn-ja {
-    transition: opacity 0.15s ease;
-}
-
-.btn-ja {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: "Noto Sans JP", sans-serif;
-    font-weight: 400;
-    letter-spacing: 0;
-    opacity: 0;
-}
-
-.filter-btn:hover .btn-text {
-    opacity: 0;
-}
-
-.filter-btn:hover .btn-ja {
-    opacity: 1;
-}
-
-.filter-btn:hover {
-    background: var(--bg);
-    color: var(--ink);
-    border-color: var(--border-strong);
-}
-
-.filter-btn.active,
-.filter-btn[aria-pressed="true"] {
-    background: var(--ink);
-    color: var(--bg);
-    border-color: var(--ink);
-}
-
-/* ============================================================
-   TALKS LIST
-   ============================================================ */
-.talks-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.talk-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--border);
-}
-
-.talk-item:first-child {
-    border-top: 1px solid var(--border);
-}
-
-.talk-item h3 {
-    font-family: var(--font-heading);
-    font-size: clamp(1rem, 2vw, 1.1rem);
-    color: var(--ink);
-}
-
-.talk-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.talk-link {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    font-weight: bold;
-    letter-spacing: 0.02em;
-    color: var(--leaf);
-    text-decoration: none;
-    border: 1px solid var(--leaf-light);
-    padding: 0.2em 0.6em;
-    border-radius: 2px;
-    transition:
-        background var(--transition-speed) ease,
-        color var(--transition-speed) ease;
-}
-
-.talk-link:hover {
-    background: var(--leaf-light);
-    color: var(--ink);
-    text-decoration: none;
-}
-
-/* ============================================================
-   CTA LINK
-   ============================================================ */
-.cta-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    font-weight: bold;
-    letter-spacing: 0.03em;
-    color: var(--ink);
-    text-decoration: none;
-    border-bottom: 2px solid var(--leaf);
-    padding-bottom: 0.1em;
-    transition: color var(--transition-speed) ease;
-}
-
-.cta-link:hover {
-    color: var(--leaf);
-    text-decoration: none;
-}
-
-/* ============================================================
-   PROSE (blog/garden item reading area)
-   ============================================================ */
-.prose {
-    font-family: var(--font-body);
-    font-size: clamp(1rem, 1.8vw, 1.08rem);
-    line-height: 1.8;
-    color: var(--ink);
-    max-width: 66ch;
-}
-
-.prose p {
-    color: var(--ink);
-    margin-bottom: 1.2em;
-}
-
-.prose p:last-child {
-    margin-bottom: 0;
-}
-
-.prose h2,
-.prose h3,
-.prose h4 {
-    margin-top: 1.8em;
-    margin-bottom: 0.6em;
-}
-
-.prose a {
-    font-weight: 600;
-}
-
-.prose ul,
-.prose ol {
-    padding-left: 1.4em;
-    margin-bottom: 1.2em;
-    color: var(--ink);
-}
-
-.prose li {
-    margin-bottom: 0.4em;
-}
-
-.prose blockquote {
-    margin: 1.4em 0;
-    padding: 0.85rem 1.1rem;
-    border-left: 4px solid var(--leaf);
-    background: var(--leaf-light);
-    font-style: italic;
-    color: var(--ink);
-}
-
-.prose code {
-    font-family: var(--font-mono);
-    font-size: 0.9em;
-    background: oklch(0.94 0.02 240);
-    color: var(--ink);
-    padding: 0.15em 0.4em;
-    border-radius: 2px;
-    border: 1px solid var(--border);
-}
-
-/* furigana, as blok publishes it: <ruby>漢字<rp>(</rp><rt>かんじ</rt><rp>)</rp></ruby> */
-.prose ruby rt {
-    font-size: 0.55em;
-    color: var(--muted);
-}
-
-.prose pre {
-    background: oklch(0.18 0.03 260);
-    color: oklch(0.9 0.04 85);
-    padding: 1rem 1.2rem;
-    border-radius: 2px;
-    overflow-x: auto;
-    margin-bottom: 1.2em;
-    border: 1px solid oklch(0.3 0.04 260);
-}
-
-.prose pre code {
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: 0.9rem;
-    color: inherit;
-}
-
-.prose img {
-    border-radius: 2px;
-    box-shadow: var(--shadow);
-    margin: 0.5em 0;
-}
-
-/* ============================================================
-   ARTICLE HEADER
-   ============================================================ */
-.article-header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-    padding-bottom: var(--space-md);
-    border-bottom: 1px solid var(--border);
-}
-
-.article-header h1 {
-    font-size: clamp(1.7rem, 5vw, 2.8rem);
-}
-
-.article-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.article-date {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--muted);
-}
-
-.article-tags {
-    margin-top: 0.3rem;
-}
-
-/* ============================================================
-   BREADCRUMB
-   ============================================================ */
-.breadcrumb {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4em;
-}
-
-.breadcrumb a {
-    color: var(--muted);
-    text-decoration: none;
-    transition: color var(--transition-speed) ease;
-}
-
-.breadcrumb a:hover {
-    color: var(--leaf);
-}
-
-.breadcrumb-sep {
-    color: var(--border-strong);
-}
-
-/* ============================================================
-   INLINE LINK
-   ============================================================ */
-.inline-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-weight: 600;
-}
-
-/* ============================================================
-   UTILITY
-   ============================================================ */
-.stack {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
 }
 
 .sr-only {
@@ -759,7 +138,922 @@ a:focus-visible {
 }
 
 /* ============================================================
-   ANIMATIONS
+   LAYOUT
+   ============================================================ */
+.site-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.site-main {
+    flex: 1;
+    width: 100%;
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 48px) var(--gutter) 72px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(40px, 6vw, 64px);
+}
+
+.site-main--narrow {
+    max-width: 920px;
+}
+
+.site-main--wide {
+    max-width: 1440px;
+}
+
+/* ============================================================
+   SHARED PIECES (from blok)
+   ============================================================ */
+.eyebrow {
+    margin: 0;
+    display: flex;
+    gap: 14px;
+    font-weight: 700;
+    font-size: calc(13px * var(--ui-text));
+    line-height: 1.45;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.eyebrow .dots {
+    letter-spacing: 0.25em;
+    white-space: nowrap;
+}
+.eyebrow [lang="ja"] {
+    display: block;
+    letter-spacing: 0.06em;
+}
+
+.lead {
+    font-size: clamp(17px, 2.2vw, 20px);
+    line-height: 1.6;
+    max-width: 60ch;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+/* black name plates, hung off title blocks */
+.plate {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65em;
+    background: var(--ink);
+    color: var(--cream);
+    font-weight: 700;
+    font-size: calc(13px * var(--ui-text));
+    line-height: 1.1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 7px 12px 6px;
+    white-space: nowrap;
+}
+.plate [lang="ja"] {
+    letter-spacing: 0.14em;
+    font-weight: 700;
+}
+
+/* staggered title on colour blocks. Each line is trimmed to cap height.
+   --rise: how far down the first line's block starts, as a fraction of the font size */
+.block-title {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.08em;
+    isolation: isolate;
+    font-family: var(--display);
+    font-size: var(--title-size, 64px);
+    font-weight: 400;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--block-ink, var(--ink));
+}
+.bt {
+    position: relative;
+    padding: 0 0.14em 0 0.2em;
+    white-space: nowrap;
+    text-box: trim-both cap alphabetic;
+}
+.bt::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -0.09em 0;
+    background: var(--block, var(--accent));
+}
+.bt:first-child::before {
+    top: calc(var(--rise) * 1em);
+}
+/* The first line rises above its block: letters are ink above the block's top edge and block ink
+   inside it, so light text on a dark block (story's indigo) still reads against the paper. */
+.bt:first-child {
+    background: linear-gradient(
+        to bottom,
+        var(--ink) calc(var(--rise) * 1em),
+        var(--block-ink, var(--ink)) calc(var(--rise) * 1em)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+@media (forced-colors: active) {
+    .bt:first-child {
+        background: none;
+        color: CanvasText;
+    }
+}
+.bt + .bt {
+    margin-left: 0.42em;
+}
+@supports not (text-box: trim-both cap alphabetic) {
+    .block-title {
+        line-height: 0.8;
+        gap: 0;
+    }
+    .bt::before {
+        inset: 0.06em 0 0.02em;
+    }
+}
+
+/* vertical Japanese slab */
+.slab-v {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: var(--jp);
+    font-weight: 700;
+    font-size: clamp(14px, calc(var(--title-size) * 0.11), 26px);
+    line-height: 1;
+    letter-spacing: 0.1em;
+    padding: 8px 10px;
+    /* one column of glyphs; set explicitly because browsers misjudge the width of vertical text inside a row */
+    width: calc(1em + 20px);
+    flex: none;
+}
+
+/* title composition: block title, slab, plates and stamp */
+.compose {
+    position: relative;
+    align-self: flex-start;
+    max-width: 100%;
+    padding: 30px 0;
+}
+.compose-row {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+/* physical margins: in vertical text, margin-block would mean left/right. The slab spans the colour block */
+.compose-row .slab-v {
+    margin-top: calc(var(--title-size) * var(--rise));
+    margin-bottom: calc(var(--title-size) * -0.09);
+}
+.compose .plate {
+    position: absolute;
+    z-index: 2;
+}
+.compose .plate--tl {
+    top: 0;
+    left: -10px;
+}
+.compose .plate--br {
+    bottom: 0;
+    right: 54px;
+}
+.compose .plate--bl {
+    bottom: 0;
+    left: 18px;
+}
+/* a status stamp sits on the left end of the first block, so the text starts after it.
+   It scales with the title, up to blok's 104px */
+.compose--stamped {
+    --stamp: clamp(48px, calc(var(--title-size) * 0.88), 104px);
+}
+.compose--stamped .bt:first-child {
+    padding-left: calc(var(--stamp) * 0.93);
+}
+.compose-stamp {
+    position: absolute;
+    z-index: 3;
+    top: calc(var(--stamp) * -0.35);
+    left: calc(var(--stamp) * -0.13);
+    line-height: 0;
+    transform: rotate(-12deg);
+}
+.compose-stamp .stamp {
+    width: var(--stamp);
+    height: var(--stamp);
+}
+
+/* logo: K R U S on four tiles. --s is one tile */
+.logo {
+    --s: 20px;
+    display: inline-grid;
+    grid-template-columns: repeat(2, var(--s));
+    grid-auto-rows: var(--s);
+    gap: calc(var(--s) * 0.1);
+    flex: none;
+}
+.logo b {
+    display: block;
+    padding-top: calc(var(--s) * 0.184); /* centres the trimmed cap height (.7em of .9s) in the tile */
+    background: var(--accent);
+    color: var(--ink);
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: calc(var(--s) * 0.9);
+    line-height: 1;
+    text-align: center;
+    text-box: trim-both cap alphabetic;
+}
+.logo b:nth-child(2),
+.logo b:nth-child(3) {
+    background: var(--ink);
+    color: var(--cream);
+}
+.logo--strip {
+    grid-template-columns: repeat(4, var(--s));
+}
+.logo--strip b:nth-child(3) {
+    background: var(--accent);
+    color: var(--ink);
+}
+.logo--strip b:nth-child(4) {
+    background: var(--ink);
+    color: var(--cream);
+}
+
+/* labels */
+.flabel {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    font-weight: 700;
+    font-size: calc(11px * var(--ui-text));
+    line-height: 1.15;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.flabel [lang="ja"] {
+    font-weight: 500;
+    font-size: calc(10.5px * var(--ui-text));
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-transform: none;
+}
+
+/* chips: filters and link chips */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 9px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    font-weight: 600;
+    font-size: calc(12px * var(--ui-text));
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+.chip [lang="ja"] {
+    font-size: calc(11px * var(--ui-text));
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--muted);
+}
+.chip .sw {
+    width: 10px;
+    height: 10px;
+    background: var(--t);
+}
+.chip:hover {
+    background: var(--cream);
+}
+.chip.is-on {
+    background: var(--ink);
+    color: var(--cream);
+}
+.chip.is-on [lang="ja"] {
+    color: var(--panel);
+}
+.chip[data-type].is-on {
+    background: var(--t);
+    color: var(--t-ink);
+}
+.chip[data-type].is-on [lang="ja"] {
+    color: inherit;
+    opacity: 0.75;
+}
+.chip[data-type].is-on .sw {
+    background: var(--t-ink);
+}
+a.chip:hover {
+    background: var(--accent);
+}
+
+.lang {
+    font: 600 calc(10.5px * var(--ui-text)) var(--mono);
+    padding: 1px 5px;
+    border: 1.5px solid var(--ink);
+}
+
+.tag {
+    font: 500 calc(11px * var(--ui-text)) var(--mono);
+    color: var(--ink-2);
+}
+
+/* station code badge in the type's line colour (needs a data-type ancestor) */
+.code {
+    flex: none;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--cream);
+    border: 4px solid var(--t);
+    color: var(--ink);
+    font-family: var(--ui);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: none;
+}
+.code b {
+    font-size: 9px;
+}
+.code span {
+    font-size: 14px;
+    margin-top: 1px;
+}
+.plate .code {
+    width: 30px;
+    height: 30px;
+    border-width: 3px;
+    margin: -4px 0 -4px -6px;
+}
+.plate .code span {
+    font-size: 12px;
+}
+
+.stamp {
+    display: block;
+    overflow: visible;
+}
+.stamp-bg {
+    fill: var(--ink);
+}
+.stamp-ring {
+    fill: var(--cream);
+    font-family: var(--ui);
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 1px;
+}
+.stamp-kanji {
+    fill: var(--cream);
+    font-family: var(--jp);
+    font-weight: 700;
+}
+
+.mosaic {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), var(--tile));
+    grid-auto-rows: var(--tile);
+    gap: calc(var(--tile) * 0.2);
+    pointer-events: none;
+}
+.tile {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.tile-bg {
+    fill: var(--bg);
+}
+.tile-fg {
+    fill: var(--fg);
+    stroke: var(--fg);
+    stroke-width: 0;
+}
+
+/* "Se hele hagen →" */
+.cta-link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 9px 14px;
+    background: var(--ink);
+    color: var(--cream);
+    font-weight: 700;
+    font-size: calc(12.5px * var(--ui-text));
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+.cta-link [lang="ja"] {
+    letter-spacing: 0.06em;
+    color: var(--panel);
+}
+.cta-link:hover {
+    background: var(--accent);
+    color: var(--ink);
+}
+.cta-link:hover [lang="ja"] {
+    color: var(--ink);
+}
+
+/* "← Hagen" */
+.back {
+    align-self: flex-start;
+    display: inline-flex;
+    gap: 8px;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: calc(12px * var(--ui-text));
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.back [lang="ja"] {
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+}
+.back:hover {
+    background: none;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--accent);
+}
+
+/* ============================================================
+   SECTIONS AND HEROES
+   ============================================================ */
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding-top: 14px;
+    border-top: 2px solid var(--ink);
+}
+.section-head h2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(34px, 6vw, 52px);
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+}
+.section-head h2 [lang="ja"] {
+    font-size: calc(15px * var(--ui-text));
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+.section-head p {
+    max-width: 52ch;
+    color: var(--ink-2);
+    font-size: calc(14px * var(--ui-text));
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 24px 40px;
+}
+.hero .compose {
+    justify-self: start;
+}
+.hero-mosaic {
+    align-self: center;
+    overflow: hidden;
+}
+.hero-stats {
+    justify-self: end;
+}
+
+.page-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ============================================================
+   GARDEN GRID AND CARDS
+   ============================================================ */
+.garden-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 36px 24px;
+    padding-top: 14px;
+}
+@media (min-width: 640px) {
+    .garden-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (min-width: 980px) {
+    .garden-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+@media (min-width: 1200px) {
+    .garden-grid--four {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 236px;
+    padding: 16px 18px;
+    background: var(--cream);
+}
+.card:hover,
+.card:has(.card-link:focus-visible) {
+    outline: 2px solid var(--ink);
+}
+.card[hidden] {
+    display: none;
+}
+.card-stamp {
+    position: absolute;
+    top: -14px;
+    right: 12px;
+    transform: rotate(-10deg);
+}
+.card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-right: 48px;
+}
+.card-head .mosaic {
+    margin-left: auto;
+}
+.card-type {
+    font-weight: 700;
+    font-size: calc(11px * var(--ui-text));
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.card-type [lang="ja"] {
+    display: block;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+.card-title {
+    margin: 4px 0 0;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.22;
+    letter-spacing: -0.01em;
+}
+.card-title-ja {
+    margin: -4px 0 0;
+    font-size: calc(13px * var(--ui-text));
+    font-weight: 500;
+    color: var(--ink-2);
+    letter-spacing: 0.04em;
+}
+.card-link {
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+}
+.card-link:hover {
+    background: none;
+}
+/* the whole card is the link */
+.card-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+.card-excerpt {
+    font-size: calc(13.5px * var(--ui-text));
+    line-height: 1.5;
+    color: var(--ink-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+}
+.card-foot {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+}
+.card-foot time {
+    margin-left: auto;
+    font: 500 calc(11px * var(--ui-text)) var(--mono);
+    color: var(--muted);
+}
+.card-cover-img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: var(--ink);
+}
+.card-cover {
+    max-width: 100%;
+    overflow: hidden;
+    margin: 6px 0 4px;
+}
+
+.card--feature {
+    padding: 22px 24px 20px;
+    gap: 14px;
+}
+.card--feature .card-stamp {
+    top: -22px;
+    right: 20px;
+}
+.card--feature .card-head {
+    padding-right: 76px;
+}
+.card--feature .card-excerpt {
+    font-size: calc(15px * var(--ui-text));
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+}
+.card-block-title {
+    --block: var(--t);
+    --block-ink: var(--t-ink);
+    margin: 18px 0 6px;
+}
+.card-block-title .card-link {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.08em;
+}
+@media (min-width: 640px) {
+    .card--feature {
+        grid-column: span 2;
+    }
+}
+@media (min-width: 980px) {
+    .card--feature {
+        grid-row: span 2;
+    }
+}
+
+/* ============================================================
+   FILTERS
+   ============================================================ */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 24px;
+    padding: 14px 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+}
+.fgroup {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+.fgroup .flabel {
+    margin-right: 6px;
+}
+.fstamps {
+    display: flex;
+    gap: 6px;
+}
+.stamp-btn {
+    line-height: 0;
+    border-radius: 50%;
+    opacity: 0.32;
+}
+.stamp-btn:hover {
+    opacity: 0.6;
+}
+.stamp-btn.is-on {
+    opacity: 1;
+}
+
+.no-results {
+    padding: 24px 0;
+    font-weight: 600;
+}
+.no-results [lang="ja"] {
+    display: block;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+/* ============================================================
+   POST
+   ============================================================ */
+.post-head {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.post-head .compose {
+    --block: var(--t);
+    --block-ink: var(--t-ink);
+    margin-top: 28px;
+    padding: 0 0 24px;
+}
+.post-head .slab-v {
+    font-size: clamp(16px, calc(var(--title-size) * 0.2), 24px);
+}
+.post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+}
+.post-cover {
+    margin: 0;
+}
+.post-cover img {
+    display: block;
+    width: 100%;
+    max-height: 70vh;
+    object-fit: cover;
+    background: var(--ink);
+}
+.post-end {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 2px solid var(--ink);
+}
+
+/* ============================================================
+   PROSE (post text)
+   ============================================================ */
+.prose {
+    max-width: 68ch;
+    font-size: clamp(17px, 1.9vw, 18px);
+    line-height: 1.75;
+    color: var(--ink);
+    overflow-wrap: break-word;
+}
+:lang(ja) .prose,
+.prose:lang(ja) {
+    line-height: 1.9;
+}
+.prose > * + * {
+    margin-top: 1.1em;
+}
+.prose p,
+.prose ul,
+.prose ol,
+.prose blockquote,
+.prose pre,
+.prose figure,
+.prose table {
+    margin-bottom: 0;
+}
+.prose h2 {
+    margin-top: 1.7em;
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 2em;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+}
+.prose h3 {
+    margin-top: 1.6em;
+    font-size: 1.2em;
+    font-weight: 700;
+    line-height: 1.3;
+}
+.prose h4 {
+    margin-top: 1.5em;
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.prose h2 + *,
+.prose h3 + *,
+.prose h4 + * {
+    margin-top: 0.6em;
+}
+.prose a {
+    font-weight: 600;
+}
+.prose strong {
+    font-weight: 700;
+}
+.prose ul,
+.prose ol {
+    padding-left: 1.3em;
+}
+.prose li + li {
+    margin-top: 0.35em;
+}
+.prose li::marker {
+    color: var(--ink-2);
+}
+.prose blockquote {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 14px 18px;
+    background: var(--cream);
+    border-left: 8px solid var(--accent);
+}
+.prose blockquote p + p {
+    margin-top: 0.8em;
+}
+.prose code {
+    font-size: 0.86em;
+    padding: 0.1em 0.35em;
+    background: var(--panel);
+}
+.prose pre {
+    /* Shiki sets its own background inline */
+    background: var(--ink) !important;
+    color: var(--cream);
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-size: 15px;
+    line-height: 1.6;
+}
+.prose pre code {
+    padding: 0;
+    background: none;
+    font-size: inherit;
+}
+.prose img {
+    display: block;
+}
+.prose hr {
+    width: 72px;
+    height: 4px;
+    margin: 2.2em 0;
+    border: 0;
+    background: var(--ink);
+}
+.prose table {
+    border-collapse: collapse;
+    font-size: 0.92em;
+}
+.prose th,
+.prose td {
+    padding: 6px 10px;
+    border: 1.5px solid var(--ink);
+    text-align: left;
+}
+.prose th {
+    background: var(--panel);
+}
+/* furigana, as blok publishes it: <ruby>漢字<rp>(</rp><rt>かんじ</rt><rp>)</rp></ruby> */
+.prose ruby rt {
+    font-size: 0.55em;
+    color: var(--muted);
+}
+
+/* ============================================================
+   MOTION
    ============================================================ */
 @keyframes pop-up {
     from {
@@ -773,39 +1067,39 @@ a:focus-visible {
 }
 
 .reveal {
-    animation: pop-up 0.55s cubic-bezier(0.23, 1, 0.32, 1) both;
+    animation: pop-up 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
-
 .reveal:nth-child(2) {
-    animation-delay: 0.06s;
+    animation-delay: 0.05s;
 }
 .reveal:nth-child(3) {
-    animation-delay: 0.12s;
+    animation-delay: 0.1s;
 }
 .reveal:nth-child(4) {
-    animation-delay: 0.18s;
+    animation-delay: 0.15s;
 }
-.reveal:nth-child(5) {
-    animation-delay: 0.24s;
-}
-.reveal:nth-child(6) {
-    animation-delay: 0.3s;
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        animation: none;
+    }
 }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 760px) {
-    .garden-grid {
-        grid-template-columns: 1fr;
+@media (max-width: 1180px) {
+    .hero {
+        grid-template-columns: minmax(0, 1fr);
     }
-
-    .filter-bar {
-        gap: 0.4rem 0.8rem;
+    .hero-stats {
+        justify-self: start;
     }
+}
 
-    .site-main {
-        gap: 2rem;
+@media (max-width: 640px) {
+    .compose .plate--br {
+        right: 12px;
     }
 }
 

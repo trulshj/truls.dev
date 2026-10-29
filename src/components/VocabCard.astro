@@ -88,7 +88,7 @@ const processedExample = example ? parseExample(example) : "";
 ---
 
 <figure class="vocab-card">
-    <div class="vocab-word-box">
+    <div class="vocab-word-box" lang="ja">
         {reading ? <ruby>{word}<rt>{reading}</rt></ruby> : word}
     </div>
     <div class="vocab-body">
@@ -100,41 +100,42 @@ const processedExample = example ? parseExample(example) : "";
 </figure>
 
 <style>
+    /* blok's vocab card: an ink word plate hung off a cream card, in the post type's line colour */
     .vocab-card {
         position: relative;
-        background: var(--surface);
-        border: 1px solid var(--border-strong);
-        border-radius: 2px;
-        box-shadow: var(--shadow);
-        margin: var(--space-md) 0;
+        margin: 2.4em 0 1.6em;
+        padding: 30px 18px 16px;
+        background: var(--cream);
+        border: 2px solid var(--ink);
+        border-left: 8px solid var(--t, var(--accent));
+        font-size: 16px;
+        line-height: 1.55;
     }
 
     .vocab-word-box {
         position: absolute;
-        top: -1px;
-        left: var(--space-sm);
-        font-family: "Noto Sans JP", sans-serif;
-        font-size: 1.3rem;
-        color: var(--ink);
-        background: var(--surface);
-        border: 1px solid var(--border-strong);
-        border-radius: 2px;
-        padding: 0.1em 0.5em;
-        line-height: 1.4;
-        /* Pull the word box up so it overlaps the card border */
-        transform: translateY(-50%);
+        top: 0;
+        left: 12px;
+        transform: translateY(-55%);
+        padding: 4px 12px 3px;
+        background: var(--ink);
+        color: var(--cream);
+        font-weight: 700;
+        font-size: 22px;
+        line-height: 1.3;
+        letter-spacing: 0.04em;
     }
 
     .vocab-word-box ruby rt {
-        font-size: 0.55em;
-        color: var(--muted);
+        color: var(--panel);
+        font-size: 0.48em;
+        letter-spacing: 0.06em;
     }
 
     .vocab-body {
-        padding: 2.2rem var(--space-sm) var(--space-sm);
         display: flex;
         flex-direction: column;
-        gap: 0.4rem;
+        gap: 6px;
     }
 
     .vocab-definition,
@@ -145,24 +146,23 @@ const processedExample = example ? parseExample(example) : "";
     }
 
     .vocab-definition {
-        color: var(--ink);
+        font-weight: 600;
     }
 
     .vocab-example {
-        font-family: "Noto Sans JP", sans-serif;
-        line-height: 2.2;
-        color: var(--ink);
+        font-size: 17px;
+        line-height: 2.1;
+        letter-spacing: 0.03em;
     }
 
     .vocab-translation {
-        color: var(--muted);
+        color: var(--ink-2);
         font-style: italic;
-        font-size: 0.92rem;
     }
 
     .vocab-context {
         color: var(--muted);
-        font-size: 0.88rem;
+        font-size: 14px;
     }
 
     :global(.vocab-example ruby rt) {
@@ -171,8 +171,8 @@ const processedExample = example ? parseExample(example) : "";
     }
 
     :global(.vocab-example mark) {
-        background: transparent;
-        color: var(--leaf);
-        font-weight: bold;
+        background: color-mix(in srgb, var(--accent) 60%, transparent);
+        color: var(--ink);
+        padding: 0 2px;
     }
 </style>

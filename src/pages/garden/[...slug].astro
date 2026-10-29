@@ -1,21 +1,21 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import GardenItemLayout from "../../layouts/GardenItemLayout.astro";
+import { publishedPosts, slugOf, stationCodes } from "../../lib/garden";
 
 export async function getStaticPaths() {
-    const entries = await getCollection("garden");
-    return entries
-        .filter((x) => !x.data.isDraft)
-        .map((entry) => ({
-            params: { slug: entry.id.replace(/\.mdx?$/, "") },
-            props: { entry },
-        }));
+    const posts = await publishedPosts();
+    const codes = stationCodes(posts);
+    return posts.map((post) => ({
+        params: { slug: slugOf(post) },
+        props: { post, code: codes.get(post.id) },
+    }));
 }
 
-const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { post, code } = Astro.props;
+const { Content } = await render(post);
 ---
 
-<GardenItemLayout frontmatter={entry.data}>
+<GardenItemLayout post={post} code={code}>
     <Content />
 </GardenItemLayout>

@@ -1,63 +1,133 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import StatusBadge from "../components/StatusBadge.astro";
-import LangBadge from "../components/LangBadge.astro";
+import CodeBadge from "../components/CodeBadge.astro";
+import Mosaic from "../components/Mosaic.astro";
+import Stamp from "../components/Stamp.astro";
+import TitleBlock from "../components/TitleBlock.astro";
+import {
+    LANG_LABELS,
+    STATUS_LABELS,
+    TYPE_LABELS,
+    formatDate,
+    slugOf,
+    splitTitle,
+    titleSize,
+    type GardenPost,
+    type StationCode,
+} from "../lib/garden";
 
-const { frontmatter } = Astro.props;
+export type Props = { post: GardenPost; code?: StationCode };
 
-const pubDate = frontmatter.pubDate as Date;
-const formattedDate = pubDate.toLocaleDateString("nb", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-});
-
-const typeLabels: Record<string, string> = {
-    writing: "tekst",
-    art: "kunst",
-    story: "fortelling",
-    note: "notat",
-    visualization: "visualisering",
-};
-
-const isViz = frontmatter.type === "visualization";
+const { post, code } = Astro.props;
+const { title, titleJa, excerpt, type, lang, status, pubDate, tags = [], image } = post.data;
+const slug = slugOf(post);
+const typeLabel = TYPE_LABELS[type];
+const langLabel = LANG_LABELS[lang];
+const lines = splitTitle(title);
+const isViz = type === "visualization";
 ---
 
-<BaseLayout pageTitle={frontmatter.title} narrow={!isViz} wide={isViz} lang={frontmatter.lang}>
-    <nav class="breadcrumb reveal">
-        <a href="/garden">hagen</a>
-        <span class="breadcrumb-sep">→</span>
-        <span>{frontmatter.title}</span>
-    </nav>
+<BaseLayout pageTitle={title} description={excerpt} narrow={!isViz} wide={isViz} lang={lang}>
+    <article class="post" data-type={type}>
+        <header class="post-head reveal">
+            <a class="back" href="/garden">← Hagen<span lang="ja">庭</span></a>
 
-    <header class="article-header reveal">
-        <h1 transition:name={frontmatter.title}>{frontmatter.title}</h1>
-        <div class="article-meta">
-            <LangBadge lang={frontmatter.lang ?? "no"} />
-            <StatusBadge status={frontmatter.status ?? "seedling"} />
-            {frontmatter.type && (
-                <span class="badge badge--type">{typeLabels[frontmatter.type] ?? frontmatter.type}</span>
-            )}
-            <span class="article-date">
-                {formattedDate}
-            </span>
-        </div>
-        {frontmatter.tags && frontmatter.tags.length > 0 && (
-            <div class="tags article-tags">
-                {frontmatter.tags.map((tag: string) => (
-                    <span class="tag">#{tag}</span>
-                ))}
+            <div class="post-title-row">
+                <TitleBlock
+                    lines={lines}
+                    size={titleSize(lines, isViz ? 980 : 560, 118, 84, 0.82)}
+                    slab={titleJa?.trim() || undefined}
+                    plateBottomSide="left"
+                    transitionName={`post-${slug}`}
+                >
+                    <Stamp slot="stamp" status={status} size={104} />
+                    <Fragment slot="plate-bottom">
+                        <CodeBadge code={code} />
+                        {typeLabel.no}
+                        <span lang="ja">{typeLabel.ja}</span>
+                    </Fragment>
+                </TitleBlock>
+                <Mosaic
+                    class="post-mosaic"
+                    seed={slug}
+                    cols={7}
+                    rows={7}
+                    tile={22}
+                    density={0.8}
+                    anchor={[0.15, 0.5]}
+                    colors={["ink", "t", "taupe", "cream"]}
+                />
             </div>
-        )}
-    </header>
 
-    {isViz ? (
-        <div class="reveal">
+            <div class="post-meta">
+                <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+                <span class="lang" title={`${langLabel.no} · ${langLabel.ja}`}>{langLabel.code}</span>
+                <span class="post-status">
+                    {STATUS_LABELS[status].no}<span lang="ja">{STATUS_LABELS[status].kanji}</span>
+                </span>
+                {tags.map((tag) => <span class="tag">#{tag}</span>)}
+            </div>
+        </header>
+
+        {
+            image && (
+                <figure class="post-cover reveal">
+                    <img src={image.src} alt={image.alt} />
+                </figure>
+            )
+        }
+
+        <div class:list={["reveal", { prose: !isViz }]}>
             <slot />
         </div>
-    ) : (
-        <article class="prose reveal">
-            <slot />
-        </article>
-    )}
+
+        <footer class="post-end">
+            <a class="back" href="/garden">← Tilbake til hagen<span lang="ja">庭へ戻る</span></a>
+        </footer>
+    </article>
 </BaseLayout>
+
+<style>
+    .post {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(28px, 5vw, 44px);
+    }
+
+    .post-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 36px;
+    }
+
+    .post-meta time {
+        font: 600 calc(12.5px * var(--ui-text)) var(--mono);
+        margin-right: 6px;
+    }
+
+    .post-status {
+        display: inline-flex;
+        gap: 6px;
+        font-weight: 700;
+        font-size: calc(11px * var(--ui-text));
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .post-status [lang="ja"] {
+        letter-spacing: 0.06em;
+        color: var(--muted);
+    }
+
+    .post-title-row :global(.post-mosaic) {
+        flex: none;
+    }
+
+    /* the mosaic only shows when there's room next to the title */
+    @media (max-width: 1000px) {
+        .post-title-row :global(.post-mosaic) {
+            display: none;
+        }
+    }
+</style>

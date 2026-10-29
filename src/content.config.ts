@@ -5,6 +5,8 @@ const gardenCollection = defineCollection({
     loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/garden" }),
     schema: z.object({
         title: z.string(),
+        // Japanese title (和題), shown on the vertical slab next to the title
+        titleJa: z.string().optional(),
         pubDate: z.date(),
         isDraft: z.boolean().optional(),
         excerpt: z.string().optional(),

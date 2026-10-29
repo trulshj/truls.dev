@@ -1,144 +1,142 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import TitleBlock from "../components/TitleBlock.astro";
+import { titleSize } from "../lib/garden";
 
-const pageTitle = "Om meg";
+const lines = ["Om meg"];
 ---
 
-<BaseLayout pageTitle={pageTitle} narrow={true}>
+<BaseLayout pageTitle="Om meg">
+    <section class="hero reveal">
+        <TitleBlock lines={lines} size={titleSize(lines, 900, 170, 74)} slab="自己紹介" transitionName="title-about">
+            <Fragment slot="plate-top">Truls Henrik</Fragment>
+            <span slot="plate-bottom" lang="ja">トルルス</span>
+        </TitleBlock>
+    </section>
+
     <section class="about">
-        <figure class="about-portrait reveal">
-            <img
-                src="/images/headshot.png"
-                alt="Portrett av Truls"
-                loading="lazy"
-            />
-            <figcaption>Gladgutt i ferd med å spandere øl på gode venner</figcaption>
-        </figure>
-
         <div class="about-text">
-            <h1 class="reveal">Hallaien! Truls Henrik heter jeg.</h1>
+            <h2 class="reveal">Hallaien! Truls Henrik heter jeg.</h2>
 
-            <p class="lead reveal">
-                Jeg liker når ting gir mening. Helst for flere enn bare meg.
+            <p class="lead reveal">Jeg liker når ting gir mening. Helst for flere enn bare meg.</p>
+
+            <p class="reveal">
+                Jeg er en utvikler som stortrives når jeg får grave meg ned i ting som er akkurat passe nerdete. Gi meg
+                noe som virker kaotisk eller unødvendig komplisert, så koser jeg meg med å rydde i det og finne gode
+                måter å gjøre det forståelig på — og dele det med andre. Akkurat nå tar jeg en master i visualisering,
+                og har blitt oppriktig fascinert av hvor mye lettere verden blir å forstå når ting blir tegnet,
+                fargelagt eller flyttet litt rundt på en skjerm.
             </p>
 
             <p class="reveal">
-                Jeg er en utvikler som stortrives når jeg får grave meg ned i
-                ting som er akkurat passe nerdete. Gi meg noe som virker kaotisk
-                eller unødvendig komplisert, så koser jeg meg med å rydde i det
-                og finne gode måter å gjøre det forståelig på — og dele det med
-                andre. Akkurat nå tar jeg en master i
-                visualisering, og har blitt oppriktig fascinert av hvor mye
-                lettere verden blir å forstå når ting blir tegnet, fargelagt
-                eller flyttet litt rundt på en skjerm.
+                Utenom skjermen danser jeg så ofte jeg kan. Jeg begynte med fastingswing for ikke så lenge siden, og
+                har nylig kastet meg ut i både salsa og boogie woogie. Resultatet er at jeg som regel har det veldig
+                gøy, og av og til er kreativ med retningene. Ellers er jeg glad i brettspill og cross-stitching, som er
+                en perfekt balanse mellom strategi, pirk og "oi, nå har det gått tre timer".
             </p>
 
             <p class="reveal">
-                Utenom skjermen danser jeg så ofte jeg kan. Jeg begynte med
-                fastingswing for ikke så lenge siden, og har nylig kastet meg ut
-                i både salsa og boogie woogie. Resultatet er at jeg som regel
-                har det veldig gøy, og av og til er kreativ med retningene.
-                Ellers er jeg glad i brettspill og cross-stitching, som er en
-                perfekt balanse mellom strategi, pirk og "oi, nå har det gått
-                tre timer".
-            </p>
-
-            <p class="reveal">
-                Denne siden er mitt lille hjørne av internett der jeg samler
-                ting jeg har lyst til å lage og dele — små prosjekter, tanker,
-                formidlingsforsøk og annet jeg synes er gøy.
+                Denne siden er mitt lille hjørne av internett der jeg samler ting jeg har lyst til å lage og dele — små
+                prosjekter, tanker, formidlingsforsøk og annet jeg synes er gøy.
             </p>
 
             <aside class="garden-note reveal">
                 Konseptet med en digital hage er inspirert av{" "}
-                <a class="inline-link" href="https://maggieappleton.com/garden-history">Maggie Appletons tanker om digitale hager.</a>
+                <a href="https://maggieappleton.com/garden-history">Maggie Appletons tanker om digitale hager.</a>
             </aside>
 
             <p class="about-cta reveal">
                 Hvis noe her treffer deg, faglig eller personlig,{" "}
-                <a class="inline-link" href="mailto:post@truls.dev">send meg gjerne en e-post</a>.
-                Jeg sier sjelden nei til en prat over kaffe &lt;3
+                <a href="mailto:post@truls.dev">send meg gjerne en e-post</a>. Jeg sier sjelden nei til en prat over
+                kaffe &lt;3
             </p>
         </div>
+
+        <figure class="about-portrait reveal">
+            <img src="/images/headshot.png" alt="Portrett av Truls" loading="lazy" />
+            <figcaption class="plate">Gladgutt i ferd med å spandere øl på gode venner</figcaption>
+        </figure>
     </section>
 </BaseLayout>
 
 <style>
     .about {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-    }
-
-    .about-portrait {
-        margin: 0 auto;
-        padding: 0;
-        width: min(100%, 16rem);
-        position: relative;
-        transform: rotate(1.2deg);
-    }
-
-    .about-portrait img {
-        width: 100%;
-        object-fit: cover;
-        display: block;
-        min-height: 200px;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-hover);
-        border-radius: 2px;
-        background: var(--surface);
-        filter: saturate(1.06) contrast(1.02);
-    }
-
-    .about-portrait figcaption {
-        position: static;
-        width: auto;
-        margin-top: 0.5rem;
-        text-align: center;
-        font-size: 0.78rem;
-        font-family: var(--font-heading);
-        color: var(--muted);
-        line-height: 1.5;
-    }
-
-    @media (min-width: 640px) {
-        .about-portrait figcaption {
-            position: absolute;
-            left: calc(100% + 0.75rem);
-            top: 0;
-            width: 8rem;
-            margin-top: 0;
-            text-align: left;
-        }
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
     }
 
     .about-text {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 18px;
+        max-width: 64ch;
     }
 
-    .about-text h1 {
-        font-size: clamp(2rem, 6vw, 3rem);
+    .about-text h2 {
+        font-size: clamp(24px, 3.4vw, 32px);
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
     }
 
     .about-text p {
-        color: var(--ink);
-        font-size: clamp(0.98rem, 1.8vw, 1.06rem);
+        font-size: clamp(16.5px, 1.9vw, 18px);
         line-height: 1.75;
-        max-width: 62ch;
     }
 
-    .about-cta {
-        font-size: clamp(1.05rem, 2vw, 1.2rem) !important;
+    .about-text .lead {
+        font-size: clamp(19px, 2.4vw, 22px);
+        font-weight: 600;
+        line-height: 1.5;
     }
 
     .garden-note {
-        border-left: 3px solid var(--border-strong);
-        padding: 0.4rem 0 0.4rem 0.9rem;
-        color: var(--muted);
-        font-size: 0.85rem;
-        font-family: var(--font-heading);
-        max-width: 62ch;
+        padding: 12px 16px;
+        background: var(--cream);
+        border-left: 8px solid var(--green);
+        font-size: calc(14px * var(--ui-text));
+        line-height: 1.55;
+        color: var(--ink-2);
+    }
+
+    .about-portrait {
+        position: relative;
+        margin: 0;
+        width: min(100%, 300px);
+        justify-self: start;
+    }
+
+    .about-portrait img {
+        display: block;
+        width: 100%;
+        min-height: 200px;
+        object-fit: cover;
+        background: var(--ink);
+        border: 2px solid var(--ink);
+    }
+
+    .about-portrait figcaption {
+        position: absolute;
+        left: -10px;
+        bottom: -14px;
+        max-width: calc(100% - 20px);
+        white-space: normal;
+        line-height: 1.35;
+        font-size: calc(11.5px * var(--ui-text));
+    }
+
+    @media (min-width: 900px) {
+        .about {
+            grid-template-columns: minmax(0, 1fr) 300px;
+            align-items: start;
+            gap: 56px;
+        }
+
+        .about-portrait {
+            position: sticky;
+            top: 110px;
+            transform: rotate(1.2deg);
+        }
     }
 </style>

@@ -1,56 +1,89 @@
 ---
-import StatusBadge from "./StatusBadge.astro";
-import LangBadge from "./LangBadge.astro";
+import CodeBadge from "./CodeBadge.astro";
+import Mosaic from "./Mosaic.astro";
+import Stamp from "./Stamp.astro";
+import {
+    LANG_LABELS,
+    TYPE_LABELS,
+    formatDate,
+    slugOf,
+    splitTitle,
+    titleSize,
+    type GardenPost,
+    type StationCode,
+} from "../lib/garden";
 
 export type Props = {
-    slug: string;
-    title: string;
-    excerpt?: string;
-    type: "writing" | "art" | "story" | "note" | "visualization";
-    lang: "no" | "en" | "ja";
-    status: "seedling" | "budding" | "evergreen";
-    pubDate: Date;
-    tags?: string[];
-    image?: { src: string; alt: string };
+    post: GardenPost;
+    code?: StationCode;
+    /** The big 2×2 card at the start of the garden grid. */
+    feature?: boolean;
 };
 
-const { slug, title, excerpt, type, lang, status, pubDate, tags } = Astro.props;
-
-const formattedDate = pubDate.toLocaleDateString("nb", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-});
-
-const typeLabels: Record<string, string> = {
-    writing: "tekst",
-    art: "kunst",
-    story: "fortelling",
-    note: "notat",
-    visualization: "visualisering",
-};
+const { post, code, feature = false } = Astro.props;
+const { title, titleJa, excerpt, type, lang, status, pubDate, tags = [], image } = post.data;
+const slug = slugOf(post);
+const href = `/garden/${slug}`;
+const typeLabel = TYPE_LABELS[type];
+const langLabel = LANG_LABELS[lang];
+const lines = splitTitle(title);
 ---
 
-<a
-    href={`/garden/${slug}`}
-    class="garden-card"
+<article
+    class:list={["card", { "card--feature": feature }]}
     data-type={type}
     data-lang={lang}
-    transition:name={title}
+    data-status={status}
+    transition:name={`post-${slug}`}
 >
-    <h3 class="garden-card__title">{title}</h3>
-    {excerpt && <p class="garden-card__excerpt">{excerpt}</p>}
-    <div class="garden-card__meta">
-        <LangBadge lang={lang} />
-        <StatusBadge status={status} />
-        <span class="badge badge--type">{typeLabels[type] ?? type}</span>
-        <time class="garden-card__date" datetime={pubDate.toISOString()}>{formattedDate}</time>
-    </div>
-    {tags && tags.length > 0 && (
-        <div class="tags">
-            {tags.slice(0, 3).map((tag) => (
-                <span class="tag">#{tag}</span>
-            ))}
-        </div>
-    )}
-</a>
+    <span class="card-stamp"><Stamp status={status} size={feature ? 72 : 46} /></span>
+
+    <header class="card-head">
+        <CodeBadge code={code} />
+        <span class="card-type">
+            {typeLabel.no}
+            <span lang="ja">{typeLabel.ja}</span>
+        </span>
+        {!feature && <Mosaic seed={slug} cols={4} rows={2} tile={11} density={0.95} colors={["ink", "t", "taupe", "paper"]} />}
+    </header>
+
+    {/* the cover image, or the post's own tile pattern when it has none */}
+    {feature && image && <img class="card-cover-img" src={image.src} alt={image.alt} loading="lazy" />}
+    {
+        feature && !image && (
+            <Mosaic
+                class="card-cover"
+                seed={slug}
+                cols={20}
+                rows={5}
+                tile={24}
+                density={0.85}
+                anchor={[0.5, 0.5]}
+                colors={["ink", "t", "taupe", "paper"]}
+            />
+        )
+    }
+
+    {
+        feature ? (
+            <h3 class="block-title card-block-title" style={`--title-size: ${titleSize(lines, 560, 66, 70)}`}>
+                <a href={href} class="card-link" aria-label={title}>
+                    {lines.map((line) => <span class="bt">{line}</span>)}
+                </a>
+            </h3>
+        ) : (
+            <h3 class="card-title">
+                <a href={href} class="card-link">{title}</a>
+            </h3>
+        )
+    }
+    {titleJa && <p class="card-title-ja" lang="ja">{titleJa}</p>}
+
+    {excerpt && <p class="card-excerpt">{excerpt}</p>}
+
+    <footer class="card-foot">
+        <span class="lang" title={`${langLabel.no} · ${langLabel.ja}`}>{langLabel.code}</span>
+        {tags.slice(0, feature ? 6 : 3).map((tag) => <span class="tag">#{tag}</span>)}
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate, true)}</time>
+    </footer>
+</article>

@@ -1,0 +1,42 @@
+---
+/**
+ * Title on colour blocks, with an optional vertical slab, stamp and name plates hung off it.
+ * Slots: "plate-top", "plate-bottom" and "stamp".
+ */
+export type Props = {
+    /** One string per staggered line. */
+    lines: string[];
+    /** CSS font size of the title (see titleSize in lib/garden.ts). */
+    size: string;
+    /** Japanese text on the vertical slab. */
+    slab?: string;
+    /** Bottom plate on the right (default) or left. */
+    plateBottomSide?: "left" | "right";
+    /** h1 on full pages, h2 inside sections. */
+    as?: "h1" | "h2";
+    /** Same name on two pages morphs one title into the other. */
+    transitionName: string;
+};
+
+const { lines, size, slab, plateBottomSide = "right", as: Heading = "h1", transitionName } = Astro.props;
+const stamped = Astro.slots.has("stamp");
+---
+
+<div class:list={["compose", { "compose--stamped": stamped }]} style={`--title-size: ${size}`}>
+    {Astro.slots.has("plate-top") && <span class="plate plate--tl"><slot name="plate-top" /></span>}
+    {stamped && <span class="compose-stamp"><slot name="stamp" /></span>}
+    <div class="compose-row">
+        {/* the label keeps a space between the staggered lines for screen readers */}
+        <Heading class="block-title" aria-label={lines.join(" ")} transition:name={transitionName}>
+            {lines.map((line) => <span class="bt">{line}</span>)}
+        </Heading>
+        {slab && <div class="slab-v" lang="ja">{slab}</div>}
+    </div>
+    {
+        Astro.slots.has("plate-bottom") && (
+            <span class:list={["plate", plateBottomSide === "left" ? "plate--bl" : "plate--br"]}>
+                <slot name="plate-bottom" />
+            </span>
+        )
+    }
+</div>
