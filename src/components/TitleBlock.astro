@@ -14,11 +14,14 @@ export type Props = {
     plateBottomSide?: "left" | "right";
     /** h1 on full pages, h2 inside sections. */
     as?: "h1" | "h2";
-    /** Same name on two pages morphs one title into the other. */
-    transitionName: string;
+    /**
+     * Same name on two pages morphs one title into the other. The main pages share "page-title",
+     * so their titles morph into each other; a post's title morphs from its card instead.
+     */
+    transitionName?: string;
 };
 
-const { lines, size, slab, plateBottomSide = "right", as: Heading = "h1", transitionName } = Astro.props;
+const { lines, size, slab, plateBottomSide = "right", as: Heading = "h1", transitionName = "page-title" } = Astro.props;
 const stamped = Astro.slots.has("stamp");
 ---
 
