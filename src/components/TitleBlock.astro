@@ -17,7 +17,9 @@ export type Props = {
     /**
      * Same name on two pages morphs one title into the other. The main pages share "page-title",
      * so their titles morph into each other; a post's title morphs from its card instead.
-     * The slab gets the same name plus "-slab", so it moves along with the title.
+     * The slab, plates and stamp get the same name plus a suffix, so they move along with the
+     * title. That also keeps the plates and stamp in front of the title while it morphs; unnamed,
+     * they'd be part of the page behind it and jump to the front when the transition ends.
      */
     transitionName?: string;
 };
@@ -27,8 +29,20 @@ const stamped = Astro.slots.has("stamp");
 ---
 
 <div class:list={["compose", { "compose--stamped": stamped }]} style={`--title-size: ${size}`}>
-    {Astro.slots.has("plate-top") && <span class="plate plate--tl"><slot name="plate-top" /></span>}
-    {stamped && <span class="compose-stamp"><slot name="stamp" /></span>}
+    {
+        Astro.slots.has("plate-top") && (
+            <span class="plate plate--tl" transition:name={`${transitionName}-plate-top`}>
+                <slot name="plate-top" />
+            </span>
+        )
+    }
+    {
+        stamped && (
+            <span class="compose-stamp" transition:name={`${transitionName}-stamp`}>
+                <slot name="stamp" />
+            </span>
+        )
+    }
     <div class="compose-row">
         {/* the label keeps a space between the staggered lines for screen readers */}
         <Heading class="block-title" aria-label={lines.join(" ")} transition:name={transitionName}>
@@ -44,7 +58,10 @@ const stamped = Astro.slots.has("stamp");
     </div>
     {
         Astro.slots.has("plate-bottom") && (
-            <span class:list={["plate", plateBottomSide === "left" ? "plate--bl" : "plate--br"]}>
+            <span
+                class:list={["plate", plateBottomSide === "left" ? "plate--bl" : "plate--br"]}
+                transition:name={`${transitionName}-plate-bottom`}
+            >
                 <slot name="plate-bottom" />
             </span>
         )
