@@ -17,6 +17,7 @@ export type Props = {
     /**
      * Same name on two pages morphs one title into the other. The main pages share "page-title",
      * so their titles morph into each other; a post's title morphs from its card instead.
+     * The slab gets the same name plus "-slab", so it moves along with the title.
      */
     transitionName?: string;
 };
@@ -33,7 +34,13 @@ const stamped = Astro.slots.has("stamp");
         <Heading class="block-title" aria-label={lines.join(" ")} transition:name={transitionName}>
             {lines.map((line) => <span class="bt">{line}</span>)}
         </Heading>
-        {slab && <div class="slab-v" lang="ja">{slab}</div>}
+        {
+            slab && (
+                <div class="slab-v" lang="ja" transition:name={`${transitionName}-slab`}>
+                    {slab}
+                </div>
+            )
+        }
     </div>
     {
         Astro.slots.has("plate-bottom") && (
